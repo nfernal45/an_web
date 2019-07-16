@@ -1,0 +1,40 @@
+.area {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+.input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+.icon,
+.button {
+  font-size: 0;
+  svg {
+    font-size: 14px;
+  }
+}
+.icon {
+  margin-right: 8px;
+  opacity: .9;
+  svg {
+    fill: #0E69AF;
+  }
+}
+.button {
+  margin-left: 14px;
+  cursor: pointer;
+  svg {
+    fill: #A0A0A0;
+  }
+}
+.title {
+  opacity: .9;
+  color: #0E69AF;
+}

@@ -1,0 +1,14 @@
+.start {
+  margin-bottom: 32px;
+  h4 {
+    margin-bottom: 16px;
+  }
+  &Btns {
+    display: flex;
+  }
+  &Btn {
+    min-width: 120px;
+    margin-right: 16px;
+  }
+}
+
