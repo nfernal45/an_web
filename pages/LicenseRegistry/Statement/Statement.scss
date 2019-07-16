@@ -1,0 +1,107 @@
+.info {
+  margin-bottom: 32px;
+  text-align: center;
+  &Item {
+    display: inline-block;
+    margin: 0 16px;
+    strong {
+      color: #0e69af;
+    }
+  }
+}
+
+.actions {
+  width: 160px;
+  &Btn {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  &Mb {
+    margin-bottom: 32px;
+  }
+}
+
+.row {
+  display: flex;
+  margin: 0 -8px 16px;
+  &Main {
+    margin: 0 -16px 16px;
+    & > .col {
+      padding: 0 16px;
+    }
+  }
+  &Center {
+    align-items: center;
+  }
+  &Bottom {
+    align-items: flex-end;
+  }
+}
+
+.col {
+  padding: 0 8px;
+  &25 {
+    width: 25%;
+  }
+  &50 {
+    width: 50%;
+  }
+  &75 {
+    width: 75%;
+  }
+  &100 {
+    width: 100%;
+  }
+}
+
+.label {
+  margin-bottom: 6px;
+  font-weight: 700;
+  color: #0e69af;
+  &Red {
+    color: red;
+  }
+}
+
+.line {
+  margin-top: 6px;
+}
+
+.note {
+  margin: -10px 0 16px;
+}
+
+.minButton {
+  min-width: 120px;
+}
+
+.mb0 {
+  margin-bottom: 0;
+}
+.mt6 {
+  margin-top: 6px;
+}
+.mb6 {
+  margin-bottom: 6px;
+}
+.mb16 {
+  margin-bottom: 16px;
+}
+.ml8 {
+  margin-left: 8px;
+}
+.mt16 {
+  margin-top: 16px;
+}
+.mt24 {
+  margin-top: 24px;
+}
+.mt30 {
+  margin-top: 30px;
+}
+.mb32 {
+  margin-bottom: 32px;
+}
+.mlAuto {
+  margin-left: auto;
+}

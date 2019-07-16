@@ -1,0 +1,29 @@
+.preloader {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #fff;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  &:before {
+    content: "";
+    width: 32px;
+    height: 32px;
+    border: 4px solid #0e69af;
+    border-top-color: transparent;
+    animation: loader 1s infinite linear;
+  }
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
