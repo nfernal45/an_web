@@ -1,0 +1,18 @@
+const actions = {
+  GET_REQUEST: 'GET_REQUEST',
+  GET_REQUEST_LIST: 'GET_REQUEST_LIST',
+  SAVE_REQUEST: 'SAVE_REQUEST',
+  CHANGE_REQUEST_STATUS: 'CHANGE_REQUEST_STATUS'
+}
+
+const mutations = {
+  SET_REQUEST: 'SET_REQUEST',
+  RESET_REQUEST: 'RESET_REQUEST',
+  RESET_REQUEST_LIST: 'RESET_REQUEST_LIST'
+}
+
+const getters = {
+  GET_REQUEST: 'GET_REQUEST'
+}
+
+export { actions, mutations, getters }
