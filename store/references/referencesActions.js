@@ -1,7 +1,7 @@
-import { actions, mutations } from '../types/references'
+import { actionTypes, mutationTypes } from '../types/references'
 
 export default {
-  [actions.GET_REFERENCE]: async (
+  [actionTypes.GET_REFERENCE]: async (
     { commit },
     { referenceUrl, referenceName, search }
   ) => {
@@ -9,6 +9,6 @@ export default {
       url: referenceUrl,
       params: search
     })
-    commit(mutations[referenceName], data)
+    commit(mutationTypes[referenceName], data)
   }
 }

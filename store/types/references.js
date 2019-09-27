@@ -1,11 +1,11 @@
-const actions = {
+const actionTypes = {
   GET_REFERENCE: 'GET_REFERENCE'
 }
 
-const mutations = {
+const mutationTypes = {
   SET_REFERENCE: 'SET_REFERENCE'
 }
 
-const getters = {}
+const getterTypes = {}
 
-export { actions, mutations, getters }
+export { actionTypes, mutationTypes, getterTypes }
