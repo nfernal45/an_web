@@ -1,7 +1,7 @@
 import { actionTypes, mutationTypes } from '../types/references'
 
 export default {
-  [actionTypes.GET_REFERENCE]: async (
+  [actionTypes.FETCH_REFERENCE]: async (
     { commit },
     { referenceUrl, referenceName, search }
   ) => {

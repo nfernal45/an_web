@@ -1,5 +1,5 @@
 const actionTypes = {
-  GET_REFERENCE: 'GET_REFERENCE'
+  FETCH_REFERENCE: 'FETCH_REFERENCE'
 }
 
 const mutationTypes = {
