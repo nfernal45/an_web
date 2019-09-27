@@ -1,7 +1,7 @@
 export default {
   mode: 'universal',
   server: {
-    port: 3000,
+    port: 5001,
     host: '0.0.0.0',
     disableHostCheck: true
   },
@@ -62,5 +62,8 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+  router: {
+    base: '/gf/'
   }
 }
