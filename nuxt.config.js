@@ -9,7 +9,7 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: process.env.APP_TITLE || '',
+    title: 'Внесение изменений в реестр',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -46,8 +46,7 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa',
-    ['@nuxtjs/dotenv', { path: '~/', systemvars: true }]
+    '@nuxtjs/pwa'
   ],
   /*
    ** Axios module configuration
@@ -66,5 +65,9 @@ export default {
   },
   router: {
     base: '/management/'
+  },
+  env: {
+    APP_REST_API_GF: '/rlic-gf-rest/api/v1',
+    APP_REST_API_NSI: '/nsi-rest/api/v1'
   }
 }
