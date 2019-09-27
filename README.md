@@ -22,8 +22,8 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ## Конфигурация nginx веб-сервера
 [nginx.conf](https://nextcloud.c-i-p.ru/s/wlLiqoDOizH2yZd "Конфигурация nginx")
-
-
+  
+  
 ## Примечание
 Проект необходимо запускать параллельно с проктов Реестр лицензиатов. Гос. услуга.
 [bitbucket](https://bitbucket.c-i-p.ru/projects/LIC/repos/rlic-front/browse "Репозиторий РЛИЦ ГУ")
