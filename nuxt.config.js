@@ -1,7 +1,7 @@
 export default {
   mode: 'universal',
   server: {
-    port: 3000,
+    port: 50001,
     host: '0.0.0.0',
     disableHostCheck: true
   },
