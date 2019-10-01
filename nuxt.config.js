@@ -9,7 +9,7 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'Внесение изменений в реестр',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -65,5 +65,9 @@ export default {
   },
   router: {
     base: '/management/'
+  },
+  env: {
+    APP_REST_API_GF: '/rlic-gf-rest/api/v1',
+    APP_REST_API_NSI: '/nsi-rest/api/v1'
   }
 }
