@@ -28,7 +28,9 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['element-ui/lib/theme-chalk/index.css'],
+  css: [
+    '@/assets/scss/element-variables.scss'
+  ],
   /*
    ** Plugins to load before mounting the App
    */
@@ -61,7 +63,17 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {
+      // config.module.rules.push({
+      //   test: /\.(sass|scss)$/,
+      //   use: {
+      //     loader: "sass-loader",
+      //     options: {
+      //       includePaths: ["./node_modules"]
+      //     }
+      //   }
+      // })
+    }
   },
   router: {
     base: '/management/'

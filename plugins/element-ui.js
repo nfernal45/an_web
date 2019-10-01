@@ -1,5 +1,9 @@
 import Vue from 'vue'
-import Element from 'element-ui'
-import locale from 'element-ui/lib/locale/lang/en'
+import { Button } from 'element-ui'
+import lang from 'element-ui/lib/locale/lang/ru-Ru'
+import locale from 'element-ui/lib/locale'
+// import '@/assets/scss/element-variables.scss'
 
-Vue.use(Element, { locale })
+locale.use(lang)
+
+Vue.use(Button)
