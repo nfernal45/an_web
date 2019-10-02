@@ -1,8 +1,29 @@
 <template>
-  <div>
+  <div v-show="isReady">
+    <the-header />
     <nuxt />
   </div>
 </template>
+
+<script>
+import TheHeader from '@/components/TheHeader'
+
+export default {
+  components: {
+    TheHeader
+  },
+  data() {
+    return {
+      isReady: false
+    }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.isReady = true
+    })
+  }
+}
+</script>
 
 <style>
 html {

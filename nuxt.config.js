@@ -28,11 +28,18 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['element-ui/lib/theme-chalk/index.css'],
+  css: [
+    '@/assets/scss/element-variables.scss',
+    '@/assets/sass/global-styles.sass'
+  ],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/element-ui'],
+  plugins: [
+    '@/plugins/element-ui',
+    '@/plugins/global-elements',
+    '@/plugins/font-awesome'
+  ],
   /*
    ** Nuxt.js dev-modules
    */

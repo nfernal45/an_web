@@ -1,5 +1,12 @@
 import Vue from 'vue'
-import Element from 'element-ui'
-import locale from 'element-ui/lib/locale/lang/en'
+import { Button, Container, Header, Row, Col } from 'element-ui'
+import lang from 'element-ui/lib/locale/lang/ru-Ru'
+import locale from 'element-ui/lib/locale'
 
-Vue.use(Element, { locale })
+locale.use(lang)
+
+Vue.use(Button)
+Vue.use(Header)
+Vue.use(Container)
+Vue.use(Row)
+Vue.use(Col)
