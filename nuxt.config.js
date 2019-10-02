@@ -29,12 +29,17 @@ export default {
    ** Global CSS
    */
   css: [
-    '@/assets/scss/element-variables.scss'
+    '@/assets/scss/element-variables.scss',
+    '@/assets/sass/global-styles.sass'
   ],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/element-ui'],
+  plugins: [
+    '@/plugins/element-ui',
+    '@/plugins/global-elements',
+    '@/plugins/font-awesome'
+  ],
   /*
    ** Nuxt.js dev-modules
    */
@@ -63,17 +68,7 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {
-      // config.module.rules.push({
-      //   test: /\.(sass|scss)$/,
-      //   use: {
-      //     loader: "sass-loader",
-      //     options: {
-      //       includePaths: ["./node_modules"]
-      //     }
-      //   }
-      // })
-    }
+    extend(config, ctx) {}
   },
   router: {
     base: '/management/'
