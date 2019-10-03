@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'registryAppealsTable'
+  name: 'RegistryAppealsTable'
 }
 </script>
 <style lang="sass"></style>

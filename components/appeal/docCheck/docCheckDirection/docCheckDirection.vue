@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'docCheckDirectionComponent'
+  name: 'DocCheckDirectionComponent'
 }
 </script>
 <style lang="sass"></style>

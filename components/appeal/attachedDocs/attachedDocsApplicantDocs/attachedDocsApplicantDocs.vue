@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'attachedDocsApplicantDocs'
+  name: 'AttachedDocsApplicantDocs'
 }
 </script>
 <style lang="sass"></style>

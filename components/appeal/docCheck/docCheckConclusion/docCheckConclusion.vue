@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'docCheckConclusion'
+  name: 'DocCheckConclusion'
 }
 </script>
 <style lang="sass"></style>

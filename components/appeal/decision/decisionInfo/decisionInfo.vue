@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'decisionInfo'
+  name: 'DecisionInfo'
 }
 </script>
 <style lang="sass"></style>

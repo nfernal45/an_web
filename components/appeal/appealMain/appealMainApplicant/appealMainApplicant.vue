@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'appealMainApplicant'
+  name: 'AppealMainApplicant'
 }
 </script>
 <style lang="sass"></style>

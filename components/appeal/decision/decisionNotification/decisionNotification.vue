@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'decisionNotification'
+  name: 'DecisionNotification'
 }
 </script>
 <style lang="sass"></style>
