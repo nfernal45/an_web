@@ -1,16 +1,20 @@
-<template>
-  <div v-show="isReady">
-    <the-header />
-    <nuxt />
-  </div>
+<template lang="pug">
+  div.flex.justify-center(v-show="isReady")
+    the-header
+    el-container(style="padding-top:80px")
+      the-aside
+      el-main(style="padding-left:200px")
+        nuxt
 </template>
 
 <script>
 import TheHeader from '@/components/TheHeader'
+import TheAside from '@/components/TheAside'
 
 export default {
   components: {
-    TheHeader
+    TheHeader,
+    TheAside
   },
   data() {
     return {
