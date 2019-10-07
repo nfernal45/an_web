@@ -4,9 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
   faUser,
   faSignOutAlt,
-  faCircle
+  faCircle,
+  faPrint,
+  faSave,
+  faReply
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUser, faSignOutAlt, faCircle)
+library.add(faUser, faSignOutAlt, faCircle, faPrint, faSave, faReply)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

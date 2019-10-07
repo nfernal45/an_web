@@ -1,5 +1,9 @@
 <template lang="pug">
-  h1  Основная вкладка заявления {{ appealId }}
+  div
+    h1  Основная вкладка заявления {{ appealId }}
+    ul
+      li(v-for="item in content")
+        span {{ item.title }}
 </template>
 
 <script>
@@ -9,6 +13,11 @@ export default {
     appealId() {
       return this.$route.params.id
     }
+  },
+  asyncData(context) {
+    return context.$axios
+      .$get('https://jsonplaceholder.typicode.com/posts/')
+      .then((data) => ({ content: data }))
   }
 }
 </script>
