@@ -1,20 +1,23 @@
 <template lang="pug">
-  div.flex.justify-center(v-show="isReady")
+  div.flex.justify-center(v-show="isReady" style="background:#f8f8f8")
     the-header
     el-container(style="padding-top:80px")
-      the-aside
-      el-main(style="padding-left:200px")
+      the-tabs
+      the-aside(style="margin-top:120px")
+      el-main(style="margin-left:200px;margin-top:120px")
         nuxt
 </template>
 
 <script>
 import TheHeader from '@/components/TheHeader'
 import TheAside from '@/components/TheAside'
+import TheTabs from '@/components/TheTabs'
 
 export default {
   components: {
     TheHeader,
-    TheAside
+    TheAside,
+    TheTabs
   },
   data() {
     return {
