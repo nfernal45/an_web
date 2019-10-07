@@ -1,5 +1,14 @@
 import Vue from 'vue'
-import { Button, Container, Header, Row, Col, Aside, Main } from 'element-ui'
+import {
+  Button,
+  Container,
+  Header,
+  Row,
+  Col,
+  Aside,
+  Main,
+  ButtonGroup
+} from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-Ru'
 import locale from 'element-ui/lib/locale'
 
@@ -12,3 +21,4 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Aside)
 Vue.use(Main)
+Vue.use(ButtonGroup)
