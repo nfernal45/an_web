@@ -54,17 +54,15 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/dotenv'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    proxy: true // Can be also an object with default options
-  },
-  proxy: {
-    '/gf/': 'http://gf-qa.c-i-p.ru/api/v1/'
+    baseURL: '/'
   },
   /*
    ** Build configuration
@@ -76,13 +74,10 @@ export default {
      */
     extend(config, ctx) {}
   },
-  router: {
-    base: '/management/',
-    middleware: 'root-links'
-  },
+  router: { base: '/management/' },
   env: {
-    APP_REST_API_GF: '/rlic-gf-rest/api/v1',
-    APP_REST_API_GU: '/rlic-rest/api/v1',
-    APP_REST_API_NSI: '/nsi-rest/api/v1'
+    // APP_REST_API_GF: process.env.APP_REST_API_GF
+    // APP_REST_API_GU: '/rlic-rest/api/v1',
+    // APP_REST_API_NSI: '/nsi-rest/api/v1'
   }
 }

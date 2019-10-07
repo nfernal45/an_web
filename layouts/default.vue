@@ -12,6 +12,7 @@ export default {
   components: {
     TheHeader
   },
+  middleware: ['root-links'],
   data() {
     return {
       isReady: false

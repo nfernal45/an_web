@@ -1,16 +1,11 @@
-const gfRootLinks = {}
-const guRootLinks = {}
-const nsiRootLinks = {}
+const rootLinks = {}
 
-const setGfRootLink = (link) => (gfRootLinks[link] = link)
-const setGuRootLink = (link) => (guRootLinks[link] = link)
-const setNsiRootLink = (link) => (nsiRootLinks[link] = link)
+const rootLinksTypes = [
+  // { type: 'rootLinksGf', api: '/gf-api/root-links' },
+  // { type: 'rootLinksGu', api: '/gu-api/root-links' },
+  { type: 'rootLinksNsi', api: '/nsi-api/root-links' }
+]
 
-export {
-  gfRootLinks,
-  guRootLinks,
-  nsiRootLinks,
-  setGfRootLink,
-  setGuRootLink,
-  setNsiRootLink
-}
+const setRootLinks = ({ type, links }) => (rootLinks[type] = links)
+
+export { rootLinks, setRootLinks, rootLinksTypes }
