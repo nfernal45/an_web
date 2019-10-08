@@ -1,10 +1,10 @@
 <template lang="pug">
   div.flex.justify-center(v-show="isReady" style="background:#f8f8f8")
     the-header
-    el-container(style="padding-top:80px")
-      the-tabs
-      the-aside(style="margin-top:120px")
-      el-main(style="margin-left:200px;margin-top:120px")
+    el-container.flex-wrap(style="padding-top:80px;position:relative;")
+      the-tabs(style="flex-basis:100%;")
+      the-aside.sticky-aside(style="flex-basis:200px;")
+      el-main(style="flex:1")
         nuxt
 </template>
 
