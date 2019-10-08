@@ -1,20 +1,23 @@
 <template lang="pug">
-  div.flex.justify-center(v-show="isReady")
+  div.flex.justify-center(v-show="isReady" style="background:#f8f8f8")
     the-header
-    el-container(style="padding-top:80px")
-      the-aside
-      el-main(style="padding-left:200px")
+    el-container.flex-wrap(style="padding-top:80px;position:relative;")
+      the-tabs(style="flex-basis:100%;")
+      the-aside.sticky-aside(style="flex-basis:200px;")
+      el-main(style="flex:1")
         nuxt
 </template>
 
 <script>
 import TheHeader from '@/components/TheHeader'
 import TheAside from '@/components/TheAside'
+import TheTabs from '@/components/TheTabs'
 
 export default {
   components: {
     TheHeader,
-    TheAside
+    TheAside,
+    TheTabs
   },
   data() {
     return {
