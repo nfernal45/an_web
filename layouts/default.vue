@@ -1,16 +1,15 @@
 <template lang="pug">
-  div.flex.justify-center(v-show="isReady" style="background:#f8f8f8")
-    the-header
-    el-container#sticky-container.flex-wrap(style="padding-top:80px;position:relative;")
-      the-tabs(style="flex-basis:100%;")
-      the-aside#sticky-sidebar.sticky-sidebar(style="flex-basis:200px;position:sticky;")
-        .sidebar__inner
-      el-main(style="flex:1")
-        nuxt
+  div.flex.justify-center.flex-wrap(v-show="isReady" style="background:#f8f8f8")
+    the-header.header.sticky(style="flex: 1 0 0; position: sticky; top: 0;")
+    el-container.flex-wrap(style="position: relative;")
+      the-tabs(style="flex-basis: 100%;")
+      div.flex.width-100
+        the-aside.sticky(style="flex-basis: 200px; position: sticky; top: 100px; align-self: flex-start;")
+        el-main(style="flex: 1 0 0;")
+          nuxt
 </template>
 
 <script>
-import StickySidebar from 'sticky-sidebar'
 import TheHeader from '@/components/TheHeader'
 import TheAside from '@/components/TheAside'
 import TheTabs from '@/components/TheTabs'
@@ -23,29 +22,21 @@ export default {
   },
   data() {
     return {
-      isReady: false,
-      offset: {
-        top: 10,
-        bottom: 10
-      }
+      isReady: false
     }
   },
   mounted() {
+    this.setStickyPolyfill()
     this.$nextTick(() => {
       this.isReady = true
     })
-
-    this.setStickyAside()
   },
   methods: {
-    setStickyAside() {
+    setStickyPolyfill() {
       if (process.client) {
-        const sidebar = new StickySidebar('#sticky-sidebar', {
-          containerSelector: '#sticky-container',
-          innerWrapperSelector: '.sidebar__inner',
-          topSpacing: 20,
-          bottomSpacing: 20
-        })
+        const Stickyfill = require('stickyfilljs')
+        const stickyElements = document.querySelectorAll('.sticky')
+        Stickyfill.add(stickyElements)
       }
     }
   }
