@@ -6,7 +6,7 @@
 export default {
   name: 'AppealQueriedDocsPage',
   computed: {
-    apepalId() {
+    appealId() {
       return this.$route.params.id
     }
   }
