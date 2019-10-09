@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default function({ $axios, redirect }) {
   $axios.onRequest((config) => {
     if (config.url.match(/\/root-links/)) {
@@ -16,7 +17,7 @@ export default function({ $axios, redirect }) {
     if (config.url.match(/^\/nsi-api/)) {
       config.url = config.url.replace('/nsi-api', process.env.APP_REST_API_NSI)
     }
-
+    
     // eslint-disable-next-line
     console.log('Making request to', config.url)
   })
@@ -33,6 +34,7 @@ export default function({ $axios, redirect }) {
       // redirect('/400')
     }
 
+    // TODO: разработать обработку ошибок
     // redirect(`/error/${code}`)
   })
 }
