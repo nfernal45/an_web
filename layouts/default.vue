@@ -1,11 +1,12 @@
 <template lang="pug">
-  div.flex.justify-center(v-show="isReady" style="background:#f8f8f8")
-    the-header
-    el-container.flex-wrap(style="padding-top:80px;position:relative;")
-      the-tabs(style="flex-basis:100%;")
-      the-aside.sticky-aside(style="flex-basis:200px;")
-      el-main(style="flex:1")
-        nuxt
+  div.flex.justify-center.flex-wrap(v-show="isReady" style="background:#f8f8f8")
+    the-header.header.sticky(style="flex: 1 0 0; position: sticky; top: 0;")
+    el-container.flex-wrap(style="position: relative;")
+      the-tabs(style="flex-basis: 100%;")
+      div.flex.width-100
+        the-aside.sticky(style="flex-basis: 200px; position: sticky; top: 100px; align-self: flex-start;")
+        el-main(style="flex: 1 0 0;")
+          nuxt
 </template>
 
 <script>
@@ -25,9 +26,19 @@ export default {
     }
   },
   mounted() {
+    this.setStickyPolyfill()
     this.$nextTick(() => {
       this.isReady = true
     })
+  },
+  methods: {
+    setStickyPolyfill() {
+      if (process.client) {
+        const Stickyfill = require('stickyfilljs')
+        const stickyElements = document.querySelectorAll('.sticky')
+        Stickyfill.add(stickyElements)
+      }
+    }
   }
 }
 </script>
@@ -79,5 +90,15 @@ html {
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
+}
+
+.sticky-sidebar {
+  will-change: min-height;
+}
+
+.sidebar__inner {
+  transform: translate(0, 0); /* For browsers don't support translate3d. */
+  transform: translate3d(0, 0, 0);
+  will-change: position, transform;
 }
 </style>

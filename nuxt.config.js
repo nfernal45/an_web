@@ -24,10 +24,10 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: 'green', height: '10px' },
+  loading: { color: '#409eff', height: '5px' },
   /*
    ** Global CSS
-   */
+   */ 
   css: [
     '@/assets/scss/element-variables.scss',
     '@/assets/sass/global-styles.sass'
