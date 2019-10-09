@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { setRootLinks, rootLinks, rootLinksTypes } from '@/api/root-links.js'
+import { setRootLinks, rootLinks, rootLinksTypes } from '~/services/api/root-links.js'
 
 const defineRootLinks = async function(context) {
   let requests = rootLinksTypes.map(({ type, api }) => fetchRootLinks({ context, type, api }))
