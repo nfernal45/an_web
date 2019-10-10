@@ -1,2 +1,2 @@
-import formCollapsibleBlock from './formCollapsibleBlock'
-export default [formCollapsibleBlock]
+import formBlock from './formBlock'
+export default [formBlock]

@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.collapsible-container
+  div.form-container
     div.item-title(@click='contentIsVisible = !contentIsVisible')
       h4 {{ title }}
       font-awesome-icon.arrow-icon(:icon='currentIconPosition')
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'FormCollapsibleBlock',
+  name: 'FormBlock',
   props: {
     title: {
       type: String,
@@ -32,14 +32,15 @@ export default {
 </script>
 
 <style lang="scss">
-.collapsible-container {
+.form-container {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.08);
-
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
   .arrow-icon {
     margin-left: 10px;
   }
 }
-.item-title {
+.form-container .item-title {
   background-color: rgb(224, 242, 255);
   display: flex;
   font-size: 16px;
@@ -64,7 +65,10 @@ export default {
     background-color: rgb(151, 210, 253);
   }
 }
-.collapsible-container .item-content {
+.form-container .item-content {
   padding: 10px 13px;
+  background-color: #fff;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 </style>
