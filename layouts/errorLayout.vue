@@ -1,10 +1,11 @@
 <template lang="pug">
- div
-   h2 Таблица заявлений
+  .nuxt-error
+    nuxt
+    nuxt-link(to="/") На главную
 </template>
 <script>
 export default {
-  name: 'RegistryAppealsTable'
+  name: 'ErrorLayout'
 }
 </script>
 <style lang="sass"></style>

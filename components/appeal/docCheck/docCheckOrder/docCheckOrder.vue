@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'docCheckOrder'
+  name: 'DocCheckOrder'
 }
 </script>
 <style lang="sass"></style>
