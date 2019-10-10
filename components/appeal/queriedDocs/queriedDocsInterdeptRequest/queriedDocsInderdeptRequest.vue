@@ -4,7 +4,7 @@
 </template>
 <script>
 export default {
-  name: 'queriedDocsInderdeptRequest'
+  name: 'QueriedDocsInderdeptRequest'
 }
 </script>
 <style lang="sass"></style>
