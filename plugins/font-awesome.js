@@ -7,9 +7,20 @@ import {
   faCircle,
   faPrint,
   faSave,
-  faReply
+  faReply,
+  faChevronUp,
+  faChevronDown
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUser, faSignOutAlt, faCircle, faPrint, faSave, faReply)
+library.add(
+  faUser,
+  faSignOutAlt,
+  faCircle,
+  faPrint,
+  faSave,
+  faReply,
+  faChevronUp,
+  faChevronDown
+)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
