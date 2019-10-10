@@ -55,7 +55,8 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/auth'
   ],
   /*
    ** Axios module configuration
@@ -75,9 +76,29 @@ export default {
     extend(config, ctx) {}
   },
   router: { base: '/management/' },
-  env: {
-    // APP_REST_API_GF: process.env.APP_REST_API_GF
-    // APP_REST_API_GU: '/rlic-rest/api/v1',
-    // APP_REST_API_NSI: '/nsi-rest/api/v1'
+  auth: {
+    plugins: ['@/plugins/auth.js'],
+    strategies: {
+      code: {
+        authorization_endpoint: 'http://rlic-dev.c-i-p.ru/as/oauth/authorize',
+        // userinfo_endpoint: 'http://rlic-dev.c-i-p.ru/as/user',
+        // scope: ['read', 'write'],
+        access_type: 'offline',
+        access_token_endpoint: 'http://rlic-dev.c-i-p.ru/as/login',
+        response_type: 'code',
+        token_type: 'Bearer',
+        redirect_uri: 'http://rlic-dev.c-i-p.ru/management/login',
+        client_id: 'client1',
+        token_key: 'access_token'
+        // state: 'UNIQUE_AND_NON_GUESSABLE'
+      }
+    },
+    watchLoggedIn: false,
+    redirect: false
+    // login: 'http://rlic-dev.c-i-p.ru/as/login',
+    // logout: 'http://rlic-dev.c-i-p.ru/as/logout',
+    // callback: 'http://rlic-dev.c-i-p.ru/login',
+    // home: 'http://rlic-dev.c-i-p.ru/management/registry'
+    // }
   }
 }
