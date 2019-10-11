@@ -1,4 +1,5 @@
 import Vue from 'vue'
+
 import {
   Button,
   Container,
@@ -7,7 +8,16 @@ import {
   Col,
   Aside,
   Main,
-  ButtonGroup
+  ButtonGroup,
+  Notification,
+  Tag,
+  Input,
+  Form,
+  FormItem,
+  Card,
+  Radio,
+  Select,
+  DatePicker
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-Ru'
 import locale from 'element-ui/lib/locale'
@@ -22,3 +32,13 @@ Vue.use(Col)
 Vue.use(Aside)
 Vue.use(Main)
 Vue.use(ButtonGroup)
+Vue.use(Tag)
+Vue.use(Input)
+Vue.use(Form)
+Vue.use(Card)
+Vue.use(FormItem)
+Vue.use(Radio)
+Vue.use(Select)
+Vue.use(DatePicker)
+
+Vue.prototype.$notify = Notification
