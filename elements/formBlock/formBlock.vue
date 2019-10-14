@@ -4,8 +4,9 @@
       h4 {{ title }}
       font-awesome-icon.arrow-icon(:icon='currentIconPosition')
 
-    div.item-content(v-show='contentIsVisible')
-      slot(name='content')
+    transition(name='fade' appear)
+      div.item-content(v-if='contentIsVisible')
+        slot(name='content')
 
 </template>
 
@@ -20,7 +21,7 @@ export default {
   },
   data() {
     return {
-      contentIsVisible: false
+      contentIsVisible: true
     }
   },
   computed: {

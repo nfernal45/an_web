@@ -34,4 +34,34 @@
 .o-hidden
   overflow: hidden
 
+// margin
 
+.mb-10
+  margin-bottom: 10px
+
+.mb-20
+  margin-bottom: 20px
+
+.mb-30
+  margin-bottom: 30px
+
+
+@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) 
+  ::-webkit-scrollbar 
+      position: fixed
+      width:  $size
+      height: $size
+
+  ::-webkit-scrollbar-thumb 
+      background: $foreground-color
+
+  ::-webkit-scrollbar-track 
+      background: $background-color
+
+  // For Internet Explorer
+  body 
+    scrollbar-face-color: $foreground-color
+    scrollbar-track-color: $background-color
+  
+
+@include scrollbars(.5em, slategray)
