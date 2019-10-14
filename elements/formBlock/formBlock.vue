@@ -1,16 +1,21 @@
 <template lang="pug">
-  div.form-container
-    div.item-title(@click='contentIsVisible = !contentIsVisible')
+  div(:class='styles["form-container"]')
+    div(
+      :class='styles["item-title"]'
+      @click='contentIsVisible = !contentIsVisible')
       h4 {{ title }}
       font-awesome-icon.arrow-icon(:icon='currentIconPosition')
 
     transition(name='fade' appear)
-      div.item-content(v-if='contentIsVisible')
+      div(:class='styles["item-content"]'
+          v-if='contentIsVisible')
         slot(name='content')
 
 </template>
 
 <script>
+import styles from './formBlock.module.sass?module'
+
 export default {
   name: 'FormBlock',
   props: {
@@ -25,51 +30,10 @@ export default {
     }
   },
   computed: {
+    styles: () => styles,
     currentIconPosition() {
       return this.contentIsVisible ? 'chevron-up' : 'chevron-down'
     }
   }
 }
 </script>
-
-<style lang="scss">
-.form-container {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.08);
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  .arrow-icon {
-    margin-left: 10px;
-  }
-}
-.form-container .item-title {
-  background-color: rgb(224, 242, 255);
-  display: flex;
-  font-size: 16px;
-  font-weight: 700;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  cursor: pointer;
-  transition: 0.3s;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-
-  &:hover {
-    background-color: rgb(208, 235, 255);
-  }
-  &:active {
-    background-color: rgb(151, 210, 253);
-  }
-}
-.form-container .item-content {
-  padding: 10px 13px;
-  background-color: #fff;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-}
-</style>

@@ -17,7 +17,11 @@
             el-row.mb-10
               h4.form-title.mb-10 Способ получения решения
               //- el-form-item(label='Способ получения решения')
-              el-select(size='small' placeholder='Select something')
+              el-select(:value='selectValue' size='small' placeholder='Select something')
+                el-option(v-for='item in [1, 2, 3, 4]'
+                          :key='item'
+                          :label='item'
+                          :value='item')
             el-row
               //- span(style='display: block; margin-bottom: 5px') 
               el-form-item(label='Плановый срок оказания ГУ')
@@ -39,11 +43,20 @@
               el-date-picker
           el-col(:span='8')
             el-form-item(label='Специалист службы одного окна')
-              el-select
+              el-select(:value='selectValue')
+                el-option(v-for='item in [1, 2, 3, 4]'
+                          :key='item'
+                          :label='item'
+                          :value='item')
 </template>
 <script>
 export default {
-  name: 'AppealMainGeneralInfo'
+  name: 'AppealMainGeneralInfo',
+  data() {
+    return {
+      selectValue: ''
+    }
+  }
 }
 </script>
 <style lang="sass"></style>
