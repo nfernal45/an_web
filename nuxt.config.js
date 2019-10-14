@@ -27,7 +27,8 @@ export default {
   loading: { color: '#409eff', height: '5px' },
   /*
    ** Global CSS
-   */ 
+   */
+
   css: [
     '@/assets/scss/element-variables.scss',
     '@/assets/sass/global-styles.sass'
@@ -79,26 +80,18 @@ export default {
   auth: {
     plugins: ['@/plugins/auth.js'],
     strategies: {
-      code: {
+      oauth2: {
+        _scheme: 'oauth2',
         authorization_endpoint: 'http://rlic-dev.c-i-p.ru/as/oauth/authorize',
-        // userinfo_endpoint: 'http://rlic-dev.c-i-p.ru/as/user',
-        // scope: ['read', 'write'],
+        scope: ['READ', 'WRITE'],
         access_type: 'offline',
-        access_token_endpoint: 'http://rlic-dev.c-i-p.ru/as/login',
+        access_token_endpoint:
+          'http://rlic-dev.c-i-p.ru/rlic-gf-rest/api/v1/login',
         response_type: 'code',
         token_type: 'Bearer',
         redirect_uri: 'http://rlic-dev.c-i-p.ru/management/login',
-        client_id: 'client1',
-        token_key: 'access_token'
-        // state: 'UNIQUE_AND_NON_GUESSABLE'
+        client_id: 'client1'
       }
-    },
-    watchLoggedIn: false,
-    redirect: false
-    // login: 'http://rlic-dev.c-i-p.ru/as/login',
-    // logout: 'http://rlic-dev.c-i-p.ru/as/logout',
-    // callback: 'http://rlic-dev.c-i-p.ru/login',
-    // home: 'http://rlic-dev.c-i-p.ru/management/registry'
-    // }
+    }
   }
 }
