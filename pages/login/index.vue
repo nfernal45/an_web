@@ -7,13 +7,15 @@
 export default {
   name: 'LoginPage',
   layout: 'emptyLayout',
-  mounted() {
-    if (this.$route.query.code) {
-      return
-    }
-
-    if (!this.$auth.loggedIn) {
-      this.$auth.loginWith('oauth2')
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.login()
+    })
+  },
+  methods: {
+    login() {
+      if (this.$route.query.code) return
+      if (!this.$auth.loggedIn) this.$auth.loginWith('oauth2')
     }
   }
 }
