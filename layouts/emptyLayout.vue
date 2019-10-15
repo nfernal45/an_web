@@ -1,9 +1,19 @@
 <template lang="pug">
-  nuxt
+  nuxt(v-show="isReady")
 </template>
 <script>
 export default {
-  name: 'EmptyLayout'
+  name: 'EmptyLayout',
+  data() {
+    return {
+      isReady: false
+    }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.isReady = true
+    })
+  }
 }
 </script>
 <style lang="sass"></style>
