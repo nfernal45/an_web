@@ -1,3 +1,7 @@
+// eslint-disable-next-line nuxt/no-cjs-in-config
+const authStrategies = require('./plugins/auth/strategies.js')
+// import authStrategies from './plugins/auth/strategies.js'
+
 export default {
   mode: 'universal',
   server: {
@@ -76,22 +80,15 @@ export default {
      */
     extend(config, ctx) {}
   },
-  router: { base: '/management/' },
+  router: {
+    base: process.env.APP_BASE_ROUTE
+  },
   auth: {
-    plugins: ['@/plugins/auth.js'],
-    strategies: {
-      oauth2: {
-        _scheme: 'oauth2',
-        authorization_endpoint: 'http://rlic-dev.c-i-p.ru/as/oauth/authorize',
-        scope: ['READ', 'WRITE'],
-        access_type: 'offline',
-        access_token_endpoint:
-          'http://rlic-dev.c-i-p.ru/rlic-gf-rest/api/v1/login',
-        response_type: 'code',
-        token_type: 'Bearer',
-        redirect_uri: 'http://rlic-dev.c-i-p.ru/management/login',
-        client_id: 'client1'
-      }
+    plugins: [{ src: '@/plugins/auth/auth.js', mode: 'client' }],
+    strategies: authStrategies,
+    redirect: {
+      login: `${process.env.APP_BASE_ROUTE}/login`,
+      callback: `${process.env.APP_HOST}${process.env.APP_BASE_ROUTE}/login`
     }
   }
 }
