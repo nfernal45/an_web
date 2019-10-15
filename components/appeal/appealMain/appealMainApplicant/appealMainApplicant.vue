@@ -43,7 +43,11 @@
               el-input  
           el-col(:span='6')
             el-form-item(label='Должность')
-              el-select
+              el-select(:value='selectValue')
+                el-option(v-for='item in [1, 2, 3, 4]'
+                          :key='item'
+                          :label='item'
+                          :value='item')
           
           el-col
             h4.form-title.mb-10 Полномочия представителя
@@ -53,7 +57,12 @@
 </template>
 <script>
 export default {
-  name: 'AppealMainApplicant'
+  name: 'AppealMainApplicant',
+  data() {
+    return {
+      selectValue: ''
+    }
+  }
 }
 </script>
 <style lang="sass"></style>

@@ -17,6 +17,7 @@ import {
   Card,
   Radio,
   Select,
+  Option,
   DatePicker
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-Ru'
@@ -39,6 +40,7 @@ Vue.use(Card)
 Vue.use(FormItem)
 Vue.use(Radio)
 Vue.use(Select)
+Vue.use(Option)
 Vue.use(DatePicker)
 
 Vue.prototype.$notify = Notification
