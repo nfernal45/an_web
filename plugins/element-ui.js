@@ -18,13 +18,17 @@ import {
   Radio,
   Select,
   Option,
-  DatePicker
+  DatePicker,
+  CheckboxGroup,
+  Checkbox
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-Ru'
 import locale from 'element-ui/lib/locale'
 
 locale.use(lang)
 
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
 Vue.use(Button)
 Vue.use(Header)
 Vue.use(Container)

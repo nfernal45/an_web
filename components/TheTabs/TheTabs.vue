@@ -46,7 +46,7 @@ export default {
         },
         {
           title: 'Приостановление',
-          link: 'abeyance'
+          link: 'suspension'
         },
         {
           title: 'Ход рассмотрения',
