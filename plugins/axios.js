@@ -1,6 +1,8 @@
 /* eslint-disable */
-export default function({ $axios, redirect }) {
+export default function({ $axios, $auth, redirect, base, route }) {
+
   $axios.onRequest((config) => {
+
     if (config.url.match(/\/root-links/)) {
       config.headers.common.accept = 'application/hal+json'
       config.url = config.url.replace('/root-links', '/')
@@ -18,23 +20,21 @@ export default function({ $axios, redirect }) {
       config.url = config.url.replace('/nsi-api', process.env.APP_REST_API_NSI)
     }
     
-    // eslint-disable-next-line
-    console.log('Making request to', config.url)
   })
 
-  $axios.onResponse((config) => {
-    // console.log('Getting response from', config.url)
+  $axios.onResponse((response) => {
+    // console.info('Getting response from', response.config.url)
   })
 
   $axios.onError((error) => {
     const code = parseInt(error.response && error.response.status)
-    // eslint-disable-next-line
-    console.error('On axios error', error)
-    if (code === 400) {
-      // redirect('/400')
+    if (code === 401) {
+      $auth.logout()
+        .then(() => {
+          $auth.$storage.setCookie('redirect', `${base.slice(0, -1)}${route.path}`, false)
+          redirect('/login')
+        })
     }
-
-    // TODO: разработать обработку ошибок
-    // redirect(`/error/${code}`)
   })
+
 }
