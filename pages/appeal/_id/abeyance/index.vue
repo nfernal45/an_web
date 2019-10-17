@@ -1,14 +1,16 @@
 <template lang="pug">
-  div
-    h1 Приостановление рассмотрения заявления {{ appealtId }}
+  div.appeal-abeyance
+
+    // Приостановление решения заявления
+    abeyance-decision
+    
 </template>
 <script>
+import abeyanceDecision from '@/components/appeal/abeyance/abeyanceDecision'
 export default {
-  name: 'AppealAbeyancePage',
-  computed: {
-    appealtId() {
-      return this.$route.params.id
-    }
+  name: 'AppealabeyancePage',
+  components: {
+    abeyanceDecision
   }
 }
 </script>

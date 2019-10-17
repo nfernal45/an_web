@@ -1,4 +1,5 @@
 import Vue from 'vue'
+
 import {
   Button,
   Container,
@@ -10,7 +11,19 @@ import {
   ButtonGroup,
   Loading,
   Spinner,
-  MessageBox
+  MessageBox,
+  Notification,
+  Tag,
+  Input,
+  Form,
+  FormItem,
+  Card,
+  Radio,
+  Select,
+  Option,
+  DatePicker,
+  CheckboxGroup,
+  Checkbox
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-Ru'
 import locale from 'element-ui/lib/locale'
@@ -19,6 +32,8 @@ import locale from 'element-ui/lib/locale'
 
 locale.use(lang)
 
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
 Vue.use(Button)
 Vue.use(Header)
 Vue.use(Container)
@@ -29,5 +44,15 @@ Vue.use(Main)
 Vue.use(ButtonGroup)
 Vue.use(Spinner)
 Vue.use(Loading.directive)
+Vue.use(Tag)
+Vue.use(Input)
+Vue.use(Form)
+Vue.use(Card)
+Vue.use(FormItem)
+Vue.use(Radio)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(DatePicker)
 
 Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$notify = Notification

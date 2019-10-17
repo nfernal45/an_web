@@ -36,7 +36,8 @@ export default {
 
   css: [
     '@/assets/scss/element-variables.scss',
-    '@/assets/sass/global-styles.sass'
+    '@/assets/sass/global-styles.sass',
+    '@/assets/sass/global-transitions.sass'
   ],
   /*
    ** Plugins to load before mounting the App
