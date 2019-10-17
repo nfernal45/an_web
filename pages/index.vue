@@ -6,7 +6,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.$route.push('/registry')
+    })
+  }
+}
 </script>
 
 <style lang="sass">

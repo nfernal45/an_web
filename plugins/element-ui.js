@@ -9,6 +9,9 @@ import {
   Aside,
   Main,
   ButtonGroup,
+  Loading,
+  Spinner,
+  MessageBox,
   Notification,
   Tag,
   Input,
@@ -25,6 +28,8 @@ import {
 import lang from 'element-ui/lib/locale/lang/ru-Ru'
 import locale from 'element-ui/lib/locale'
 
+// Loading.service()
+
 locale.use(lang)
 
 Vue.use(Checkbox)
@@ -37,6 +42,8 @@ Vue.use(Col)
 Vue.use(Aside)
 Vue.use(Main)
 Vue.use(ButtonGroup)
+Vue.use(Spinner)
+Vue.use(Loading.directive)
 Vue.use(Tag)
 Vue.use(Input)
 Vue.use(Form)
@@ -47,4 +54,5 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(DatePicker)
 
+Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$notify = Notification

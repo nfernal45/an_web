@@ -1,3 +1,8 @@
+require('dotenv').config()
+// eslint-disable-next-line nuxt/no-cjs-in-config
+const authStrategies = require('./plugins/auth/strategies.js')
+// import authStrategies from './plugins/auth/strategies.js'
+
 export default {
   mode: 'universal',
   server: {
@@ -27,7 +32,8 @@ export default {
   loading: { color: '#409eff', height: '5px' },
   /*
    ** Global CSS
-   */ 
+   */
+
   css: [
     '@/assets/scss/element-variables.scss',
     '@/assets/sass/global-styles.sass',
@@ -39,8 +45,7 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/global-elements',
-    '@/plugins/font-awesome',
-    '@/plugins/axios'
+    '@/plugins/font-awesome'
   ],
   /*
    ** Nuxt.js dev-modules
@@ -56,7 +61,8 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/auth'
   ],
   /*
    ** Axios module configuration
@@ -75,10 +81,24 @@ export default {
      */
     extend(config, ctx) {}
   },
-  router: { base: '/management/' },
-  env: {
-    // APP_REST_API_GF: process.env.APP_REST_API_GF
-    // APP_REST_API_GU: '/rlic-rest/api/v1',
-    // APP_REST_API_NSI: '/nsi-rest/api/v1'
+  router: {
+    base: process.env.APP_BASE_ROUTE,
+    middleware: 'auth',
+    extendRoutes(routes, resolve) {
+      routes[routes.findIndex((route) => route.name === 'index')].redirect =
+        '/registry'
+      routes.push({
+        name: 'custom',
+        path: '*',
+        redirect: '/registry'
+      })
+    }
+  },
+  auth: {
+    plugins: ['@/plugins/axios.js', '@/plugins/auth/auth.js'],
+    strategies: authStrategies(),
+    redirect: {
+      logout: '/login'
+    }
   }
 }
