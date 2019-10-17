@@ -20,7 +20,6 @@ export default {
     TheAside,
     TheTabs
   },
-  middleware: ['root-links'],
   data() {
     return {
       isReady: false
