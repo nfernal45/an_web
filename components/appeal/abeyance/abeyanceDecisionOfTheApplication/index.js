@@ -1,2 +1,0 @@
-import abeyanceDecisionOfTheApplication from './abeyanceDecisionOfTheApplication.vue'
-export default abeyanceDecisionOfTheApplication

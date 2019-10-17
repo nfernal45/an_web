@@ -2,15 +2,15 @@
   div.appeal-abeyance
 
     // Приостановление решения заявления
-    abeyance-decision-of-the-application
+    abeyance-decision
     
 </template>
 <script>
-import abeyanceDecisionOfTheApplication from '@/components/appeal/abeyance/abeyanceDecisionOfTheApplication'
+import abeyanceDecision from '@/components/appeal/abeyance/abeyanceDecision'
 export default {
   name: 'AppealabeyancePage',
   components: {
-    abeyanceDecisionOfTheApplication
+    abeyanceDecision
   }
 }
 </script>

@@ -62,7 +62,7 @@
 </template>
 <script>
 export default {
-  name: 'SuspensionOfTheApplication',
+  name: 'AbeyanceDecision',
   data() {
     return {
       selectValue: '',
