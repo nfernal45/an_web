@@ -31,8 +31,13 @@ export default {
       alert('Функционал в разработке')
     },
     logout() {
-      this.$emit('logout')
-      alert('Функционал в разработке')
+      this.$confirm('Выйти из системы?', 'Выход', {
+        confirmButtonText: 'Да',
+        cancelButtonText: 'Нет',
+        type: 'primary'
+      }).then(() => {
+        this.$auth.logout()
+      })
     }
   }
 }
