@@ -7,10 +7,15 @@ import {
   Col,
   Aside,
   Main,
-  ButtonGroup
+  ButtonGroup,
+  Loading,
+  Spinner,
+  MessageBox
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-Ru'
 import locale from 'element-ui/lib/locale'
+
+// Loading.service()
 
 locale.use(lang)
 
@@ -22,3 +27,7 @@ Vue.use(Col)
 Vue.use(Aside)
 Vue.use(Main)
 Vue.use(ButtonGroup)
+Vue.use(Spinner)
+Vue.use(Loading.directive)
+
+Vue.prototype.$confirm = MessageBox.confirm
