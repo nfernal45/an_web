@@ -1,3 +1,4 @@
+require('dotenv').config()
 // eslint-disable-next-line nuxt/no-cjs-in-config
 const authStrategies = require('./plugins/auth/strategies.js')
 // import authStrategies from './plugins/auth/strategies.js'
@@ -43,8 +44,7 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/global-elements',
-    '@/plugins/font-awesome',
-    '@/plugins/axios'
+    '@/plugins/font-awesome'
   ],
   /*
    ** Nuxt.js dev-modules
@@ -81,14 +81,23 @@ export default {
     extend(config, ctx) {}
   },
   router: {
-    base: process.env.APP_BASE_ROUTE
+    base: process.env.APP_BASE_ROUTE,
+    middleware: 'auth',
+    extendRoutes(routes, resolve) {
+      routes[routes.findIndex((route) => route.name === 'index')].redirect =
+        '/registry'
+      routes.push({
+        name: 'custom',
+        path: '*',
+        redirect: '/registry'
+      })
+    }
   },
   auth: {
-    plugins: [{ src: '@/plugins/auth/auth.js', mode: 'client' }],
-    strategies: authStrategies,
+    plugins: ['@/plugins/axios.js', '@/plugins/auth/auth.js'],
+    strategies: authStrategies(),
     redirect: {
-      login: `${process.env.APP_BASE_ROUTE}/login`,
-      callback: `${process.env.APP_HOST}${process.env.APP_BASE_ROUTE}/login`
+      logout: '/login'
     }
   }
 }

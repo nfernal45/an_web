@@ -1,16 +1,18 @@
-const authStrategies = (function() {
+/* eslint-disable camelcase */
+const authStrategies = function() {
   return {
     oauth2: {
       _scheme: 'oauth2',
-      authorization_endpoint: '/as/oauth/authorize',
-      scope: ['READ', 'WRITE'],
+      authorization_endpoint: process.env.APP_AUTH_ENDPOINT,
+      scope: process.env.APP_AUTH_SCOPE.split(' '),
       access_type: 'offline',
-      access_token_endpoint: '/gf-api/login',
+      access_token_endpoint: process.env.APP_AUTH_ACCESS_TOKEN_ENDPOINT,
       response_type: 'code',
+      redirect_uri: `${process.env.APP_HOST}${process.env.APP_BASE_ROUTE}/login`,
       token_type: 'Bearer',
-      client_id: 'client1'
+      client_id: process.env.APP_AUTH_CLIENT_ID
     }
   }
-})()
+}
 
 module.exports = authStrategies
