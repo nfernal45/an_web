@@ -34,11 +34,11 @@ export default {
       tabs: [
         {
           title: 'Заявление',
-          link: `main`
+          link: 'main'
         },
         {
           title: 'Документы заявления',
-          link: `attached-docs`
+          link: 'attached-docs'
         },
         {
           title: 'МВ запросы',
@@ -75,7 +75,7 @@ export default {
         })
         .map((tab) => ({
           title: tab.title,
-          link: (tab.link = `/appeal/${this.appealId}/${tab.link}`)
+          link: `/appeal/${this.$route.params.id}/${tab.link}`
         }))
     }
   },
