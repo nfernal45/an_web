@@ -1,8 +1,15 @@
+const restApiNameSpaces = {
+  gf: '/gf-api',
+  gu: '/gu-api',
+  nsi: '/nsi-api'
+}
+
 const restApiGf = {
-  gfRequest: {
+  gfAppeal: {
     byId: '/gf-requests/{requestId}',
     list: '/gf-requests/list',
-    empty: '/gf-requests/empty-element'
+    empty: '/gf-requests/empty-element',
+    save: '/gf-requests/'
   },
   gfQueriedDocs: {
     byId: '/gf-queried-docs/{id}',
@@ -39,7 +46,19 @@ const restApiGfRef = {
 
 const restApiGu = {}
 const restApiGuRef = {}
-
 const restApiNsi = {}
+
+function setApiPrefix({ prefix, links }) {
+  Object.keys(links).forEach((key) => {
+    Object.keys(links[key]).forEach((subKey) => {
+      links[key][subKey] = `${prefix}${links[key][subKey]}`
+    })
+  })
+}
+
+setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGf })
+setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGfRef })
+
+// console.log(restApiGf)
 
 export { restApiGf, restApiGfRef, restApiGu, restApiGuRef, restApiNsi }
