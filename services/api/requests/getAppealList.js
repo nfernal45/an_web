@@ -1,3 +1,3 @@
-export default async function() {
-  $axios.$get('/gf-api/gf-requests/')
+export default async function({ axiosModule }) {
+  await axiosModule.$get('/gf-api/gf-requests/')
 }
