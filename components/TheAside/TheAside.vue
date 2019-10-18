@@ -7,7 +7,7 @@
             font-awesome-icon(icon="reply")
             span Назад к списку
       li(:class="styles['list-item']")
-        el-button(type="success" :class="styles['list-button']" @click="saveAppeal($route.params.id)")
+        el-button(type="success" :class="styles['list-button']" @click="saveAppeal()")
           font-awesome-icon(icon="save")
           span Сохранить
       li(:class="styles['list-item']")
