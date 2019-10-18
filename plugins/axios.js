@@ -1,3 +1,5 @@
+import logout from '@/services/auth'
+
 /* eslint-disable */
 export default function({ $axios, $auth, redirect, base, route }) {
 
@@ -29,11 +31,7 @@ export default function({ $axios, $auth, redirect, base, route }) {
   $axios.onError((error) => {
     const code = parseInt(error.response && error.response.status)
     if (code === 401) {
-      $auth.logout()
-        .then(() => {
-          $auth.$storage.setCookie('redirect', `${base.slice(0, -1)}${route.path}`, false)
-          redirect('/login')
-        })
+      logout({ authModule: $auth, baseRoute: base, currentPath: route.path, redirectFunction: redirect })
     }
   })
 

@@ -10,6 +10,7 @@
 </template>
 <script>
 import styles from './TheHeader.module.sass?module'
+import logout from '@/services/auth'
 
 export default {
   name: 'TheHeader',
@@ -36,7 +37,12 @@ export default {
         cancelButtonText: 'Нет',
         type: 'primary'
       }).then(() => {
-        this.$auth.logout()
+        logout({
+          authModule: this.$auth,
+          baseRoute: this.base,
+          currentPath: this.$route.path,
+          redirectFunction: this.redirect
+        })
       })
     }
   }
