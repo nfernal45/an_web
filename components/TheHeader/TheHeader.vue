@@ -39,8 +39,8 @@ export default {
       }).then(() => {
         logout({
           authModule: this.$auth,
-          baseRoute: this.base,
-          currentPath: this.$route.path,
+          baseRoute: this.$router.options.base,
+          currentRoute: this.$route.path,
           redirectFunction: this.redirect
         })
       })
