@@ -54,11 +54,6 @@ export default {
       })
     }
   }
-  // asyncData(context) {
-  //   return context.$axios
-  //     .$get('https://jsonplaceholder.typicode.com/posts/')
-  //     .then((data) => ({ content: data }))
-  // }
 }
 </script>
 

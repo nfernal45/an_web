@@ -4,12 +4,12 @@ export default function({
   currentRoute,
   redirectFunction
 }) {
+  const redirectRoute = currentRoute
+    ? `${baseRoute.slice(0, -1)}${currentRoute}`
+    : baseRoute
+
   authModule.logout().then(() => {
-    authModule.$storage.setCookie(
-      'redirect',
-      `${baseRoute.slice(0, -1)}${currentRoute}`,
-      false
-    )
+    authModule.$storage.setCookie('redirect', redirectRoute, false)
     redirectFunction('/login')
   })
 }
