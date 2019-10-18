@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import logout from '@/services/auth'
 
 /* eslint-disable */
@@ -30,8 +31,18 @@ export default function({ $axios, $auth, redirect, base, route }) {
 
   $axios.onError((error) => {
     const code = parseInt(error.response && error.response.status)
+    
+    if (code === 404) {
+      throw error
+    }
+
+    Vue.prototype.$notify.error({
+      title: 'Ошибка',
+      message: error.message
+    })
+
     if (code === 401) {
-      logout({ authModule: $auth, baseRoute: base, currentPath: route.path, redirectFunction: redirect })
+      logout({ authModule: $auth, baseRoute: base, currentRoute: route.path, redirectFunction: redirect })
     }
   })
 
