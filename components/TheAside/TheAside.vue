@@ -7,7 +7,7 @@
             font-awesome-icon(icon="reply")
             span Назад к списку
       li(:class="styles['list-item']")
-        el-button(type="success" :class="styles['list-button']" @click="saveRequest()")
+        el-button(type="success" :class="styles['list-button']" @click="saveAppeal($route.params.id)")
           font-awesome-icon(icon="save")
           span Сохранить
       li(:class="styles['list-item']")
@@ -21,7 +21,9 @@
 
 </template>
 <script>
+import { mapActions } from 'vuex'
 import styles from './TheAside.module.sass?module'
+import { actionTypes as appealActionTypes } from '@/store/types/appeal'
 
 export default {
   name: 'TheAside',
@@ -58,9 +60,9 @@ export default {
     }
   },
   methods: {
-    saveRequest() {
-      alert('Функционал находится в разработке')
-    },
+    ...mapActions({
+      saveAppeal: `appeal/${appealActionTypes.SAVE_APPEAL}`
+    }),
     print() {
       alert('Функционал находится в разработке')
     },
