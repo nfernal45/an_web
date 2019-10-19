@@ -37,7 +37,11 @@ export default {
   },
   methods: {
     login() {
-      this.$auth.loginWith('oauth2')
+      try {
+        this.$auth.loginWith('oauth2')
+      } catch(error) {
+        redirect('/login')
+      }
     }
   }
 }
