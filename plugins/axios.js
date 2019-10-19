@@ -11,17 +11,17 @@ export default function({ $axios, $auth, redirect, base, route }) {
       config.url = config.url.replace('/root-links', '/')
     }
 
-    if (config.url.match(/^\/gf-api/)) {
-      config.url = config.url.replace('/gf-api', process.env.APP_REST_API_GF)
-    }
+    // if (config.url.match(/^\/gf-api/)) {
+    //   config.url = config.url.replace('/gf-api', process.env.APP_REST_API_GF)
+    // }
 
-    if (config.url.match(/^\/gu-api/)) {
-      config.url = config.url.replace('/gu-api', process.env.APP_REST_API_GU)
-    }
+    // if (config.url.match(/^\/gu-api/)) {
+    //   config.url = config.url.replace('/gu-api', process.env.APP_REST_API_GU)
+    // }
 
-    if (config.url.match(/^\/nsi-api/)) {
-      config.url = config.url.replace('/nsi-api', process.env.APP_REST_API_NSI)
-    }
+    // if (config.url.match(/^\/nsi-api/)) {
+    //   config.url = config.url.replace('/nsi-api', process.env.APP_REST_API_NSI)
+    // }
     
   })
 
