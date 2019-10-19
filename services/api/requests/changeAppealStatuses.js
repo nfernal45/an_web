@@ -1,7 +1,6 @@
 import { restApiGfActiviti } from '@/services/api/endpoints'
 
 export default async function(axios, requestId, nextStatusId, requestStatusId) {
-  console.log('DADA')
   const url = restApiGfActiviti.statusMovement.postChange.replace(
     '{requestId}',
     requestId

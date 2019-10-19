@@ -1,7 +1,6 @@
 import { restApiGfActiviti } from '@/services/api/endpoints'
 
 export default async function(axios, requestId) {
-  console.log(requestId)
   const url = restApiGfActiviti.statusMovement.getNext.replace(
     '{requestId}',
     requestId
