@@ -8,7 +8,8 @@ const actionTypes = {
 const mutationTypes = {
   SET_APPEAL: 'SET_APPEAL',
   RESET_APPEAL: 'RESET_APPEAL',
-  RESET_APPEAL_LIST: 'RESET_APPEAL_LIST'
+  RESET_APPEAL_LIST: 'RESET_APPEAL_LIST',
+  SET_VERSION: 'SET_VERSION'
 }
 
 const getterTypes = {
