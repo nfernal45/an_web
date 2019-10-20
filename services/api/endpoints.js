@@ -30,7 +30,7 @@ const restApiGfRef = {
     byId: '/etp-gf-status-map/{id}',
     list: '/etp-gf-status-map/list'
   },
-  gfRefRequestImportErrors: {
+  gfRefAppealImportErrors: {
     byId: '/ref-request-import-errors/{id}',
     list: '/ref-request-import-errors/list'
   },
@@ -38,14 +38,22 @@ const restApiGfRef = {
     byId: '/ref-accept-reasons/{id}',
     list: '/ref-accept-reasons/list'
   },
-  gfRedRequestStatuses: {
+  gfRefAppealStatuses: {
     byId: '/ref-gf-request-statuses/',
     list: '/ref-gf-request-statuses/list'
   }
 }
 
 const restApiGu = {}
-const restApiGuRef = {}
+
+const restApiGuRef = {
+  guRefAppealTypes: {
+    list: '/ref-request-types/list'
+  },
+  guRefRegPlaces: {
+    list: '/ref-reg-places/list'
+  }
+}
 const restApiNsi = {}
 
 function setApiPrefix({ prefix, links }) {
@@ -58,6 +66,7 @@ function setApiPrefix({ prefix, links }) {
 
 setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGf })
 setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGfRef })
+setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
 
 // console.log(restApiGf)
 
