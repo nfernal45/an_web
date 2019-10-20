@@ -45,7 +45,8 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/global-elements',
-    '@/plugins/font-awesome'
+    '@/plugins/font-awesome',
+    { src: '@/plugins/vue-ls', mode: 'client' }
   ],
   /*
    ** Nuxt.js dev-modules

@@ -42,6 +42,7 @@
     "pug-plain-loader": "^1.0.0",
     "sass-loader": "7.3.1",
     "stickyfilljs": "^2.1.0",
-    "vue-jest": "^4.0.0-0"
+    "vue-jest": "^4.0.0-0",
+    "vue-ls": "^3.2.1"
   }
 }
