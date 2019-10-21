@@ -1,7 +1,8 @@
 const restApiNameSpaces = {
-  gf: '/gf-api',
-  gu: '/gu-api',
-  nsi: '/nsi-api'
+  gu: process.env.APP_REST_API_GU,
+  nsi: process.env.APP_REST_API_NSI,
+  gf: process.env.APP_REST_API_GF,
+  gfActiviti: process.env.APP_REST_API_ACTIVITI_GF
 }
 
 const restApiGf = {
@@ -44,6 +45,13 @@ const restApiGfRef = {
   }
 }
 
+const restApiGfActiviti = {
+  statusMovement: {
+    postChange: '/requests/{requestId}/status/change',
+    getNext: '/requests/{requestId}/status/next'
+  }
+}
+
 const restApiGu = {}
 
 const restApiGuRef = {
@@ -66,8 +74,16 @@ function setApiPrefix({ prefix, links }) {
 
 setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGf })
 setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGfRef })
+setApiPrefix({ prefix: restApiNameSpaces.gfActiviti, links: restApiGfActiviti })
 setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
 
 // console.log(restApiGf)
 
-export { restApiGf, restApiGfRef, restApiGu, restApiGuRef, restApiNsi }
+export {
+  restApiGf,
+  restApiGfRef,
+  restApiGu,
+  restApiGuRef,
+  restApiNsi,
+  restApiGfActiviti
+}

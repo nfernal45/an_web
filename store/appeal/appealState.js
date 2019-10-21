@@ -1,3 +1,4 @@
 export default () => ({
-  appeal: {}
+  appeal: {},
+  requestStatuses: []
 })
