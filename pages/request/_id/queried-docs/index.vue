@@ -1,10 +1,15 @@
 <template lang="pug">
-  div
-    h1 Межведомственные запросы для заявления {{ requestId }}
+  el-row
+    // Межвед. запросы
+    queried-docs-interdept-request
 </template>
 <script>
+import queriedDocsInterdeptRequest from '@/components/appeal/queriedDocs/queriedDocsInterdeptRequest'
 export default {
   name: 'RequestQueriedDocsPage',
+  components: {
+    queriedDocsInterdeptRequest
+  },
   computed: {
     requestId() {
       return this.$route.params.id

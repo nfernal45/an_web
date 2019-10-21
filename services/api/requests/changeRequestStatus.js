@@ -13,7 +13,6 @@ export default async function({
   )
 
   const query = `newStatusId=${nextStatusId}&oldStatusId=${requestStatusId}`
-  console.log(query)
   try {
     const { data } = await axiosModule.post(url, query)
     Vue.prototype.$notify.success({
