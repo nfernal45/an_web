@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Vue from 'vue'
 import { restApiGuRef } from '@/services/api/endpoints'
 

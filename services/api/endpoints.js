@@ -2,7 +2,8 @@ const restApiNameSpaces = {
   gu: process.env.APP_REST_API_GU,
   nsi: process.env.APP_REST_API_NSI,
   gf: process.env.APP_REST_API_GF,
-  gfActiviti: process.env.APP_REST_API_ACTIVITI_GF
+  gfActiviti: process.env.APP_REST_API_ACTIVITI_GF,
+  gfRabbitmq: process.env.APP_REST_API_RABBITMQ_GF
 }
 
 const restApiGf = {
@@ -52,6 +53,12 @@ const restApiGfActiviti = {
   }
 }
 
+const restApiGfRabbitmq = {
+  sendingToEtp: {
+    send: '/sending-to-etp/doc-query/send'
+  }
+}
+
 const restApiGu = {}
 
 const restApiGuRef = {
@@ -60,6 +67,9 @@ const restApiGuRef = {
   },
   guRefRegPlaces: {
     list: '/ref-reg-places/list'
+  },
+  guRefDocType: {
+    list: '/ref-doc-types/list'
   }
 }
 const restApiNsi = {}
@@ -75,6 +85,7 @@ function setApiPrefix({ prefix, links }) {
 setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGf })
 setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGfRef })
 setApiPrefix({ prefix: restApiNameSpaces.gfActiviti, links: restApiGfActiviti })
+setApiPrefix({ prefix: restApiNameSpaces.gfRabbitmq, links: restApiGfRabbitmq })
 setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
 
 // console.log(restApiGf)
@@ -85,5 +96,6 @@ export {
   restApiGu,
   restApiGuRef,
   restApiNsi,
-  restApiGfActiviti
+  restApiGfActiviti,
+  restApiGfRabbitmq
 }
