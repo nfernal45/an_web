@@ -13,12 +13,6 @@
                 style='margin-bottom: 5px'
               ) {{ item.typeName }}
 
-            // el-select.width-100(v-model='requestTypeId' size='small' placeholder='Укажите способ получения решения')
-            //   el-option(v-for='item in computedRequestTypesOptions'
-            //             :key='item.typeId'
-            //             :label='item.typeName'
-            //             :value='item.typeId')
-
           el-col(:span='14')
             el-row.mb-10
               h4.form-title.mb-10 Способ получения решения
@@ -53,8 +47,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
-import fetchRequestTypesOptions from '@/services/api/requests/references/fetchRequestTypesOptions'
-import fetchRegPlaceOptions from '@/services/api/requests/references/fetchRegPlaceOptions'
+import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
+import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
 import { dateToString, stringToDate } from '@/services/date-parser'
 import EmployeePicker from '@/elements/employeePicker/employeePicker'
 const moduleName = 'request'
