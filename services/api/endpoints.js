@@ -7,7 +7,7 @@ const restApiNameSpaces = {
 }
 
 const restApiGf = {
-  gfAppeal: {
+  gfRequest: {
     byId: '/gf-requests/{requestId}',
     list: '/gf-requests/list',
     empty: '/gf-requests/empty-element',
@@ -32,7 +32,7 @@ const restApiGfRef = {
     byId: '/etp-gf-status-map/{id}',
     list: '/etp-gf-status-map/list'
   },
-  gfRefAppealImportErrors: {
+  gfRefRequestImportErrors: {
     byId: '/ref-request-import-errors/{id}',
     list: '/ref-request-import-errors/list'
   },
@@ -40,7 +40,7 @@ const restApiGfRef = {
     byId: '/ref-accept-reasons/{id}',
     list: '/ref-accept-reasons/list'
   },
-  gfRefAppealStatuses: {
+  gfRefRequestStatuses: {
     byId: '/ref-gf-request-statuses/',
     list: '/ref-gf-request-statuses/list'
   }
@@ -62,7 +62,7 @@ const restApiGfRabbitmq = {
 const restApiGu = {}
 
 const restApiGuRef = {
-  guRefAppealTypes: {
+  guRefRequestTypes: {
     list: '/ref-request-types/list'
   },
   guRefRegPlaces: {

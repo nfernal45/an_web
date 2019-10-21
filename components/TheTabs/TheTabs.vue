@@ -11,7 +11,7 @@
 
       div
         strong Статус:
-        span {{ appealStatusLabel }}
+        span {{ requestStatusLabel }}
 
     el-button-group(:class="styles.tabs")
       nuxt-link.el-button(
@@ -27,10 +27,10 @@ export default {
   name: 'TheTabs',
   data() {
     return {
-      appealStatus: 1,
+      requestStatus: 1,
       regnum: 'МЖИ-05-ХХ-ХХХХ/YY',
       licenseeFullname: 'Товарищество собственников жилья «Снежная 23»',
-      appealStatusLabel: 'На рассмотрении',
+      requestStatusLabel: 'На рассмотрении',
       tabs: [
         {
           title: 'Заявление',
@@ -63,19 +63,19 @@ export default {
     styles() {
       return styles
     },
-    appealId() {
+    requestId() {
       return 1
     },
     tabsComputed() {
       return this.tabs
         .filter((tab) => {
           return (
-            !tab.activeStatus || tab.activeStatus.includes(this.appealStatus)
+            !tab.activeStatus || tab.activeStatus.includes(this.requestStatus)
           )
         })
         .map((tab) => ({
           title: tab.title,
-          link: `/appeal/${this.$route.params.id}/${tab.link}`
+          link: `/request/${this.$route.params.id}/${tab.link}`
         }))
     }
   },

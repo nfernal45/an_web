@@ -23,8 +23,8 @@
 import { mapActions } from 'vuex'
 import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
-import { actionTypes as appealActionTypes } from '@/store/types/appeal'
-const moduleName = 'appeal'
+import { actionTypes as requestActionTypes } from '@/store/types/request'
+const moduleName = 'request'
 export default {
   name: 'TheAside',
   components: {
@@ -32,7 +32,7 @@ export default {
   },
   data() {
     return {
-      appealStatus: 1
+      requestStatus: 1
     }
   },
   computed: {
@@ -42,12 +42,12 @@ export default {
   },
   methods: {
     ...mapActions(moduleName, {
-      saveAppeal: appealActionTypes.SAVE_APPEAL,
-      fetchAppealById: appealActionTypes.FETCH_APPEAL
+      saveRequest: requestActionTypes.SAVE_APPEAL,
+      fetchRequestById: requestActionTypes.FETCH_APPEAL
     }),
     async onSave() {
-      await this.saveAppeal()
-      await this.fetchAppealById(this.$route.params.id)
+      await this.saveRequest()
+      await this.fetchRequestById(this.$route.params.id)
     },
     print() {
       alert('Функционал находится в разработке')

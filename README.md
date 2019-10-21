@@ -21,7 +21,7 @@ $ yarn generate
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
 ### Конфигурация nginx веб-сервера
-[nginx.conf](https://nextcloud.c-i-p.ru/s/8yUWCHjEsJwNqyJ "Конфигурация nginx")  
+[nginx.conf](https://nextcloud.c-i-p.ru/s/zBcqYjxUoKvAb3H "Конфигурация nginx")  
 
 ### Примечание
 Проект необходимо запускать параллельно с проктов Реестр лицензиатов. Гос. услуга.
