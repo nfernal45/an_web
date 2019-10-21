@@ -1,7 +1,7 @@
 import { mutationTypes } from '@/store/types/request'
 
 export default {
-  [mutationTypes.SET_APPEAL]: (state, requestData) => {
+  [mutationTypes.SET_REQUEST]: (state, requestData) => {
     state.request = requestData
   },
   [mutationTypes.SET_REQUEST_STATUSES]: (state, requestStatuses) => {
