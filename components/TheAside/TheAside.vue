@@ -42,8 +42,8 @@ export default {
   },
   methods: {
     ...mapActions(moduleName, {
-      saveRequest: requestActionTypes.SAVE_APPEAL,
-      fetchRequestById: requestActionTypes.FETCH_APPEAL
+      saveRequest: requestActionTypes.SAVE_REQUEST,
+      fetchRequestById: requestActionTypes.FETCH_REQUEST
     }),
     async onSave() {
       await this.saveRequest()
