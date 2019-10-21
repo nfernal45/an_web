@@ -7,10 +7,9 @@
             el-card.mb-20(v-for='doc in queriedDocs'
                     :key='doc.queryId'
                     shadow='hover')
-            
-              el-row
+              el-row.mb-10
                 el-col
-                  h4 title
+                  h4 {{ getDocNameByDocTypeId(doc.docTypeId) }}
               el-row(:gutter='20')
                 el-col(:span='6')
                   el-form-item(label='Дата запроса')
@@ -41,19 +40,20 @@
 <script>
 import { mapState } from 'vuex'
 import mvRequest from '@/services/api/requests/mvRequest'
-
-// eslint-disable prettier/prettier
+import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
 
 export default {
   name: 'QueriedDocsInderdeptRequest',
-  date: () => ({}),
+  date: () => ({
+    refDocTypes: []
+  }),
   computed: {
     ...mapState({
-      queriedDocs: (state) => state.appeal.appeal.gfQueriedDocsByRequestId
+      queriedDocs: (state) => state.request.request.gfQueriedDocsByRequestId
     })
   },
-  created() {
-    console.log(this.queriedDocs)
+  mounted() {
+    this.fetchDocTypes()
   },
   methods: {
     async sendMvRequest(documentId) {
@@ -70,6 +70,12 @@ export default {
           message: 'Всё печально'
         })
       }
+    },
+    getDocNameByDocTypeId(id) {
+      return this.refDocTypes.find((item) => item.typeId === id).typeName
+    },
+    async fetchDocTypes() {
+      this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
     }
   }
 }

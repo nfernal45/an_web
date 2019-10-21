@@ -69,7 +69,7 @@ const restApiGuRef = {
     list: '/ref-reg-places/list'
   },
   guRefDocType: {
-    all: '/ref-doc-types/'
+    list: '/ref-doc-types/list'
   }
 }
 const restApiNsi = {}

@@ -4,7 +4,7 @@
     queried-docs-interdept-request
 </template>
 <script>
-import queriedDocsInterdeptRequest from '@/components/appeal/queriedDocs/queriedDocsInterdeptRequest'
+import queriedDocsInterdeptRequest from '@/components/request/queriedDocs/queriedDocsInterdeptRequest'
 export default {
   name: 'RequestQueriedDocsPage',
   components: {

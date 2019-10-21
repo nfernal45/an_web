@@ -9,7 +9,7 @@ export default async function({ axiosModule }) {
   if (refOptions) return refOptions
 
   try {
-    const { data } = await axiosModule.get(restApiGuRef.guRefDocType.all)
+    const { data } = await axiosModule.get(restApiGuRef.guRefDocType.list)
     Vue.ls.set(refName, data)
     return data
   } catch (error) {
