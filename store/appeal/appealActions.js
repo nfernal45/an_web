@@ -1,6 +1,7 @@
 import { actionTypes, mutationTypes } from '@/store/types/appeal'
 import getAppealRecord from '@/services/api/requests/getAppealRecord'
 import saveAppealRecord from '~/services/api/requests/saveAppealRecord'
+import fetchNextRequestStatuses from '~/services/api/requests/fetchNextRequestStatuses'
 
 export default {
   [actionTypes.FETCH_APPEAL_LIST]: async ({ commit }) => {
@@ -16,7 +17,7 @@ export default {
     commit(mutationTypes.SET_APPEAL, state.appealDefaultState())
   },
 
-  async [actionTypes.FETCH_APPEAL]({ commit }, appealId) {
+  async [actionTypes.FETCH_APPEAL]({ commit, dispatch }, appealId) {
     const appeal = await getAppealRecord({
       axiosModule: this.$axios,
       router: this.$router,
@@ -24,9 +25,19 @@ export default {
     })
     delete appeal._links
     commit(mutationTypes.SET_APPEAL, appeal)
+    dispatch(actionTypes.FETCH_REQUEST_STATUSES)
   },
 
   async [actionTypes.SAVE_APPEAL]({ state }) {
     await saveAppealRecord(this.$axios, state.appeal)
+  },
+
+  async [actionTypes.FETCH_REQUEST_STATUSES]({ state, commit }) {
+    const requestStatuses = await fetchNextRequestStatuses({
+      axiosModule: this.$axios,
+      requestId: state.appeal.requestId
+    })
+
+    commit(mutationTypes.SET_REQUEST_STATUSES, requestStatuses)
   }
 }
