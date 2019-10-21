@@ -26,9 +26,7 @@ export default {
     commit(mutationTypes.SET_APPEAL, appeal)
   },
 
-  async [actionTypes.SAVE_APPEAL]({ state, commit }) {
+  async [actionTypes.SAVE_APPEAL]({ state, dispatch }) {
     await saveAppealRecord(this.$axios, state.appeal)
-    const versionNumber = state.appeal.versionNumber + 1
-    commit(mutationTypes.SET_VERSION, versionNumber)
   }
 }
