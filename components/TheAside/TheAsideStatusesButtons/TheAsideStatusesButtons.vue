@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(v-show='appeal.requestId'
+  div(v-show='request.requestId'
       v-loading='isStatusesButtonsLoading' 
       style='margin-top: 40px; min-height: 38px;')
     ul(:class='styles["list"]')
@@ -11,9 +11,9 @@
 import { mapState, mapActions } from 'vuex'
 import styles from '../TheAside.module.sass?module'
 import changeRequestStatus from '@/services/api/requests/changeRequestStatus'
-import { actionTypes as appealActionTypes } from '@/store/types/appeal'
+import { actionTypes as requestActionTypes } from '@/store/types/request'
 
-const moduleName = 'appeal'
+const moduleName = 'request'
 
 export default {
   name: 'TheAsideStatusesButtons',
@@ -24,8 +24,8 @@ export default {
   },
   computed: {
     ...mapState({
-      appeal: (state) => state.appeal.appeal,
-      requestStatuses: (state) => state.appeal.requestStatuses
+      request: (state) => state.request.request,
+      requestStatuses: (state) => state.request.requestStatuses
     }),
     styles() {
       return styles
@@ -33,17 +33,17 @@ export default {
   },
   methods: {
     ...mapActions(moduleName, {
-      fetchAppealById: appealActionTypes.FETCH_APPEAL
+      fetchRequestById: requestActionTypes.FETCH_APPEAL
     }),
     async changeRequestStatus(nextStatusId) {
       this.isStatusesButtonsLoading = true
       await changeRequestStatus({
         axiosModule: this.$axios,
-        requestId: this.appeal.requestId,
+        requestId: this.request.requestId,
         nextStatusId,
-        requestStatusId: this.appeal.requestStatusId
+        requestStatusId: this.request.requestStatusId
       })
-      await this.fetchAppealById(this.appeal.requestId)
+      await this.fetchRequestById(this.request.requestId)
       this.isStatusesButtonsLoading = false
     },
     getButtonStatusName(statusId) {
