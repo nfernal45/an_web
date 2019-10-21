@@ -23,7 +23,8 @@ import {
   Option,
   DatePicker,
   CheckboxGroup,
-  Checkbox
+  Checkbox,
+  RadioGroup
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-Ru'
 import locale from 'element-ui/lib/locale'
@@ -53,6 +54,7 @@ Vue.use(Radio)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(DatePicker)
+Vue.use(RadioGroup)
 
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$notify = Notification

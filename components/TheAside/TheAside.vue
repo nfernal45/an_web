@@ -7,7 +7,7 @@
             font-awesome-icon(icon="reply")
             span Назад к списку
       li(:class="styles['list-item']")
-        el-button(type="success" :class="styles['list-button']" @click="saveAppeal()")
+        el-button(type="success" :class="styles['list-button']" @click="onSave()")
           font-awesome-icon(icon="save")
           span Сохранить
       li(:class="styles['list-item']")
@@ -24,7 +24,7 @@ import { mapActions } from 'vuex'
 import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
 import { actionTypes as appealActionTypes } from '@/store/types/appeal'
-
+const moduleName = 'appeal'
 export default {
   name: 'TheAside',
   components: {
@@ -41,9 +41,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      saveAppeal: `appeal/${appealActionTypes.SAVE_APPEAL}`
+    ...mapActions(moduleName, {
+      saveAppeal: appealActionTypes.SAVE_APPEAL,
+      fetchAppealById: appealActionTypes.FETCH_APPEAL
     }),
+    async onSave() {
+      await this.saveAppeal()
+      await this.fetchAppealById(this.$route.params.id)
+    },
     print() {
       alert('Функционал находится в разработке')
     }

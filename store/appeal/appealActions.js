@@ -28,7 +28,7 @@ export default {
     dispatch(actionTypes.FETCH_REQUEST_STATUSES)
   },
 
-  async [actionTypes.SAVE_APPEAL]({ state }) {
+  async [actionTypes.SAVE_APPEAL]({ state, dispatch }) {
     await saveAppealRecord(this.$axios, state.appeal)
   },
 
