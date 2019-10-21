@@ -70,20 +70,11 @@ export default {
     this.fetchDocTypes()
   },
   methods: {
-    async sendMvRequest(documentId) {
-      try {
-        await mvRequest(this.$axios, documentId)
-
-        this.$notify.success({
-          title: 'Внимание',
-          message: 'Запрос успешно отправлен'
-        })
-      } catch (e) {
-        this.$notify.error({
-          title: 'Внимание',
-          message: 'Всё печально'
-        })
-      }
+    sendMvRequest(documentId) {
+      mvRequest({
+        axiosModule: this.$axios,
+        documentId
+      })
     },
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
