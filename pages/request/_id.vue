@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     ...mapActions(moduleName, {
-      fetchRequestById: requestActionTypes.FETCH_APPEAL
+      fetchRequestById: requestActionTypes.FETCH_REQUEST
     })
   }
 }
