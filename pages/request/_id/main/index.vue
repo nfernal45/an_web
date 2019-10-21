@@ -6,7 +6,7 @@
 
       // Заявитель
       el-row
-        request-main-applicant
+        request-main-licensee
 
       // Уполномоченная организация - представитель заявителя
       el-row
@@ -23,7 +23,7 @@
 
 <script>
 import requestMainGeneralInfo from '@/components/request/requestMain/requestMainGeneralInfo'
-import requestMainApplicant from '@/components/request/requestMain/requestMainApplicant'
+import requestMainLicensee from '@/components/request/requestMain/requestMainLicensee'
 import requestMainApplicantRepresentative from '@/components/request/requestMain/requestMainApplicantRepresentative'
 import requestMainBuildingInfo from '@/components/request/requestMain/requestMainBuildingInfo'
 import requestMainExtraInfo from '@/components/request/requestMain/requestMainExtraInfo'
@@ -32,7 +32,7 @@ export default {
   name: 'RequestMainPage',
   components: {
     requestMainGeneralInfo,
-    requestMainApplicant,
+    requestMainLicensee,
     requestMainApplicantRepresentative,
     requestMainBuildingInfo,
     requestMainExtraInfo
