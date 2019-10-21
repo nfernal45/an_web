@@ -5,7 +5,7 @@ export default async function(axios, id) {
   const data = `queriedDocId=${id}`
 
   try {
-    const response = await axios.post(url, data)
+    const response = await axios.$post(url, data)
 
     return Promise.resolve(response)
   } catch (e) {

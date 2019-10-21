@@ -4,12 +4,12 @@
       el-form(size='small' label-position='top')
         el-row
           el-col
-            el-card.mb-20(v-for='doc in queriedDocs'
+            el-card.mb-20(v-for='doc in computedQueriedDocs'
                     :key='doc.queryId'
                     shadow='hover')
               el-row.mb-10
                 el-col
-                  h4 {{ getDocNameByDocTypeId(doc.docTypeId) }}
+                  h4 {{ doc.docTypeName }}
               el-row(:gutter='20')
                 el-col(:span='6')
                   el-form-item(label='Дата запроса')
@@ -44,13 +44,27 @@ import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
 
 export default {
   name: 'QueriedDocsInderdeptRequest',
-  date: () => ({
-    refDocTypes: []
-  }),
+  data() {
+    return {
+      refDocTypes: []
+    }
+  },
   computed: {
     ...mapState({
       queriedDocs: (state) => state.request.request.gfQueriedDocsByRequestId
-    })
+    }),
+    computedQueriedDocs() {
+      return (
+        this.queriedDocs &&
+        this.queriedDocs.map((doc) => {
+          const docTypeName =
+            this.refDocTypes.length &&
+            this.refDocTypes.find((item) => item.typeId === doc.docTypeId)
+              .typeName
+          return Object.assign({}, doc, { docTypeName })
+        })
+      )
+    }
   },
   mounted() {
     this.fetchDocTypes()
@@ -70,9 +84,6 @@ export default {
           message: 'Всё печально'
         })
       }
-    },
-    getDocNameByDocTypeId(id) {
-      return this.refDocTypes.find((item) => item.typeId === id).typeName
     },
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
