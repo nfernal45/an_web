@@ -14,7 +14,7 @@ export default {
   },
 
   [actionTypes.RESET_REQUEST]: ({ state, commit }) => {
-    commit(mutationTypes.SET_REQUEST, state.requestDefaultState())
+    commit(mutationTypes.SET_REQUEST, {})
   },
 
   async [actionTypes.FETCH_REQUEST]({ commit, dispatch }, requestId) {
@@ -33,11 +33,12 @@ export default {
   },
 
   async [actionTypes.FETCH_REQUEST_STATUSES]({ state, commit }) {
-    const requestStatuses = await fetchNextRequestStatuses({
-      axiosModule: this.$axios,
-      requestId: state.request.requestId
-    })
-
-    commit(mutationTypes.SET_REQUEST_STATUSES, requestStatuses)
+    if (state.request.requestId) {
+      const requestStatuses = await fetchNextRequestStatuses({
+        axiosModule: this.$axios,
+        requestId: state.request.requestId
+      })
+      commit(mutationTypes.SET_REQUEST_STATUSES, requestStatuses)
+    }
   }
 }
