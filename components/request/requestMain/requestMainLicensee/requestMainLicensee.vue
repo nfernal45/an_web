@@ -47,10 +47,9 @@ import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 const moduleName = 'request'
 export default {
-  name: 'RequestMainApplicant',
+  name: 'RequestMainLicensee',
   data() {
     return {
-      selectValue: '',
       licenseeTypeOptions: [
         {
           licenseeTypeName: 'Юридическое лицо',
