@@ -12,6 +12,7 @@ export default {
   name: 'RequestPage',
   mounted() {
     this.fetchRequestById(this.$route.params.id)
+    this.$router.replace(`/request/${this.$route.params.id}/main`)
   },
   destroyed() {
     this.resetRequest()
