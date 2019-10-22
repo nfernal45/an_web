@@ -13,9 +13,13 @@ export default {
   mounted() {
     this.fetchRequestById(this.$route.params.id)
   },
+  destroyed() {
+    this.resetRequest()
+  },
   methods: {
     ...mapActions(moduleName, {
-      fetchRequestById: requestActionTypes.FETCH_REQUEST
+      fetchRequestById: requestActionTypes.FETCH_REQUEST,
+      resetRequest: requestActionTypes.RESET_REQUEST
     })
   }
 }
