@@ -70,6 +70,9 @@ const restApiGuRef = {
   },
   guRefDocType: {
     list: '/ref-doc-types/list'
+  },
+  guRefAbeyanceReasons: {
+    list: '/ref-abeyance-reasons/list'
   }
 }
 const restApiNsi = {}
