@@ -1,2 +1,0 @@
-import requestMainApplicantRepresentative from './requestMainApplicantRepresentative'
-export default requestMainApplicantRepresentative

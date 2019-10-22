@@ -10,7 +10,7 @@
 
       // Уполномоченная организация - представитель заявителя
       el-row
-        request-main-applicant-representative
+        request-main-licensee-representative
       
       // Сведения о многоквартирном доме
       el-row
@@ -24,7 +24,7 @@
 <script>
 import requestMainGeneralInfo from '@/components/request/requestMain/requestMainGeneralInfo'
 import requestMainLicensee from '@/components/request/requestMain/requestMainLicensee'
-import requestMainApplicantRepresentative from '@/components/request/requestMain/requestMainApplicantRepresentative'
+import requestMainLicenseeRepresentative from '@/components/request/requestMain/requestMainLicenseeRepresentative'
 import requestMainBuildingInfo from '@/components/request/requestMain/requestMainBuildingInfo'
 import requestMainExtraInfo from '@/components/request/requestMain/requestMainExtraInfo'
 
@@ -33,7 +33,7 @@ export default {
   components: {
     requestMainGeneralInfo,
     requestMainLicensee,
-    requestMainApplicantRepresentative,
+    requestMainLicenseeRepresentative,
     requestMainBuildingInfo,
     requestMainExtraInfo
   },
