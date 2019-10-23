@@ -3,7 +3,7 @@ import { restApiGf } from '@/services/api/endpoints'
 
 export default async function(axios, request) {
   try {
-    await axios({
+    const { data } = await axios({
       method: request.requestId ? 'PUT' : 'POST',
       url: `${restApiGf.gfRequest.save}`,
       data: request
@@ -14,6 +14,8 @@ export default async function(axios, request) {
       message: 'Заявление сохранено',
       type: 'success'
     })
+
+    return data
   } catch (error) {
     let message = error.response.data.message.split(',')
     message = message.map((subMessage) => subMessage.split(':')[1])
@@ -25,5 +27,7 @@ export default async function(axios, request) {
       duration: 10000,
       message
     })
+
+    throw error
   }
 }

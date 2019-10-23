@@ -42,12 +42,10 @@ export default {
   },
   methods: {
     ...mapActions(moduleName, {
-      saveRequest: requestActionTypes.SAVE_REQUEST,
-      fetchRequestById: requestActionTypes.FETCH_REQUEST
+      saveRequest: requestActionTypes.SAVE_REQUEST
     }),
-    async onSave() {
-      await this.saveRequest()
-      await this.fetchRequestById(this.$route.params.id)
+    onSave() {
+      this.saveRequest()
     },
     print() {
       alert('Функционал находится в разработке')
