@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { mutationTypes } from '@/store/types/request'
 
 export default {
@@ -9,5 +10,8 @@ export default {
   },
   [mutationTypes.SET_PROP]: (state, { propName, propValue }) => {
     state.request[propName] = propValue
+  },
+  [mutationTypes.SET_ARRAY]: (state, { arrayName, arrayValue }) => {
+    Vue.set(state.request, arrayName, arrayValue)
   }
 }
