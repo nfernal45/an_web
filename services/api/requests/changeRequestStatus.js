@@ -1,3 +1,4 @@
+import qs from 'qs'
 import Vue from 'vue'
 import { restApiGfActiviti } from '@/services/api/endpoints'
 
@@ -12,9 +13,10 @@ export default async function({
     requestId
   )
 
-  const query = `newStatusId=${nextStatusId}&oldStatusId=${requestStatusId}`
+  const query = { newStatusId: nextStatusId, oldStatusId: requestStatusId }
+
   try {
-    const { data } = await axiosModule.post(url, query)
+    const { data } = await axiosModule.post(url, qs.stringify(query))
     Vue.prototype.$notify.success({
       title: 'Успех',
       offset: 180,
