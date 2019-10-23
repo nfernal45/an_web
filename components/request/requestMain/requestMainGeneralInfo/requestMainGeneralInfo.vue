@@ -23,7 +23,12 @@
                           :value='item.decisionIssueMethodId')
             el-row
               el-form-item(label='Плановый срок оказания ГУ')
-                el-date-picker(v-model='planConsidDate' placeholder='Укажите плановый срок оказания ГУ' format='dd.MM.yyyy')
+                el-date-picker(
+                  v-model='planConsidDate'
+                  placeholder='Укажите плановый срок оказания ГУ'
+                  format='dd.MM.yyyy'
+                  value-format='dd.MM.yyyy'
+                )
         
         el-row.mb-20
           el-col
@@ -37,9 +42,19 @@
               el-input(v-model='regnum')
           el-col(:span='6')
             el-form-item(v-show='regPlaceId === 1' label='Дата подачи заявления')
-              el-date-picker(v-model='requestDate' format='dd.MM.yyyy')
+              el-date-picker(
+                v-model='requestDate'
+                placeholder='Укажите дату подачи заявления'
+                format='dd.MM.yyyy'
+                value-format='dd.MM.yyyy'
+              )
             el-form-item(v-show='regPlaceId === 2' label='Дата подачи на портале')
-              el-date-picker(v-model='outerRequestDate' format='dd.MM.yyyy')
+              el-date-picker(
+                v-model='outerRequestDate'
+                placeholder='Укажите дату подачи заявления'
+                format='dd.MM.yyyy'
+                value-format='dd.MM.yyyy'
+              )
           el-col(:span='12')
             employee-picker(v-model='regEmployeeId' label='Специалист службы одного окна')
 
@@ -49,7 +64,6 @@ import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
-import { dateToString, stringToDate } from '@/services/date-parser'
 import EmployeePicker from '@/elements/employeePicker/employeePicker'
 const moduleName = 'request'
 export default {
@@ -99,10 +113,10 @@ export default {
 
     planConsidDate: {
       get() {
-        return stringToDate(this.request.planConsidDate)
+        return this.request.planConsidDate
       },
       set(value) {
-        this.set({ propName: 'planConsidDate', propValue: dateToString(value) })
+        this.set({ propName: 'planConsidDate', propValue: value })
       }
     },
 
@@ -126,34 +140,28 @@ export default {
 
     requestDate: {
       get() {
-        return stringToDate(this.request.requestDate)
+        return this.request.requestDate
       },
       set(value) {
-        this.set({ propName: 'requestDate', propValue: dateToString(value) })
+        this.set({ propName: 'requestDate', propValue: value })
       }
     },
 
     outerRequestDate: {
       get() {
-        return stringToDate(this.request.outerRequestDate)
+        return this.request.outerRequestDate
       },
       set(value) {
-        this.set({
-          propName: 'outerRequestDate',
-          propValue: dateToString(value)
-        })
+        this.set({ propName: 'outerRequestDate', propValue: value })
       }
     },
 
     regEmployeeId: {
       get() {
-        return stringToDate(this.request.regEmployeeId)
+        return this.request.regEmployeeId
       },
       set(value) {
-        this.set({
-          propName: 'regEmployeeId',
-          propValue: dateToString(value)
-        })
+        this.set({ propName: 'regEmployeeId', propValue: value })
       }
     },
 
