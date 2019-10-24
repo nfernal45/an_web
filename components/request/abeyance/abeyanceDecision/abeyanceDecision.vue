@@ -6,74 +6,74 @@
           el-col(:span='6')
             el-form-item(label='Номер')
               el-input(v-model='abeyanceRegnum')
-          el-col(:span='6')
-            el-form-item(label='Дата приостановления')
-              el-date-picker(v-model='startDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
-          el-col(:span='12')
-            el-form-item(label='Руководитель')
-              el-select(v-model='selectValue' style='width: 350px')
-                el-option(v-for='item in [1, 2, 3, 4]'
-                          :key='item'
-                          :value='item'
-                          :label='item')
+        //-   el-col(:span='6')
+        //-     el-form-item(label='Дата приостановления')
+        //-       el-date-picker(v-model='startDate'
+        //-                      format="dd.MM.yyyy"
+        //-                      value-format="dd.MM.yyyy")
+        //-   el-col(:span='12')
+        //-     el-form-item(label='Руководитель')
+        //-       el-select(v-model='selectValue' style='width: 350px')
+        //-         el-option(v-for='item in [1, 2, 3, 4]'
+        //-                   :key='item'
+        //-                   :value='item'
+        //-                   :label='item')
 
-        el-row(:gutter='20')
-          el-col(:span='6' :offset='6')
-            el-form-item(label='Приостановлено до:')
-              el-date-picker(v-model='endDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
-          el-col(:span='6')
-            el-form-item(label='Исполнитель')
-              el-select(v-model='selectValue' style='width: 350px')
-                el-option(v-for='item in [1, 2, 3, 4]'
-                          :key='item'
-                          :value='item'
-                          :label='item')
+        //- el-row(:gutter='20')
+        //-   el-col(:span='6' :offset='6')
+        //-     el-form-item(label='Приостановлено до:')
+        //-       el-date-picker(v-model='endDate'
+        //-                      format="dd.MM.yyyy"
+        //-                      value-format="dd.MM.yyyy")
+        //-   el-col(:span='6')
+        //-     el-form-item(label='Исполнитель')
+        //-       el-select(v-model='selectValue' style='width: 350px')
+        //-         el-option(v-for='item in [1, 2, 3, 4]'
+        //-                   :key='item'
+        //-                   :value='item'
+        //-                   :label='item')
 
-        el-row(:gutter='20')
-          el-col
-            el-form-item(label='Основания для приостановления')
-              el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='refAbeyanceReasons')
-                  el-checkbox(v-for="item in computedRefAbeyanceReasonsOptions"
-                              :key='item.reasonId'
-                              :label='item'
-                               style='margin: 2px; font-size: 10px !important;') {{ item.reasonName }}
+        //- el-row(:gutter='20')
+        //-   el-col
+        //-     el-form-item(label='Основания для приостановления')
+        //-       el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='refAbeyanceReasons')
+        //-           el-checkbox(v-for="item in computedRefAbeyanceReasonsOptions"
+        //-                       :key='item.reasonId'
+        //-                       :label='item'
+        //-                        style='margin: 2px; font-size: 10px !important;') {{ item.reasonName }}
                               
 
-        el-row(:gutter='20')
-          el-col
-            el-form-item(label='Причина приостановления')
-              el-input(v-model='reason'
-                       type='textarea'
-                       :minlength='10'
-                       :maxlength='500')
+        //- el-row(:gutter='20')
+        //-   el-col
+        //-     el-form-item(label='Причина приостановления')
+        //-       el-input(v-model='reason'
+        //-                type='textarea'
+        //-                :minlength='10'
+        //-                :maxlength='500')
         
-        el-row(:gutter='20')
-          el-col(:span='16')
-            el-form-item(label=' ')
-              el-checkbox(label='Получены документы, приложенные заявителем в Личном кабинете'
-                          v-model='docsRecived'
-                          true-label='Y'
-                          false-label='N'
-                          border)
-            el-form-item
-              el-checkbox(label='Нарушения устранены в полном объёме'
-                          v-model='violationFixed'
-                          true-label='Y'
-                          false-label='N'
-                          border)
-          el-col(:span='8')
-            el-form-item(label='Дата получения:')
-              el-date-picker(v-model='receiveDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy") 
-            el-form-item(label='Дата возобновления:')
-              el-date-picker(v-model='recommenceDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
+        //- el-row(:gutter='20')
+        //-   el-col(:span='16')
+        //-     el-form-item(label=' ')
+        //-       el-checkbox(label='Получены документы, приложенные заявителем в Личном кабинете'
+        //-                   v-model='docsRecived'
+        //-                   true-label='Y'
+        //-                   false-label='N'
+        //-                   border)
+        //-     el-form-item
+        //-       el-checkbox(label='Нарушения устранены в полном объёме'
+        //-                   v-model='violationFixed'
+        //-                   true-label='Y'
+        //-                   false-label='N'
+        //-                   border)
+        //-   el-col(:span='8')
+        //-     el-form-item(label='Дата получения:')
+        //-       el-date-picker(v-model='receiveDate'
+        //-                      format="dd.MM.yyyy"
+        //-                      value-format="dd.MM.yyyy") 
+        //-     el-form-item(label='Дата возобновления:')
+        //-       el-date-picker(v-model='recommenceDate'
+        //-                      format="dd.MM.yyyy"
+        //-                      value-format="dd.MM.yyyy")
 
 
 </template>
@@ -100,17 +100,20 @@ export default {
       }
     }),
     computedRefAbeyanceReasonsOptions() {
-      return this.refAbeyanceReasonsOptions
-        .filter((item) => item.gf === 'Y')
-        .map((item) => ({
-          reasonId: item.reasonId,
-          reasonName: item.reasonName,
-          versionNumber: item.versionNumber,
-          defaultReasonText: item.defaultReasonText,
-          dayCount: item.dayCount,
-          etpCode: item.etpCode,
-          isActive: item.isActive
-        }))
+      return (
+        this.refAbeyanceReasonsOptions &&
+        this.refAbeyanceReasonsOptions
+          .filter((item) => item.gf === 'Y')
+          .map((item) => ({
+            reasonId: item.reasonId,
+            reasonName: item.reasonName,
+            versionNumber: item.versionNumber,
+            defaultReasonText: item.defaultReasonText,
+            dayCount: item.dayCount,
+            etpCode: item.etpCode,
+            isActive: item.isActive
+          }))
+      )
     },
     abeyanceRegnum: {
       get() {
@@ -190,7 +193,8 @@ export default {
   },
   methods: {
     ...mapMutations(moduleName, {
-      set: mutationTypes.SET_PROP
+      set: mutationTypes.SET_PROP,
+      setArray: mutationTypes.SET_ARRAY
     }),
     async fetchAbeyanceReasons() {
       this.refAbeyanceReasonsOptions = await fetchAbeyanceReasons({
