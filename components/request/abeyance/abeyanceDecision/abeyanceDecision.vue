@@ -35,13 +35,12 @@
 
         el-row(:gutter='20')
           el-col
-            //- h4.form-title Основания для приостановления 
             el-form-item(label='Основания для приостановления')
               el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='refAbeyanceReasons')
                   el-checkbox(v-for="item in computedRefAbeyanceReasonsOptions"
                               :key='item.reasonId'
                               :label='item'
-                              style='margin: 2px; font-size: 10px !important;') {{ item.reasonName }}
+                               style='margin: 2px; font-size: 10px !important;') {{ item.reasonName }}
                               
 
         el-row(:gutter='20')
@@ -179,14 +178,14 @@ export default {
     },
     refAbeyanceReasons: {
       get() {
-        return this.abeyance && this.abeyance.refAbeyanceReasons
+        return this.abeyance.refAbeyanceReasons
       },
       set(value) {
         this.setProp('refAbeyanceReasons', value)
       }
     }
   },
-  created() {
+  mounted() {
     this.fetchAbeyanceReasons()
   },
   methods: {

@@ -25,6 +25,8 @@ import {
   CheckboxGroup,
   Checkbox,
   RadioGroup,
+  Table,
+  TableColumn,
   Dialog,
   Dropdown,
   DropdownItem
@@ -58,6 +60,8 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(DatePicker)
 Vue.use(RadioGroup)
+Vue.use(Table)
+Vue.use(TableColumn)
 Vue.use(Dialog)
 Vue.use(Dropdown)
 Vue.use(DropdownItem)
