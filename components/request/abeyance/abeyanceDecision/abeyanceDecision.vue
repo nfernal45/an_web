@@ -6,74 +6,66 @@
           el-col(:span='6')
             el-form-item(label='Номер')
               el-input(v-model='abeyanceRegnum')
-        //-   el-col(:span='6')
-        //-     el-form-item(label='Дата приостановления')
-        //-       el-date-picker(v-model='startDate'
-        //-                      format="dd.MM.yyyy"
-        //-                      value-format="dd.MM.yyyy")
-        //-   el-col(:span='12')
-        //-     el-form-item(label='Руководитель')
-        //-       el-select(v-model='selectValue' style='width: 350px')
-        //-         el-option(v-for='item in [1, 2, 3, 4]'
-        //-                   :key='item'
-        //-                   :value='item'
-        //-                   :label='item')
+          el-col(:span='6')
+            el-form-item(label='Дата приостановления')
+              el-date-picker(v-model='startDate'
+                             format="dd.MM.yyyy"
+                             value-format="dd.MM.yyyy")
+          el-col(:span='11')
+            employee-picker(v-model='signerId' label='Руководитель')
 
-        //- el-row(:gutter='20')
-        //-   el-col(:span='6' :offset='6')
-        //-     el-form-item(label='Приостановлено до:')
-        //-       el-date-picker(v-model='endDate'
-        //-                      format="dd.MM.yyyy"
-        //-                      value-format="dd.MM.yyyy")
-        //-   el-col(:span='6')
-        //-     el-form-item(label='Исполнитель')
-        //-       el-select(v-model='selectValue' style='width: 350px')
-        //-         el-option(v-for='item in [1, 2, 3, 4]'
-        //-                   :key='item'
-        //-                   :value='item'
-        //-                   :label='item')
+        el-row(:gutter='20')
+          el-col(:span='6' :offset='6')
+            el-form-item(label='Приостановлено до:')
+              el-date-picker(v-model='endDate'
+                             format="dd.MM.yyyy"
+                             value-format="dd.MM.yyyy")
+          el-col(:span='11')
+            employee-picker(v-model='executorId' label='Исполнитель')
 
-        //- el-row(:gutter='20')
-        //-   el-col
-        //-     el-form-item(label='Основания для приостановления')
-        //-       el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='refAbeyanceReasons')
-        //-           el-checkbox(v-for="item in computedRefAbeyanceReasonsOptions"
-        //-                       :key='item.reasonId'
-        //-                       :label='item'
-        //-                        style='margin: 2px; font-size: 10px !important;') {{ item.reasonName }}
-                              
+        el-row(:gutter='20')
+          el-col
+            el-form-item(label='Основания для приостановления')
+              el-input(placeholder='В разработке' disabled)
+            
+            //- el-form-item(label='Основания для приостановления' v-if='refAbeyanceReasons')
+            //-   el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='refAbeyanceReasons')
+            //-     el-checkbox(v-for="(item, index) in computedRefAbeyanceReasonsOptions"
+            //-                 :key='index'
+            //-                 :label='item'
+            //-                 style='margin: 2px; font-size: 10px !important;')          
 
-        //- el-row(:gutter='20')
-        //-   el-col
-        //-     el-form-item(label='Причина приостановления')
-        //-       el-input(v-model='reason'
-        //-                type='textarea'
-        //-                :minlength='10'
-        //-                :maxlength='500')
+        el-row(:gutter='20')
+          el-col
+            el-form-item(label='Причина приостановления')
+              el-input(v-model='reason'
+                       type='textarea'
+                       :minlength='10'
+                       :maxlength='500')
         
-        //- el-row(:gutter='20')
-        //-   el-col(:span='16')
-        //-     el-form-item(label=' ')
-        //-       el-checkbox(label='Получены документы, приложенные заявителем в Личном кабинете'
-        //-                   v-model='docsRecived'
-        //-                   true-label='Y'
-        //-                   false-label='N'
-        //-                   border)
-        //-     el-form-item
-        //-       el-checkbox(label='Нарушения устранены в полном объёме'
-        //-                   v-model='violationFixed'
-        //-                   true-label='Y'
-        //-                   false-label='N'
-        //-                   border)
-        //-   el-col(:span='8')
-        //-     el-form-item(label='Дата получения:')
-        //-       el-date-picker(v-model='receiveDate'
-        //-                      format="dd.MM.yyyy"
-        //-                      value-format="dd.MM.yyyy") 
-        //-     el-form-item(label='Дата возобновления:')
-        //-       el-date-picker(v-model='recommenceDate'
-        //-                      format="dd.MM.yyyy"
-        //-                      value-format="dd.MM.yyyy")
+        el-row(:gutter='20')
+          el-col(:span='16')
+            el-form-item(label=' ')
+              el-checkbox(label='Получены документы, приложенные заявителем в Личном кабинете'
+                          v-model='docsRecived'
+                          true-label='Y'
+                          false-label='N'
+                          border)
+            el-form-item
+              el-checkbox(label='Нарушения устранены в полном объёме'
+                          v-model='violationFixed'
+                          true-label='Y'
+                          false-label='N'
+                          border)
+          el-col(:span='8')
+            el-form-item(label='Дата получения:')
+              el-date-picker(v-model='receiveDate'
+                             format="dd.MM.yyyy"
+                             value-format="dd.MM.yyyy") 
+            el-form-item(label='Дата возобновления:')
+              el-date-picker(v-model='recommenceDate'
+                             format="dd.MM.yyyy"
+                             value-format="dd.MM.yyyy")
 
 
 </template>
@@ -81,14 +73,17 @@
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import fetchAbeyanceReasons from '@/services/api/requests/references/fetchAbeyanceReasons'
+import employeePicker from '@/elements/employeePicker'
 
 const moduleName = 'request'
 
 export default {
   name: 'AbeyanceDecision',
+  components: {
+    employeePicker
+  },
   data() {
     return {
-      selectValue: '',
       refAbeyanceReasonsOptions: []
     }
   },
@@ -179,9 +174,25 @@ export default {
         this.setProp('violationFixed', value)
       }
     },
+    executorId: {
+      get() {
+        return this.abeyance && this.abeyance.executorId
+      },
+      set(value) {
+        this.setProp('executorId', value)
+      }
+    },
+    signerId: {
+      get() {
+        return this.abeyance && this.abeyance.signerId
+      },
+      set(value) {
+        this.setProp('signerId', value)
+      }
+    },
     refAbeyanceReasons: {
       get() {
-        return this.abeyance.refAbeyanceReasons
+        return (this.abeyance && this.abeyance.refAbeyanceReasons) || []
       },
       set(value) {
         this.setProp('refAbeyanceReasons', value)
