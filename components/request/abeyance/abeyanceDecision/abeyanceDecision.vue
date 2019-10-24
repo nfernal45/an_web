@@ -11,13 +11,8 @@
               el-date-picker(v-model='startDate'
                              format="dd.MM.yyyy"
                              value-format="dd.MM.yyyy")
-          el-col(:span='12')
-            el-form-item(label='Руководитель')
-              el-select(v-model='selectValue' style='width: 350px')
-                el-option(v-for='item in [1, 2, 3, 4]'
-                          :key='item'
-                          :value='item'
-                          :label='item')
+          el-col(:span='11')
+            employee-picker(v-model='signerId' label='Руководитель')
 
         el-row(:gutter='20')
           el-col(:span='6' :offset='6')
@@ -25,23 +20,13 @@
               el-date-picker(v-model='endDate'
                              format="dd.MM.yyyy"
                              value-format="dd.MM.yyyy")
-          el-col(:span='6')
-            el-form-item(label='Исполнитель')
-              el-select(v-model='selectValue' style='width: 350px')
-                el-option(v-for='item in [1, 2, 3, 4]'
-                          :key='item'
-                          :value='item'
-                          :label='item')
+          el-col(:span='11')
+            employee-picker(v-model='executorId' label='Исполнитель')
 
         el-row(:gutter='20')
           el-col
             el-form-item(label='Основания для приостановления')
-              el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='refAbeyanceReasons')
-                  el-checkbox(v-for="item in computedRefAbeyanceReasonsOptions"
-                              :key='item.reasonId'
-                              :label='item'
-                               style='margin: 2px; font-size: 10px !important;') {{ item.reasonName }}
-                              
+              el-input(placeholder='В разработке' disabled)      
 
         el-row(:gutter='20')
           el-col
@@ -81,14 +66,17 @@
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import fetchAbeyanceReasons from '@/services/api/requests/references/fetchAbeyanceReasons'
+import employeePicker from '@/elements/employeePicker'
 
 const moduleName = 'request'
 
 export default {
   name: 'AbeyanceDecision',
+  components: {
+    employeePicker
+  },
   data() {
     return {
-      selectValue: '',
       refAbeyanceReasonsOptions: []
     }
   },
@@ -100,17 +88,20 @@ export default {
       }
     }),
     computedRefAbeyanceReasonsOptions() {
-      return this.refAbeyanceReasonsOptions
-        .filter((item) => item.gf === 'Y')
-        .map((item) => ({
-          reasonId: item.reasonId,
-          reasonName: item.reasonName,
-          versionNumber: item.versionNumber,
-          defaultReasonText: item.defaultReasonText,
-          dayCount: item.dayCount,
-          etpCode: item.etpCode,
-          isActive: item.isActive
-        }))
+      return (
+        this.refAbeyanceReasonsOptions &&
+        this.refAbeyanceReasonsOptions
+          .filter((item) => item.gf === 'Y')
+          .map((item) => ({
+            reasonId: item.reasonId,
+            reasonName: item.reasonName,
+            versionNumber: item.versionNumber,
+            defaultReasonText: item.defaultReasonText,
+            dayCount: item.dayCount,
+            etpCode: item.etpCode,
+            isActive: item.isActive
+          }))
+      )
     },
     abeyanceRegnum: {
       get() {
@@ -176,9 +167,25 @@ export default {
         this.setProp('violationFixed', value)
       }
     },
+    executorId: {
+      get() {
+        return this.abeyance && this.abeyance.executorId
+      },
+      set(value) {
+        this.setProp('executorId', value)
+      }
+    },
+    signerId: {
+      get() {
+        return this.abeyance && this.abeyance.signerId
+      },
+      set(value) {
+        this.setProp('signerId', value)
+      }
+    },
     refAbeyanceReasons: {
       get() {
-        return this.abeyance.refAbeyanceReasons
+        return (this.abeyance && this.abeyance.refAbeyanceReasons) || []
       },
       set(value) {
         this.setProp('refAbeyanceReasons', value)
@@ -190,7 +197,8 @@ export default {
   },
   methods: {
     ...mapMutations(moduleName, {
-      set: mutationTypes.SET_PROP
+      set: mutationTypes.SET_PROP,
+      setArray: mutationTypes.SET_ARRAY
     }),
     async fetchAbeyanceReasons() {
       this.refAbeyanceReasonsOptions = await fetchAbeyanceReasons({

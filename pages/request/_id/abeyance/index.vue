@@ -1,7 +1,6 @@
 <template lang="pug">
   div.request-abeyance
     el-row
-     el-col(v-for="abeyance in gfAbeyancesByRequestId" :key="abeyance.abeyanceId")
       // Приостановление решения заявления
       abeyance-decision
     

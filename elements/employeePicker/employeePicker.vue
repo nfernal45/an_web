@@ -48,6 +48,9 @@ export default {
       }
     }
   },
+  mounted() {
+    if (this.value) this.fetchEmployeeById()
+  },
   watch: {
     value(value) {
       if (!value || this.employeeOptions.length) return
