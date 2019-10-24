@@ -38,8 +38,10 @@
         
         el-row(:gutter='20')
           el-col(:span='6')
-            el-form-item(label='Рег.№')
+            el-form-item(v-show='regPlaceId === 1' label='Рег.№')
               el-input(v-model='regnum')
+            el-form-item(v-show='regPlaceId === 2' label='Рег.№')
+              el-input(v-model='outerRegnum')
           el-col(:span='6')
             el-form-item(v-show='regPlaceId === 1' label='Дата подачи заявления')
               el-date-picker(
@@ -73,7 +75,6 @@ export default {
   },
   data() {
     return {
-      selectValue: '',
       requestTypesOptions: [],
       regPlaceOptions: [],
       decisionIssueMethodOptions: [
@@ -135,6 +136,15 @@ export default {
       },
       set(value) {
         this.set({ propName: 'regnum', propValue: value })
+      }
+    },
+
+    outerRegnum: {
+      get() {
+        return this.request.outerRegnum
+      },
+      set(value) {
+        this.set({ propName: 'outerRegnum', propValue: value })
       }
     },
 
