@@ -73,7 +73,6 @@ export default {
   },
   data() {
     return {
-      selectValue: '',
       requestTypesOptions: [],
       regPlaceOptions: [],
       decisionIssueMethodOptions: [
