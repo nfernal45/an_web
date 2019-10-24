@@ -26,14 +26,7 @@
         el-row(:gutter='20')
           el-col
             el-form-item(label='Основания для приостановления')
-              el-input(placeholder='В разработке' disabled)
-            
-            //- el-form-item(label='Основания для приостановления' v-if='refAbeyanceReasons')
-            //-   el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='refAbeyanceReasons')
-            //-     el-checkbox(v-for="(item, index) in computedRefAbeyanceReasonsOptions"
-            //-                 :key='index'
-            //-                 :label='item'
-            //-                 style='margin: 2px; font-size: 10px !important;')          
+              el-input(placeholder='В разработке' disabled)      
 
         el-row(:gutter='20')
           el-col
