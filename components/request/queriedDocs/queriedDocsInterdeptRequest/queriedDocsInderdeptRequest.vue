@@ -32,15 +32,17 @@
               el-row
                 el-col
                   el-button(type='primary'
-                            @click='sendMvRequest(doc.queryId)') Запросить документ в БР
+                            v-show='!doc.queryDate'
+                            @click='sendToEtp(doc.queryId)') Запросить документ в БР
 
           
 
 </template>
 <script>
 import { mapState } from 'vuex'
-import mvRequest from '@/services/api/requests/mvRequest'
 import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
+import fetchRequiredInterParam from '@/services/api/requests/fetchRequiredInterParam'
+import sendToEtp from '@/services/api/requests/sendToEtp'
 
 export default {
   name: 'QueriedDocsInderdeptRequest',
@@ -70,10 +72,16 @@ export default {
     this.fetchDocTypes()
   },
   methods: {
-    sendMvRequest(documentId) {
-      mvRequest({
+    async sendToEtp(documentQueryId) {
+      // TODO: fetchRequiredInterParam return respones with data. If data is not empty, need display this for user.
+      await fetchRequiredInterParam({
         axiosModule: this.$axios,
-        documentId
+        documentQueryId
+      })
+
+      sendToEtp({
+        axiosModule: this.$axios,
+        documentQueryId
       })
     },
     async fetchDocTypes() {
