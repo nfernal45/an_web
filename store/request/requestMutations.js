@@ -3,7 +3,7 @@ import { mutationTypes } from '@/store/types/request'
 
 export default {
   [mutationTypes.SET_REQUEST]: (state, requestData) => {
-    state.request = requestData
+    Vue.set(state, 'request', requestData)
   },
   [mutationTypes.SET_REQUEST_STATUSES]: (state, requestStatuses) => {
     state.requestStatuses = requestStatuses
@@ -11,7 +11,15 @@ export default {
   [mutationTypes.SET_PROP]: (state, { propName, propValue }) => {
     state.request[propName] = propValue
   },
-  [mutationTypes.SET_ARRAY]: (state, { arrayName, arrayValue }) => {
-    Vue.set(state.request, arrayName, arrayValue)
+  [mutationTypes.SET_ARRAY]: (state, { propName, propValue }) => {
+    Vue.set(state.request, propName, propValue)
+  },
+  [mutationTypes.SET_ARRAY_OBJECT_PROP]: (
+    state,
+    { arrayName, propName, propValue, propIndex }
+  ) => {
+    const array = state.request[arrayName]
+    const item = array[propIndex]
+    Vue.set(item, propName, propValue)
   }
 }

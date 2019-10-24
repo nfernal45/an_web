@@ -1,10 +1,17 @@
 <template lang="pug">
-  div
-    h1 Прикрепленные документы заявления {{ requestId }}
+  div.attached-docs
+    el-row
+      // Документы заявителя
+      attached-docs-applicant-docs
+
 </template>
 <script>
+import attachedDocsApplicantDocs from '@/components/request/attachedDocs/attachedDocsApplicantDocs'
 export default {
   name: 'RequestAttachedDocsPage',
+  components: {
+    attachedDocsApplicantDocs
+  },
   computed: {
     requestId() {
       return this.$route.params.id

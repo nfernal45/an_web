@@ -1,4 +1,6 @@
 export default () => ({
-  request: {},
+  request: {
+    gfAttachedDocsByRequestId: []
+  },
   requestStatuses: []
 })
