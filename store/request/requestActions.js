@@ -49,7 +49,6 @@ export default {
   },
 
   [actionTypes.CREATE_ABEYANCE]({ commit }) {
-    console.log('create abyeance')
     commit(mutationTypes.SET_ARRAY, {
       arrayName: 'gfAbeyancesByRequestId',
       arrayValue: [gfAbeyancesByRequestId()]
