@@ -7,7 +7,7 @@
             font-awesome-icon(icon="reply")
             span Назад к списку
       li(:class="styles['list-item']")
-        el-button(type="success" :class="styles['list-button']" @click="saveRequest()")
+        el-button(type="success" :class="styles['list-button']" @click="onSave()")
           font-awesome-icon(icon="save")
           span Сохранить
       li(:class="styles['list-item']")
@@ -15,56 +15,39 @@
           font-awesome-icon(icon="print")
           span Печать
 
-    ul(:class="styles['list']")
-      li(v-for="(button, index) in statusChangeButtonsComputed" :key="index" :class="styles['list-item']")
-        el-button(type="warning" plain :class="styles['list-button']" @click="changeStatus()") {{ button.title }}
+    // Кнопки стасусов
+    the-aside-statuses-buttons
 
 </template>
 <script>
+import { mapActions } from 'vuex'
+import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
-
+import { actionTypes as requestActionTypes } from '@/store/types/request'
+const moduleName = 'request'
 export default {
   name: 'TheAside',
+  components: {
+    TheAsideStatusesButtons
+  },
   data() {
     return {
-      appealStatus: 1,
-      statusChangeButtons: [
-        {
-          title: 'На рассмотрение',
-          activeStatuses: [1],
-          changeStatus: [2]
-        },
-        {
-          activeStatuses: [1],
-          title: 'Запросить документы',
-          changeStatus: [3]
-        },
-        {
-          title: 'Сведения получены',
-          activeStatuses: [1],
-          changeStatus: [3]
-        }
-      ]
+      requestStatus: 1
     }
   },
   computed: {
     styles() {
       return styles
-    },
-    statusChangeButtonsComputed() {
-      return this.statusChangeButtons.filter((button) =>
-        button.activeStatuses.includes(this.appealStatus)
-      )
     }
   },
   methods: {
-    saveRequest() {
-      alert('Функционал находится в разработке')
+    ...mapActions(moduleName, {
+      saveRequest: requestActionTypes.SAVE_REQUEST
+    }),
+    onSave() {
+      this.saveRequest()
     },
     print() {
-      alert('Функционал находится в разработке')
-    },
-    changeStatus() {
       alert('Функционал находится в разработке')
     }
   }

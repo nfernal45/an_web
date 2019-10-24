@@ -1,2 +1,3 @@
 import formBlock from './formBlock'
-export default [formBlock]
+import employeePicker from './employeePicker'
+export default [formBlock, employeePicker]

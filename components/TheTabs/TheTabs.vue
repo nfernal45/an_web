@@ -11,7 +11,7 @@
 
       div
         strong Статус:
-        span {{ appealStatusLabel }}
+        span {{ requestStatusName }}
 
     el-button-group(:class="styles.tabs")
       nuxt-link.el-button(
@@ -21,24 +21,23 @@
         no-prefetch) {{ tab.title }}
 </template>
 <script>
+import { mapState } from 'vuex'
 import styles from './TheTabs.module.sass?module'
+import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
 
 export default {
   name: 'TheTabs',
   data() {
     return {
-      appealStatus: 1,
-      regnum: 'МЖИ-05-ХХ-ХХХХ/YY',
-      licenseeFullname: 'Товарищество собственников жилья «Снежная 23»',
-      appealStatusLabel: 'На рассмотрении',
+      requestStatusesOptions: [],
       tabs: [
         {
           title: 'Заявление',
-          link: `main`
+          link: 'main'
         },
         {
           title: 'Документы заявления',
-          link: `attached-docs`
+          link: 'attached-docs'
         },
         {
           title: 'МВ запросы',
@@ -60,24 +59,48 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      request: (state) => state.request.request
+    }),
+
+    regnum() {
+      return this.request.regnum || 'Номер не назначен'
+    },
+
+    licenseeFullname() {
+      return this.request.licenseeFullname || 'Название не указано'
+    },
+
+    requestStatusName() {
+      return (
+        (this.requestStatusesOptions.length &&
+          this.request.requestStatusId &&
+          this.requestStatusesOptions.find(
+            (status) => status.statusId === this.request.requestStatusId
+          ).statusName) ||
+        'Новое заявление'
+      )
+    },
+
     styles() {
       return styles
     },
-    appealId() {
-      return 1
-    },
+
     tabsComputed() {
       return this.tabs
         .filter((tab) => {
           return (
-            !tab.activeStatus || tab.activeStatus.includes(this.appealStatus)
+            !tab.activeStatus || tab.activeStatus.includes(this.requestStatus)
           )
         })
         .map((tab) => ({
           title: tab.title,
-          link: (tab.link = `/appeal/${this.appealId}/${tab.link}`)
+          link: `/request/${this.$route.params.id}/${tab.link}`
         }))
     }
+  },
+  async mounted() {
+    await this.fetchRequestStatusesOptions()
   },
   methods: {
     tabLinkClass(link) {
@@ -92,6 +115,11 @@ export default {
       } else {
         return false
       }
+    },
+    async fetchRequestStatusesOptions() {
+      this.requestStatusesOptions = await fetchRequestStatusesOptions({
+        axiosModule: this.$axios
+      })
     }
   }
 }
