@@ -76,7 +76,13 @@ const restApiGuRef = {
     list: '/ref-abeyance-reasons/list'
   }
 }
-const restApiNsi = {}
+
+const restApiNsi = {
+  nsiRefOrgStructure: {
+    byId: '/ref-org-strct-official/{id}',
+    list: '/ref-org-strct-official/list'
+  }
+}
 
 function setApiPrefix({ prefix, links }) {
   Object.keys(links).forEach((key) => {
@@ -91,6 +97,7 @@ setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGfRef })
 setApiPrefix({ prefix: restApiNameSpaces.gfActiviti, links: restApiGfActiviti })
 setApiPrefix({ prefix: restApiNameSpaces.gfRabbitmq, links: restApiGfRabbitmq })
 setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
+setApiPrefix({ prefix: restApiNameSpaces.nsi, links: restApiNsi })
 
 // console.log(restApiGf)
 
