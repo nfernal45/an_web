@@ -1,14 +1,22 @@
 import { restApiNsi } from '@/services/api/endpoints'
 
 export default async function({ axiosModule, query }) {
-  query = 'limit==500'
+  const search = []
+
+  Object.keys(query).forEach((key) => {
+    search.push(`${key}=="${query[key]}"`)
+  })
+
+  const params = {
+    limit: 20,
+    search: search.join(';')
+  }
+
   const url = restApiNsi.nsiRefOrgStructure.list
 
   try {
-    const data = await axiosModule.$get(url, query)
-    // eslint-disable-next-line no-console
-    console.log(data)
-    // return data
+    const { data } = await axiosModule.$get(url, { params })
+    return data
   } catch (error) {
     throw error
   }
