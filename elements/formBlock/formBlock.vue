@@ -3,7 +3,7 @@
     div(
       :class='styles["item-title"]'
       @click='contentIsVisible = !contentIsVisible')
-      h4 {{ title }}
+      h3 {{ title }}
       font-awesome-icon.arrow-icon(:icon='currentIconPosition')
 
     transition(name='fade' appear)
