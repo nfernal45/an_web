@@ -32,6 +32,7 @@
               el-row
                 el-col
                   el-button(type='primary'
+                            v-show='!doc.queryDate'
                             @click='sendMvRequest(doc.queryId)') Запросить документ в БР
 
           
@@ -39,8 +40,9 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import mvRequest from '@/services/api/requests/mvRequest'
 import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
+import fetchRequiredInterParam from '@/services/api/requests/fetchRequiredInterParam'
+import mvRequest from '@/services/api/requests/mvRequest'
 
 export default {
   name: 'QueriedDocsInderdeptRequest',
@@ -70,10 +72,16 @@ export default {
     this.fetchDocTypes()
   },
   methods: {
-    sendMvRequest(documentId) {
+    async sendMvRequest(documentQueryId) {
+      // TODO: fetchRequiredInterParam return respones with data. If data is not empty, need display this for user.
+      await fetchRequiredInterParam({
+        axiosModule: this.$axios,
+        documentQueryId
+      })
+
       mvRequest({
         axiosModule: this.$axios,
-        documentId
+        documentQueryId
       })
     },
     async fetchDocTypes() {

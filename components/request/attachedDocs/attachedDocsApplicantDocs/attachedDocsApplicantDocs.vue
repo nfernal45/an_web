@@ -41,7 +41,7 @@
             el-select(v-model='additionalDocumentTypeId' 
                       size='small'
                       style='width: 500px')
-              el-option(v-for='item in addDocumentDocTypes'
+              el-option(v-for='item in licenseeDocTypesOptions'
                         :key='item.typeName'
                         :value='item.typeId'
                         :label='item.typeName')
