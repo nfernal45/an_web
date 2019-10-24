@@ -15,7 +15,8 @@ const restApiGf = {
   },
   gfQueriedDocs: {
     byId: '/gf-queried-docs/{id}',
-    list: '/gf-queried-docs/list'
+    list: '/gf-queried-docs/list',
+    requiredInterParam: '/gf-queried-docs/{id}/required-inter-param'
   },
   gfAttachedDocs: {
     byId: '/gf-attached-docs/{id}',
