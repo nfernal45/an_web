@@ -9,7 +9,7 @@ export default {
     state.requestStatuses = requestStatuses
   },
   [mutationTypes.SET_PROP]: (state, { propName, propValue }) => {
-    state.request[propName] = Object.assign({}, propValue)
+    state.request[propName] = propValue
   },
   [mutationTypes.SET_ARRAY]: (state, { propName, propValue }) => {
     Vue.set(state.request, propName, propValue)

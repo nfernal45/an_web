@@ -73,8 +73,8 @@ export default {
       })
     }
   },
-  async mounted() {
-    await this.fetchDocTypes()
+  mounted() {
+    this.fetchDocTypes()
   },
   methods: {
     ...mapMutations(moduleName, {
@@ -92,8 +92,6 @@ export default {
     },
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
-
-      return Promise.resolve()
     },
     getDocTypeNameByDocTypeId(docTypeId) {
       const data = this.refDocTypes.find((item) => item.typeId === docTypeId)
@@ -124,7 +122,7 @@ export default {
   }
 }
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 .el-select-dropdown__item
   color: rgba(37, 37, 37, 1) !important
   font-size: 12px
