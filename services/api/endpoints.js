@@ -1,11 +1,13 @@
 const restApiNameSpaces = {
-  gf: '/gf-api',
-  gu: '/gu-api',
-  nsi: '/nsi-api'
+  gu: process.env.APP_REST_API_GU,
+  nsi: process.env.APP_REST_API_NSI,
+  gf: process.env.APP_REST_API_GF,
+  gfActiviti: process.env.APP_REST_API_ACTIVITI_GF,
+  gfRabbitmq: process.env.APP_REST_API_RABBITMQ_GF
 }
 
 const restApiGf = {
-  gfAppeal: {
+  gfRequest: {
     byId: '/gf-requests/{requestId}',
     list: '/gf-requests/list',
     empty: '/gf-requests/empty-element',
@@ -38,14 +40,41 @@ const restApiGfRef = {
     byId: '/ref-accept-reasons/{id}',
     list: '/ref-accept-reasons/list'
   },
-  gfRedRequestStatuses: {
+  gfRefRequestStatuses: {
     byId: '/ref-gf-request-statuses/',
     list: '/ref-gf-request-statuses/list'
   }
 }
 
+const restApiGfActiviti = {
+  statusMovement: {
+    postChange: '/requests/{requestId}/status/change',
+    getNext: '/requests/{requestId}/status/next'
+  }
+}
+
+const restApiGfRabbitmq = {
+  sendingToEtp: {
+    send: '/sending-to-etp/doc-query/send'
+  }
+}
+
 const restApiGu = {}
-const restApiGuRef = {}
+
+const restApiGuRef = {
+  guRefRequestTypes: {
+    list: '/ref-request-types/list'
+  },
+  guRefRegPlaces: {
+    list: '/ref-reg-places/list'
+  },
+  guRefDocType: {
+    list: '/ref-doc-types/list'
+  },
+  guRefAbeyanceReasons: {
+    list: '/ref-abeyance-reasons/list'
+  }
+}
 const restApiNsi = {}
 
 function setApiPrefix({ prefix, links }) {
@@ -58,7 +87,18 @@ function setApiPrefix({ prefix, links }) {
 
 setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGf })
 setApiPrefix({ prefix: restApiNameSpaces.gf, links: restApiGfRef })
+setApiPrefix({ prefix: restApiNameSpaces.gfActiviti, links: restApiGfActiviti })
+setApiPrefix({ prefix: restApiNameSpaces.gfRabbitmq, links: restApiGfRabbitmq })
+setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
 
 // console.log(restApiGf)
 
-export { restApiGf, restApiGfRef, restApiGu, restApiGuRef, restApiNsi }
+export {
+  restApiGf,
+  restApiGfRef,
+  restApiGu,
+  restApiGuRef,
+  restApiNsi,
+  restApiGfActiviti,
+  restApiGfRabbitmq
+}
