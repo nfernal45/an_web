@@ -67,7 +67,7 @@ export default {
     ...mapState(moduleName, {
       attachedDocs: (state) => state.request.gfAttachedDocsByRequestId
     }),
-    addDocumentDocTypes() {
+    licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
         return item.refDocTypeGroupByGroupId.groupId === 1
       })
