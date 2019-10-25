@@ -2,5 +2,7 @@ export default () => ({
   request: {
     gfAttachedDocsByRequestId: []
   },
-  requestStatuses: []
+  requestStatuses: [],
+  defaultAttachedDocsByRequestId: null,
+  gfAbeyancesByRequestIdDefault: null
 })
