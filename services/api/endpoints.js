@@ -22,9 +22,10 @@ const restApiGf = {
     byId: '/gf-attached-docs/{id}',
     list: '/gf-attached-docs/list'
   },
-  gfocCheck: {
+  gfDocCheck: {
     byId: '/gf-doc-checks/{id}',
-    list: '/gf-doc-checks/list'
+    list: '/gf-doc-checks/list',
+    save: '/gf-doc-checks/'
   }
 }
 
@@ -81,6 +82,9 @@ const restApiNsi = {
   nsiRefOrgStructure: {
     byId: '/ref-org-strct-official/{id}',
     list: '/ref-org-strct-official/list'
+  },
+  nsiRefDept: {
+    list: '/ref-depts/list'
   }
 }
 

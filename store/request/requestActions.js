@@ -3,6 +3,8 @@ import getRequestRecord from '@/services/api/requests/getRequestRecord'
 import saveRequestRecord from '~/services/api/requests/saveRequestRecord'
 import fetchNextRequestStatuses from '~/services/api/requests/fetchNextRequestStatuses'
 import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
+import fetchDocCheckByRequestId from '@/services/api/requests/fetchDocCheckByRequestId'
+import saveDocCheck from '@/services/api/requests/saveDocCheck'
 
 export default {
   [actionTypes.FETCH_REQUEST_LIST]: async ({ commit }) => {
@@ -33,9 +35,19 @@ export default {
     }
   },
 
-  async [actionTypes.SAVE_REQUEST]({ state, commit }) {
+  async [actionTypes.SAVE_REQUEST]({ state, commit, dispatch }) {
     const data = await saveRequestRecord(this.$axios, state.request)
-    commit(mutationTypes.SET_REQUEST, data)
+    await commit(mutationTypes.SET_REQUEST, data)
+
+    // Логика ниже нужна для корректного сохранения сущности doc-check.
+    // Поместил её сюда, что бы по кнопке "Сохранить", сохранялось всё вместе.
+    const docCheck = Object.assign({}, state.docCheck)
+
+    await dispatch(actionTypes.FETCH_DOC_CHECK, state.request.requestId)
+    docCheck.versionNumber = state.docCheck.versionNumber
+
+    await commit(mutationTypes.SET_DOC_CHECK, docCheck)
+    await dispatch(actionTypes.SAVE_DOC_CHECK)
   },
 
   async [actionTypes.FETCH_REQUEST_STATUSES]({ state, commit }) {
@@ -53,5 +65,22 @@ export default {
       arrayName: 'gfAbeyancesByRequestId',
       arrayValue: [gfAbeyancesByRequestId()]
     })
+  },
+  async [actionTypes.FETCH_DOC_CHECK]({ state, commit }, requestId) {
+    const { data } = await fetchDocCheckByRequestId({
+      axiosModule: this.$axios,
+      requestId
+    })
+
+    if (data.length) commit(mutationTypes.SET_DOC_CHECK, data[0])
+  },
+  async [actionTypes.SAVE_DOC_CHECK]({ state, commit }) {
+    const data = await saveDocCheck({
+      axiosModule: this.$axios,
+      requestId: state.request.requestId,
+      docCheckEntity: state.docCheck
+    })
+
+    commit(mutationTypes.SET_DOC_CHECK, data)
   }
 }

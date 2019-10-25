@@ -5,34 +5,76 @@
         el-row.mb-10(:gutter='20')
           el-col(:span='6')
             el-form-item(label='Номер')
-              el-input
+              el-input(v-model='actNo')
           el-col(:span='6')
             el-form-item(label='Дата:')
-              el-date-picker
+              el-date-picker(v-model='actDate'
+                             format="dd.MM.yyyy"
+                             value-format="dd.MM.yyyy")
           el-col(:span='10')
-            el-form-item(label='Руководитель:')
-              el-select(v-model='selectValue' 
-                        style='width: 350px')
-                el-option(v-for='item in [1, 2, 3, 4]'
-                          :key='item'
-                          :label='item'
-                          :value='item')
+            employee-picker(v-model='signerId' label='Руководитель')
+
           el-col(:span='10' :offset='12')
             el-form-item(label='Исполнитель:')
-              el-select(v-model='selectValue' 
-                        style='width: 350px')
-                el-option(v-for='item in [1, 2, 3, 4]'
-                          :key='item'
-                          :label='item'
-                          :value='item')
+              //- employee-picker(v-model='signerId' label='Руководитель')
         
         el-row.mb-10
           el-col
-            h4.form-title Соответствие заявления и документов положениям пунктов 2 и 3 настоящего Порядка
+            el-input(type='textarea' v-model='conclusion')
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex'
+import { mutationTypes } from '@/store/types/request'
+import employeePicker from '@/elements/employeePicker'
+const moduleName = 'request'
+
 export default {
-  name: 'DocCheckConclusion'
+  name: 'DocCheckConclusion',
+  components: {
+    employeePicker
+  },
+  computed: {
+    ...mapState(moduleName, {
+      docCheck: (state) => state.docCheck
+    }),
+    actNo: {
+      get() {
+        return this.docCheck && this.docCheck.actNo
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'actNo', propValue: value })
+      }
+    },
+    actDate: {
+      get() {
+        return this.docCheck && this.docCheck.actDate
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'actDate', propValue: value })
+      }
+    },
+    signerId: {
+      get() {
+        return this.docCheck && this.docCheck.signerId
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'signerId', propValue: value })
+      }
+    },
+    conclusion: {
+      get() {
+        return this.docCheck && this.docCheck.conclusion
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'conclusion', propValue: value })
+      }
+    }
+  },
+  methods: {
+    ...mapMutations(moduleName, {
+      setPropDocCheck: mutationTypes.SET_PROP_DOC_CHECK
+    })
+  }
 }
 </script>
 <style lang="sass" scoped>

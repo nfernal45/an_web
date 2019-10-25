@@ -10,9 +10,9 @@
     doc-check-conclusion
 </template>
 <script>
-import docCheckDirection from '@/components/appeal/docCheck/docCheckDirection'
-import docCheckConclusion from '@/components/appeal/docCheck/docCheckConclusion'
-import docCheckOrder from '@/components/appeal/docCheck/docCheckOrder'
+import docCheckDirection from '@/components/request/docCheck/docCheckDirection'
+import docCheckConclusion from '@/components/request/docCheck/docCheckConclusion'
+import docCheckOrder from '@/components/request/docCheck/docCheckOrder'
 
 export default {
   name: 'AppealDocCheckPage',

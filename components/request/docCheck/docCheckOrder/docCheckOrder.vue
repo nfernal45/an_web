@@ -5,35 +5,53 @@
         el-row(:gutter='20')
           el-col(:span='6')
             el-form-item(label='Номер')
-              el-input
+              el-input(v-model='instructionNo')
           el-col(:span='6')
             el-form-item(label='Дата:')
-              el-date-picker
+              el-date-picker(v-model='instructionDate'
+                             format="dd.MM.yyyy"
+                             value-format="dd.MM.yyyy")
+
           el-col(:span='10')
             el-form-item(label='Руководитель:')
-              el-select(v-model='selectValue' 
-                        style='width: 350px')
-                el-option(v-for='item in [1, 2, 3, 4]'
-                          :key='item'
-                          :label='item'
-                          :value='item')
+              el-input(disabled)
           el-col(:span='10' :offset='12')
             el-form-item(label='Исполнитель:')
-              el-select(v-model='selectValue' 
-                        style='width: 350px')
-                el-option(v-for='item in [1, 2, 3, 4]'
-                          :key='item'
-                          :label='item'
-                          :value='item')
+              el-input(disabled)
 
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex'
+import { mutationTypes } from '@/store/types/request'
+const moduleName = 'request'
+
 export default {
   name: 'DocCheckOrder',
-  data() {
-    return {
-      selectValue: ''
+  computed: {
+    ...mapState(moduleName, {
+      docCheck: (state) => state.docCheck
+    }),
+    instructionNo: {
+      get() {
+        return this.docCheck && this.docCheck.instructionNo
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'instructionNo', propValue: value })
+      }
+    },
+    instructionDate: {
+      get() {
+        return this.docCheck && this.docCheck.instructionDate
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'instructionDate', propValue: value })
+      }
     }
+  },
+  methods: {
+    ...mapMutations(moduleName, {
+      setPropDocCheck: mutationTypes.SET_PROP_DOC_CHECK
+    })
   }
 }
 </script>
