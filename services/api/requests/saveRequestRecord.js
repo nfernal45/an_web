@@ -10,8 +10,8 @@ export default async function(axios, request) {
     })
 
     Vue.prototype.$notify({
-      title: 'Успех',
-      message: 'Заявление сохранено',
+      title: 'Сохранено',
+      message: 'Изменения сохранены',
       type: 'success'
     })
 
@@ -21,7 +21,11 @@ export default async function(axios, request) {
     message = message.map((subMessage) => subMessage.split(':')[1])
     message = message.join('</br></br>')
 
-    Vue.prototype.$notify.error({
+    const code = parseInt(error.response && error.response.status)
+    const type = code === 400 ? 'warning' : 'error'
+
+    Vue.prototype.$notify({
+      type,
       title: 'Не удалось сохранить заявление',
       dangerouslyUseHTMLString: true,
       duration: 10000,
