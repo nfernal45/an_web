@@ -15,8 +15,7 @@
             employee-picker(v-model='signerId' label='Руководитель')
 
           el-col(:span='10' :offset='12')
-            el-form-item(label='Исполнитель:')
-              //- employee-picker(v-model='signerId' label='Руководитель')
+            employee-picker(v-model='test1' label='Исполнитель')
         
         el-row.mb-10
           el-col
@@ -32,6 +31,11 @@ export default {
   name: 'DocCheckConclusion',
   components: {
     employeePicker
+  },
+  data() {
+    return {
+      test1: ''
+    }
   },
   computed: {
     ...mapState(moduleName, {
@@ -77,7 +81,4 @@ export default {
   }
 }
 </script>
-<style lang="sass" scoped>
-.form-title
-    color: #0e69af
-</style>
+<style lang="sass" scoped></style>
