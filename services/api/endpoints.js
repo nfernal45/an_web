@@ -74,6 +74,9 @@ const restApiGuRef = {
   },
   guRefAbeyanceReasons: {
     list: '/ref-abeyance-reasons/list'
+  },
+  guRefRefusalReasons: {
+    list: '/ref-refusal-reasons/list'
   }
 }
 
