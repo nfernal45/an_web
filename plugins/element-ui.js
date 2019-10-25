@@ -31,7 +31,7 @@ import {
   Dropdown,
   DropdownItem
 } from 'element-ui'
-import lang from 'element-ui/lib/locale/lang/ru-Ru'
+import lang from 'element-ui/lib/locale/lang/ru-RU'
 import locale from 'element-ui/lib/locale'
 
 // Loading.service()
