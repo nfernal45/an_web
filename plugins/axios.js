@@ -36,6 +36,10 @@ export default function({ $axios, $auth, redirect, base, route }) {
       throw error
     }
 
+    if (code === 400) {
+      throw error
+    }
+
     Vue.prototype.$notify.error({
       title: 'Ошибка',
       message: error.message
@@ -43,6 +47,7 @@ export default function({ $axios, $auth, redirect, base, route }) {
 
     if (code === 401) {
       logout({ authModule: $auth, baseRoute: base, currentRoute: route.path, redirectFunction: redirect })
+      return
     }
   })
 
