@@ -15,7 +15,6 @@
               el-row(:gutter='20')
                 el-col(:span='7')
                   el-form-item(label='Номер')
-                    //- el-input(v-model='doc.docNum')
                     el-input(
                       :value='doc.docNum'
                       @input='setArrayObjectProp({ arrayName: "gfAttachedDocsByRequestId", propName: "docNum", propValue: $event, propIndex: index })'
@@ -27,9 +26,6 @@
                                    format="dd.MM.yyyy"
                                    value-format="dd.MM.yyyy"
                                    placeholder='Выберите дату')
-                //- el-col(:span='6')
-                //-   el-form-item(label='Кол-во страниц')
-                //-     el-input
                 el-col(:span='7' v-show='doc.docFileName')
                   el-form-item(label=' ')
                     span.file(@click='downloadFile(doc)')
@@ -52,14 +48,14 @@
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
-// import { cloneDeep } from 'lodash'
+
 const moduleName = 'request'
 export default {
   name: 'AttachedDocsApplicantDocs',
   data() {
     return {
       addDocumentDialogIsVisible: false,
-      additionalDocumentTypeId: {},
+      additionalDocumentTypeId: null,
       refDocTypes: []
     }
   },
@@ -71,6 +67,13 @@ export default {
       return this.refDocTypes.filter((item) => {
         return item.refDocTypeGroupByGroupId.groupId === 1
       })
+    },
+    getDocTypeNameByDocTypeId() {
+      return (docTypeId) => {
+        const data = this.refDocTypes.find((item) => item.typeId === docTypeId)
+
+        return data && data.typeName
+      }
     }
   },
   mounted() {
@@ -92,11 +95,6 @@ export default {
     },
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
-    },
-    getDocTypeNameByDocTypeId(docTypeId) {
-      const data = this.refDocTypes.find((item) => item.typeId === docTypeId)
-
-      return data && data.typeName
     },
     downloadFile(doc) {
       // TODO: add system settings
