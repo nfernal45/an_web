@@ -90,15 +90,14 @@ export default {
       defaultObjectsNames.forEach((defaultObject) => {
         commit(mutationTypes.SET_DEFAULT_OBJECT, {
           objectName: `${defaultObject}Default`,
-          objectValue: Object.assign({}, defaultRequest[defaultObject][0])
+          objectValue: () => Object.assign({}, defaultRequest[defaultObject][0])
         })
       })
     }
   },
 
   async [actionTypes.CREATE_ABEYANCE]({ state, commit, dispatch }) {
-    await dispatch(actionTypes.FETCH_DEFAULT_OBJECT)
-
+    await dispatch(actionTypes.FETCH_DEFAULT_OBJECTS)
     await commit(mutationTypes.SET_ARRAY, {
       arrayName: 'gfAbeyancesByRequestId',
       arrayValue: state.gfAbeyancesByRequestIdDefault()
