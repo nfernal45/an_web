@@ -2,7 +2,6 @@ import { actionTypes, mutationTypes } from '@/store/types/request'
 import fetchRequestRecord from '@/services/api/requests/fetchRequestRecord'
 import saveRequestRecord from '~/services/api/requests/saveRequestRecord'
 import fetchNextRequestStatuses from '~/services/api/requests/fetchNextRequestStatuses'
-// import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
 
 export default {
   [actionTypes.FETCH_REQUEST_LIST]: async ({ commit }) => {
@@ -18,7 +17,7 @@ export default {
     commit(mutationTypes.SET_REQUEST, {})
   },
 
-  async [actionTypes.FETCH_REQUEST]({ commit, dispatch }, requestId) {
+  async [actionTypes.FETCH_REQUEST]({ dispatch }, requestId) {
     try {
       const request = await fetchRequestRecord({
         axiosModule: this.$axios,
@@ -52,49 +51,57 @@ export default {
     }
   },
 
-  [actionTypes.CREATE_ABEYANCE]({ state, commit }) {
-    commit(mutationTypes.SET_ARRAY, {
+  [actionTypes.SET_REQUEST]({ commit }, request) {
+    if (!request.requestId) {
+      const defaultArraysNames = [
+        'gfAbeyancesByRequestId',
+        'gfAttachedDocsByRequestId',
+        'gfQueriedDocsByRequestId',
+        'gfRefusalReasonRequestId'
+      ]
+
+      defaultArraysNames.forEach((defaultObject) => {
+        request = Object.assign({}, request, { [defaultObject]: null })
+      })
+    }
+
+    commit(mutationTypes.SET_REQUEST, request)
+  },
+
+  async [actionTypes.FETCH_DEFAULT_OBJECTS]({ state, commit }) {
+    const defaultObjectsNames = [
+      'gfAbeyancesByRequestId',
+      'gfAttachedDocsByRequestId',
+      'gfQueriedDocsByRequestId',
+      'gfRefusalReasonRequestId'
+    ]
+
+    const defaultObjectsArray = defaultObjectsNames.map((defaultObject) => {
+      return state[`${defaultObject}Default`]
+    })
+
+    if (defaultObjectsArray.some((defaultObject) => !defaultObject)) {
+      const defaultRequest = await fetchRequestRecord({
+        axiosModule: this.$axios,
+        router: this.$router,
+        requestId: 'empty'
+      })
+
+      defaultObjectsNames.forEach((defaultObject) => {
+        commit(mutationTypes.SET_DEFAULT_OBJECT, {
+          objectName: `${defaultObject}Default`,
+          objectValue: Object.assign({}, defaultRequest[defaultObject][0])
+        })
+      })
+    }
+  },
+
+  async [actionTypes.CREATE_ABEYANCE]({ state, commit, dispatch }) {
+    await dispatch(actionTypes.FETCH_DEFAULT_OBJECT)
+
+    await commit(mutationTypes.SET_ARRAY, {
       arrayName: 'gfAbeyancesByRequestId',
       arrayValue: state.gfAbeyancesByRequestIdDefault()
     })
-  },
-
-  [actionTypes.SET_REQUEST]({ commit }, request) {
-    if (!request.requestId) {
-      console.log('new request')
-
-      const defaultArraysNames = ['gfAbeyancesByRequestId']
-      // const defaultRequest = {}
-
-      defaultArraysNames.forEach((defaultObject) => {
-        commit(mutationTypes.SET_DEFAULT_OBJECT, {
-          objectName: `${defaultObject}Default`,
-          objectValue: Object.assign({}, request[defaultObject][0])
-        })
-
-        // defaultRequest = Object.assign({}, request, {
-        //   gfAbeyancesByRequestId: null,
-        //   gfAttachedDocsByRequestId: null,
-        //   gfQueriedDocsByRequestId: null,
-        //   gfRefusalReasonRequestId: null
-        // })
-      })
-
-      defaultArraysNames.reduce(
-        (defaultRequest, currentValue, currentIndex, arr) => {
-          console.log(defaultRequest, currentValue, currentIndex, arr)
-        }
-      )
-
-      request = Object.assign({}, request, {
-        gfAbeyancesByRequestId: null,
-        gfAttachedDocsByRequestId: null,
-        gfQueriedDocsByRequestId: null,
-        gfRefusalReasonRequestId: null
-      })
-    }
-    // eslint-disable-next-line no-console
-    // console.log(request)
-    commit(mutationTypes.SET_REQUEST, request)
   }
 }

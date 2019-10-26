@@ -25,8 +25,8 @@ export default {
       return this.gfAbeyancesByRequestId && !!this.gfAbeyancesByRequestId.length
     }
   },
-  mounted() {
-    if (!this.isAbeaynceExist) this.createAbeyance()
+  async mounted() {
+    if (!this.isAbeaynceExist) await this.createAbeyance()
   },
   methods: {
     ...mapActions(moduleName, {
