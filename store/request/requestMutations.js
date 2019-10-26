@@ -21,5 +21,10 @@ export default {
     const array = state.request[arrayName]
     const item = array[propIndex]
     Vue.set(item, propName, propValue)
+  },
+  [mutationTypes.SET_DEFAULT_OBJECT]: (state, { objectName, objectValue }) => {
+    state[objectName] = function() {
+      return objectValue
+    }
   }
 }
