@@ -15,29 +15,42 @@
                   :label='item.name'
                   :value='item.id')
 
-        el-form-item(
-          v-if='request.typeId === 9 && request.licenseeType === "L"'
-          label='У организации происходит реорганизация'
-        )
-          el-radio-group(v-model='isReorg')
-            el-radio(
-              v-for='item in yesNoOptions'
-              :key='item.id'
-              :label='item.id'
-              style='margin-bottom: 5px'
-            ) {{ item.name }}
-  
-        el-form-item(
-          v-if='request.typeId === 10'
-          label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ'
-        )
-          el-radio-group(v-model='isTsgRepr')
-            el-radio(
-              v-for='item in yesNoOptions'
-              :key='item.id'
-              :label='item.id'
-              style='margin-bottom: 5px'
-            ) {{ item.name }}
+          el-col(v-if='request.typeId === 9 && request.licenseeType === "L"')
+            el-form-item(
+              label='У организации происходит реорганизация'
+            )
+              el-radio-group(v-model='isReorg')
+                el-radio(
+                  v-for='item in yesNoOptions'
+                  :key='item.id'
+                  :label='item.id'
+                  style='margin-bottom: 5px'
+                ) {{ item.name }}
+
+        el-row(:gutter='20' v-if='request.typeId === 10')
+          el-col
+            el-form-item(
+              label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ'
+            )
+              el-radio-group(v-model='isTsgRepr')
+                el-radio(
+                  v-for='item in yesNoOptions'
+                  :key='item.id'
+                  :label='item.id'
+                  style='margin-bottom: 5px'
+                ) {{ item.name }}
+
+          el-col(:span='12')
+            el-form-item(label='Серия и номер действующей лицензии')
+              el-input(v-model='currentLicenseSerNum')
+
+          el-col(:span='12')
+            el-form-item(label='Дата выдачи действующей лицензии')
+              el-date-picker(
+                v-model='currentLicenseDate'
+                format='dd.MM.yyyy'
+                value-format='dd.MM.yyyy'
+              )
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
@@ -90,6 +103,33 @@ export default {
       },
       set(value) {
         this.set({ propName: 'isTsgRepr', propValue: value })
+      }
+    },
+
+    reorganizationFormId: {
+      get() {
+        return this.request.reorganizationFormId
+      },
+      set(value) {
+        this.set({ propName: 'reorganizationFormId', propValue: value })
+      }
+    },
+
+    currentLicenseSerNum: {
+      get() {
+        return this.request.currentLicenseSerNum
+      },
+      set(value) {
+        this.set({ propName: 'currentLicenseSerNum', propValue: value })
+      }
+    },
+
+    currentLicenseDate: {
+      get() {
+        return this.request.currentLicenseDate
+      },
+      set(value) {
+        this.set({ propName: 'currentLicenseDate', propValue: value })
       }
     }
   },
