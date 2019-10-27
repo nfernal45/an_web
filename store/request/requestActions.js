@@ -46,8 +46,8 @@ export default {
     await dispatch(actionTypes.FETCH_DOC_CHECK, state.request.requestId)
     docCheck.versionNumber = state.docCheck.versionNumber
 
-    await commit({
-      objectName: mutationTypes.SET_DEFAULT_OBJECT,
+    await commit(mutationTypes.SET_DEFAULT_OBJECT, {
+      objectName: 'docCheck',
       objectValue: docCheck
     })
     await dispatch(actionTypes.SAVE_DOC_CHECK)
@@ -121,7 +121,12 @@ export default {
       requestId
     })
 
-    if (data.length) commit(mutationTypes.SET_DOC_CHECK, data[0])
+    if (data.length) {
+      commit(mutationTypes.SET_DEFAULT_OBJECT, {
+        objectName: 'docCheck',
+        objectValue: data[0]
+      })
+    }
   },
   async [actionTypes.SAVE_DOC_CHECK]({ state, commit }) {
     const data = await saveDocCheck({
@@ -130,8 +135,8 @@ export default {
       docCheckEntity: state.docCheck
     })
 
-    commit({
-      objectName: mutationTypes.SET_DEFAULT_OBJECT,
+    commit(mutationTypes.SET_DEFAULT_OBJECT, {
+      objectName: 'docCheck',
       objectValue: data
     })
   }
