@@ -30,35 +30,59 @@
                   value-format='dd.MM.yyyy'
                 )
         
-        el-row.mb-20
-          el-col
+        el-row.mb-20(:gutter='20')
+          el-col.mt-10(:span='10')
             h4.form-title.mb-10 Место подачи документов
             el-radio-group(v-model='regPlaceId')
               el-radio(v-for='item in regPlaceOptions' :key='item.regPlaceId' :label='item.regPlaceId') {{ item.regPlaceName }}
+
+          el-col(:span='14')
+            el-form-item(label='ЕНО')
+              el-input(v-model='eno' readonly)
         
         el-row(:gutter='20')
           el-col(:span='6')
-            el-form-item(v-show='regPlaceId === 1' label='Рег.№')
+            el-form-item(label='Рег.№')
               el-input(v-model='regnum')
-            el-form-item(v-show='regPlaceId === 2' label='Рег.№')
-              el-input(v-model='outerRegnum')
+
           el-col(:span='6')
-            el-form-item(v-show='regPlaceId === 1' label='Дата подачи заявления')
+            el-form-item(v-if='regPlaceId === 1' label='Дата подачи заявления')
               el-date-picker(
                 v-model='requestDate'
                 placeholder='Укажите дату подачи заявления'
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
               )
-            el-form-item(v-show='regPlaceId === 2' label='Дата подачи на портале')
+
+            el-form-item(v-if='regPlaceId === 2' label='Дата получения в МЖИ')
+              el-date-picker(
+                v-model='testValue'
+                placeholder='Укажите дату подачи заявления'
+                format='dd.MM.yyyy'
+                value-format='dd.MM.yyyy'
+              )
+
+          el-col(:span='12' v-if='regPlaceId === 1')
+            employee-picker(
+          
+              v-model='regEmployeeId'
+              label='Специалист службы одного окна'
+            )
+
+          el-col(:span='6' v-if='regPlaceId === 2')
+            el-form-item(label='Рег.№ портала')
+              el-input(v-model='outerRegnum')
+
+          el-col(:span='6' v-if='regPlaceId === 2')
+            el-form-item(label='Дата подачи на портале')
               el-date-picker(
                 v-model='outerRequestDate'
                 placeholder='Укажите дату подачи заявления'
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
               )
-          el-col(:span='12')
-            employee-picker(v-model='regEmployeeId' label='Специалист службы одного окна')
+
+
 
 </template>
 <script>
@@ -75,6 +99,7 @@ export default {
   },
   data() {
     return {
+      testValue: '',
       requestTypesOptions: [],
       regPlaceOptions: [],
       decisionIssueMethodOptions: [
@@ -175,10 +200,21 @@ export default {
       }
     },
 
+    eno: {
+      get() {
+        return this.request.eno
+      },
+      set(value) {
+        this.set({ propName: 'eno', propValue: value })
+      }
+    },
+
     computedRequestTypesOptions() {
       return this.requestTypesOptions
         .filter((type) => type.isGf)
-        .sort((prevType, nextType) => nextType - prevType)
+        .sort((prevType, nextType) => {
+          return prevType.typeId - nextType.typeId
+        })
     }
   },
   mounted() {

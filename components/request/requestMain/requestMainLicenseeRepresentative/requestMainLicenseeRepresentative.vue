@@ -16,7 +16,7 @@
               el-col
                 el-form-item(v-show='reprType === "L"' label='Полное наименование')
                   el-input(v-model='reprFullname')
-                el-form-item(label='Сокращенное наименование юр.лица')
+                el-form-item(label='Сокращенное наименование')
                   el-input(v-model='reprShortname')
 
             el-row(v-show='reprType === "I"' :gutter='20')
