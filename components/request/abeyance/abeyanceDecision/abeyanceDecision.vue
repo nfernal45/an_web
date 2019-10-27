@@ -26,7 +26,12 @@
         el-row(:gutter='20')
           el-col
             el-form-item(label='Основания для приостановления')
-              el-input(placeholder='В разработке' disabled)      
+              el-checkbox-group(v-model='refAbeyanceReasons')
+                el-checkbox(
+                  v-for='abeyanceReason in computedRefAbeyanceReasonsOptions'
+                  :key="abeyanceReason.reasonId"
+                  :label='abeyanceReason.reasonId'
+                ) {{ abeyanceReason.reasonName }}
 
         el-row(:gutter='20')
           el-col
@@ -185,10 +190,25 @@ export default {
     },
     refAbeyanceReasons: {
       get() {
-        return (this.abeyance && this.abeyance.refAbeyanceReasons) || []
+        // return (this.abeyance && this.abeyance.refAbeyanceReasons) || []
+        return (
+          (this.abeyance &&
+            this.abeyance.refAbeyanceReasons &&
+            this.abeyance.refAbeyanceReasons.map(
+              (abeyanceReason) => abeyanceReason.reasonId
+            )) ||
+          []
+        )
       },
       set(value) {
-        this.setProp('refAbeyanceReasons', value)
+        const abeyanceReason = this.computedRefAbeyanceReasonsOptions.filter(
+          (computedAbeyanceReason) => {
+            return value.some(
+              (value) => value === computedAbeyanceReason.reasonId
+            )
+          }
+        )
+        this.setProp('refAbeyanceReasons', abeyanceReason)
       }
     }
   },
