@@ -45,9 +45,7 @@ export default {
             (type) => type.typeId === request.typeId
           ).typeName,
           requestId: request.requestId,
-          statusId: this.requestStatusesOptions.find(
-            (status) => status.statusId === request.requestStatusId
-          ).statusName
+          statusId: this.getStatusNameById(request.requestStatusId)
         }
       })
     }
@@ -58,6 +56,15 @@ export default {
         name: 'request-id-main',
         params: { id: requestId }
       })
+    },
+    getStatusNameById(requestStatusId) {
+      if (!requestStatusId) {
+        return 'Статус неизвестен'
+      } else {
+        return this.requestStatusesOptions.find(
+          (status) => status.statusId === requestStatusId
+        ).statusName
+      }
     }
   }
 }

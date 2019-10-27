@@ -1,8 +1,8 @@
 import { actionTypes, mutationTypes } from '@/store/types/request'
-import getRequestRecord from '@/services/api/requests/getRequestRecord'
+import fetchRequestRecord from '@/services/api/requests/fetchRequestRecord'
 import saveRequestRecord from '~/services/api/requests/saveRequestRecord'
 import fetchNextRequestStatuses from '~/services/api/requests/fetchNextRequestStatuses'
-import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
+// import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
 import fetchDocCheckByRequestId from '@/services/api/requests/fetchDocCheckByRequestId'
 import saveDocCheck from '@/services/api/requests/saveDocCheck'
 
@@ -20,15 +20,15 @@ export default {
     commit(mutationTypes.SET_REQUEST, {})
   },
 
-  async [actionTypes.FETCH_REQUEST]({ commit, dispatch }, requestId) {
+  async [actionTypes.FETCH_REQUEST]({ dispatch }, requestId) {
     try {
-      const request = await getRequestRecord({
+      const request = await fetchRequestRecord({
         axiosModule: this.$axios,
         router: this.$router,
         requestId
       })
       delete request._links
-      commit(mutationTypes.SET_REQUEST, request)
+      await dispatch(mutationTypes.SET_REQUEST, request)
       dispatch(actionTypes.FETCH_REQUEST_STATUSES)
     } catch (error) {
       throw error
@@ -46,7 +46,10 @@ export default {
     await dispatch(actionTypes.FETCH_DOC_CHECK, state.request.requestId)
     docCheck.versionNumber = state.docCheck.versionNumber
 
-    await commit(mutationTypes.SET_DOC_CHECK, docCheck)
+    await commit({
+      objectName: mutationTypes.SET_DEFAULT_OBJECT,
+      objectValue: docCheck
+    })
     await dispatch(actionTypes.SAVE_DOC_CHECK)
   },
 
@@ -60,10 +63,56 @@ export default {
     }
   },
 
-  [actionTypes.CREATE_ABEYANCE]({ commit }) {
-    commit(mutationTypes.SET_ARRAY, {
+  [actionTypes.SET_REQUEST]({ commit }, request) {
+    if (!request.requestId) {
+      const defaultArraysNames = [
+        'gfAbeyancesByRequestId',
+        'gfAttachedDocsByRequestId',
+        'gfQueriedDocsByRequestId',
+        'gfRefusalReasonRequestId'
+      ]
+
+      defaultArraysNames.forEach((defaultObject) => {
+        request = Object.assign({}, request, { [defaultObject]: null })
+      })
+    }
+
+    commit(mutationTypes.SET_REQUEST, request)
+  },
+
+  async [actionTypes.FETCH_DEFAULT_OBJECTS]({ state, commit }) {
+    const defaultObjectsNames = [
+      'gfAbeyancesByRequestId',
+      'gfAttachedDocsByRequestId',
+      'gfQueriedDocsByRequestId',
+      'gfRefusalReasonRequestId'
+    ]
+
+    const defaultObjectsArray = defaultObjectsNames.map((defaultObject) => {
+      return state[`${defaultObject}Default`]
+    })
+
+    if (defaultObjectsArray.some((defaultObject) => !defaultObject)) {
+      const defaultRequest = await fetchRequestRecord({
+        axiosModule: this.$axios,
+        router: this.$router,
+        requestId: 'empty'
+      })
+
+      defaultObjectsNames.forEach((defaultObject) => {
+        commit(mutationTypes.SET_DEFAULT_OBJECT, {
+          objectName: `${defaultObject}Default`,
+          objectValue: () => Object.assign({}, defaultRequest[defaultObject][0])
+        })
+      })
+    }
+  },
+
+  async [actionTypes.CREATE_ABEYANCE]({ state, commit, dispatch }) {
+    await dispatch(actionTypes.FETCH_DEFAULT_OBJECTS)
+    await commit(mutationTypes.SET_ARRAY, {
       arrayName: 'gfAbeyancesByRequestId',
-      arrayValue: [gfAbeyancesByRequestId()]
+      arrayValue: state.gfAbeyancesByRequestIdDefault()
     })
   },
   async [actionTypes.FETCH_DOC_CHECK]({ state, commit }, requestId) {
@@ -81,6 +130,9 @@ export default {
       docCheckEntity: state.docCheck
     })
 
-    commit(mutationTypes.SET_DOC_CHECK, data)
+    commit({
+      objectName: mutationTypes.SET_DEFAULT_OBJECT,
+      objectValue: data
+    })
   }
 }

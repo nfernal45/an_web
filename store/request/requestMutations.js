@@ -25,7 +25,7 @@ export default {
     const item = array[propIndex]
     Vue.set(item, propName, propValue)
   },
-  [mutationTypes.SET_DOC_CHECK]: (state, value) => {
-    state.docCheck = value
+  [mutationTypes.SET_DEFAULT_OBJECT]: (state, { objectName, objectValue }) => {
+    state[objectName] = objectValue
   }
 }

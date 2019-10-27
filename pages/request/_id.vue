@@ -4,24 +4,40 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
-// TODO: реализовать принудительный редирект на main
 const moduleName = 'request'
 export default {
   name: 'RequestPage',
-  mounted() {
-    this.fetchRequestById(this.$route.params.id)
-    if (this.$route.name === 'request-id') this.$router.replace('/registry')
-  },
-  destroyed() {
+  beforeRouteLeave(to, from, next) {
     this.resetRequest()
+    next()
+  },
+  computed: {
+    ...mapState({
+      request: (state) => state.request.request
+    })
+  },
+  mounted() {
+    this.redirectToRegistry()
+    this.fetchRequestHandler()
   },
   methods: {
     ...mapActions(moduleName, {
       fetchRequestById: requestActionTypes.FETCH_REQUEST,
-      resetRequest: requestActionTypes.RESET_REQUEST
-    })
+      resetRequest: requestActionTypes.RESET_REQUEST,
+      fetchRequestStatuses: requestActionTypes.FETCH_REQUEST_STATUSES
+    }),
+    redirectToRegistry() {
+      if (this.$route.name === 'request-id') this.$router.replace('/registry')
+    },
+    fetchRequestHandler() {
+      if (this.request.requestId) {
+        this.fetchRequestStatuses()
+      } else {
+        this.fetchRequestById(this.$route.params.id)
+      }
+    }
   }
 }
 </script>

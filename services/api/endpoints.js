@@ -44,7 +44,10 @@ const restApiGfRef = {
   },
   gfRefRequestStatuses: {
     byId: '/ref-gf-request-statuses/',
-    list: '/ref-gf-request-statuses/list'
+    list: '/ref-gf-request-,statuses/list'
+  },
+  gfRefAgreementFoundations: {
+    list: '/ref-agreement-foundations/list'
   }
 }
 

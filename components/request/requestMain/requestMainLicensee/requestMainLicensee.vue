@@ -17,7 +17,7 @@
               el-col
                 el-form-item(v-show='licenseeType === "L"' label='Полное наименование')
                   el-input(v-model='licenseeFullname')
-                el-form-item(label='Сокращенное наименование юр.лица')
+                el-form-item(label='Сокращенное наименование')
                   el-input(v-model='licenseeShortname')
 
             el-row(v-show='licenseeType === "I"' :gutter='20')
