@@ -15,10 +15,25 @@
                   :label='item.name'
                   :value='item.id')
 
-        el-form-item(label='У организации происходит реорганизация')
+        el-form-item(
+          v-if='request.typeId === 9 && request.licenseeType === "L"'
+          label='У организации происходит реорганизация'
+        )
           el-radio-group(v-model='isReorg')
             el-radio(
-              v-for='item in isReorgOptions'
+              v-for='item in yesNoOptions'
+              :key='item.id'
+              :label='item.id'
+              style='margin-bottom: 5px'
+            ) {{ item.name }}
+  
+        el-form-item(
+          v-if='request.typeId === 10'
+          label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ'
+        )
+          el-radio-group(v-model='isTsgRepr')
+            el-radio(
+              v-for='item in yesNoOptions'
               :key='item.id'
               :label='item.id'
               style='margin-bottom: 5px'
@@ -34,7 +49,7 @@ export default {
   data() {
     return {
       agreementFoundationsOptions: [],
-      isReorgOptions: [
+      yesNoOptions: [
         {
           id: 'Y',
           name: 'Да'
@@ -66,6 +81,15 @@ export default {
       },
       set(value) {
         this.set({ propName: 'isReorg', propValue: value })
+      }
+    },
+
+    isTsgRepr: {
+      get() {
+        return this.request.isTsgRepr
+      },
+      set(value) {
+        this.set({ propName: 'isTsgRepr', propValue: value })
       }
     }
   },
