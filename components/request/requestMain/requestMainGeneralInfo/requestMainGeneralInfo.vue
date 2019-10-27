@@ -38,7 +38,7 @@
 
           el-col(:span='14')
             el-form-item(label='ЕНО')
-              el-input(v-model='eno')
+              el-input(v-model='eno' readonly)
         
         el-row(:gutter='20')
           el-col(:span='6')
