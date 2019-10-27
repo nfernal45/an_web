@@ -10,10 +10,10 @@
                 size='small'
                 placeholder='Укажите основание'
               )
-                el-option(v-for='item in agreementFoundationOptions'
-                  :key='item.decisionIssueMethodId'
-                  :label='item.decisionIssueMethodName'
-                  :value='item.decisionIssueMethodId')
+                el-option(v-for='item in agreementFoundationsOptions'
+                  :key='item.id'
+                  :label='item.name'
+                  :value='item.id')
 
         el-form-item(label='У организации происходит реорганизация')
           el-radio-group(v-model='isReorg')
@@ -27,12 +27,13 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
+import fetchAgreementFoundations from '@/services/api/references/fetchAgreementFoundations'
 const moduleName = 'request'
 export default {
   name: 'RequestMainExtraInfo',
   data() {
     return {
-      agreementFoundationOptions: [],
+      agreementFoundationsOptions: [],
       isReorgOptions: [
         {
           id: 'Y',
@@ -68,10 +69,19 @@ export default {
       }
     }
   },
+  mounted() {
+    this.fetchAgreementFoundations()
+  },
   methods: {
     ...mapMutations(moduleName, {
       set: mutationTypes.SET_PROP
-    })
+    }),
+
+    async fetchAgreementFoundations() {
+      this.agreementFoundationsOptions = await fetchAgreementFoundations({
+        axiosModule: this.$axios
+      })
+    }
   }
 }
 </script>

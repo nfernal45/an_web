@@ -213,7 +213,6 @@ export default {
       return this.requestTypesOptions
         .filter((type) => type.isGf)
         .sort((prevType, nextType) => {
-          console.log(nextType, prevType)
           return prevType.typeId - nextType.typeId
         })
     }
