@@ -8,18 +8,24 @@
               el-input(v-model='abeyanceRegnum')
           el-col(:span='6')
             el-form-item(label='Дата приостановления')
-              el-date-picker(v-model='startDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
+              el-date-picker(
+                :picker-options='{ firstDayOfWeek: 1 }'
+                v-model='startDate'
+                format="dd.MM.yyyy"
+                value-format="dd.MM.yyyy"
+              )
           el-col(:span='11')
             employee-picker(v-model='signerId' label='Руководитель')
 
         el-row(:gutter='20')
           el-col(:span='6' :offset='6')
             el-form-item(label='Приостановлено до:')
-              el-date-picker(v-model='endDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
+              el-date-picker(
+                :picker-options='{ firstDayOfWeek: 1 }'
+                v-model='endDate'
+                format="dd.MM.yyyy"
+                value-format="dd.MM.yyyy"
+              )
           el-col(:span='11')
             employee-picker(v-model='executorId' label='Исполнитель')
 
@@ -57,11 +63,14 @@
                           border)
           el-col(:span='8')
             el-form-item(label='Дата получения:')
-              el-date-picker(v-model='receiveDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy") 
+              el-date-picker(
+                :picker-options='{ firstDayOfWeek: 1 }'
+                v-model='receiveDate'
+                format="dd.MM.yyyy"
+                value-format="dd.MM.yyyy"
+              ) 
             el-form-item(label='Дата возобновления:')
-              el-date-picker(v-model='recommenceDate'
+              el-date-picker(:picker-options='{ firstDayOfWeek: 1 }' v-model='recommenceDate'
                              format="dd.MM.yyyy"
                              value-format="dd.MM.yyyy")
 
