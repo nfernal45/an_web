@@ -31,12 +31,17 @@
                 )
         
         el-row.mb-20(:gutter='20')
-          el-col.mt-10(:span='10')
+          el-col.mt-10(:span='12')
             h4.form-title.mb-10 Место подачи документов
             el-radio-group(v-model='regPlaceId')
-              el-radio(v-for='item in regPlaceOptions' :key='item.regPlaceId' :label='item.regPlaceId') {{ item.regPlaceName }}
+              el-radio(
+                v-for='item in regPlaceOptions'
+                :key='item.regPlaceId'
+                :label='item.regPlaceId'
+                :disabled='request.requestId && item.regPlaceId !== regPlaceId'
+              ) {{ item.regPlaceName }}
 
-          el-col(:span='14')
+          el-col(:span='12')
             el-form-item(label='ЕНО')
               el-input(v-model='eno' readonly)
         
@@ -56,8 +61,8 @@
 
             el-form-item(v-if='regPlaceId === 2' label='Дата получения в МЖИ')
               el-date-picker(
-                v-model='testValue'
-                placeholder='Укажите дату подачи заявления'
+                v-model='requestDate'
+                placeholder='Укажите дату получения в МЖИ'
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
               )
@@ -99,7 +104,6 @@ export default {
   },
   data() {
     return {
-      testValue: '',
       requestTypesOptions: [],
       regPlaceOptions: [],
       decisionIssueMethodOptions: [
