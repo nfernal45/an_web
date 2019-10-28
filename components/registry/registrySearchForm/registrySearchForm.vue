@@ -28,7 +28,11 @@
       el-row.mb-20
         el-col(:span='6')
           el-form-item(label='Дата подачи заявления')
-            el-date-picker(v-model='searchForm.requestDate' format='dd.MM.yyyy')
+            el-date-picker(
+            :picker-options='{ firstDayOfWeek: 1 }'
+            v-model='searchForm.requestDate'
+            format='dd.MM.yyyy'
+          )
 </template>
 <script>
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
