@@ -10,7 +10,8 @@
             el-form-item(label='Дата:')
               el-date-picker(v-model='actDate'
                              format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
+                             value-format="dd.MM.yyyy"
+                             :picker-options='{ firstDayOfWeek: 1 }')
           el-col(:span='10')
             employee-picker(v-model='signerId' label='Руководитель')
 

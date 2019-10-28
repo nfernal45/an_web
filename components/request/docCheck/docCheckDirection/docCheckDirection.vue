@@ -14,13 +14,15 @@
             el-form-item(label='Дата направления документов')
               el-date-picker(v-model='sendDate'
                              format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
+                             value-format="dd.MM.yyyy"
+                             :picker-options='{ firstDayOfWeek: 1 }')
 
           el-col(:span='6')
             el-form-item(label='Плановый срок исполнения')
               el-date-picker(v-model='planExecDate'
                              format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
+                             value-format="dd.MM.yyyy"
+                             :picker-options='{ firstDayOfWeek: 1 }')
         
         //- el-row.mb-10(style='font-size: 12px')
         //-   strong Сведения о действующей лицензии по данным МЖИ: 
