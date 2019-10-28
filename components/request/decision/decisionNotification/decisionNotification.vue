@@ -24,16 +24,12 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
-import formBlock from '@/elements/formBlock'
 import fetchAcceptReasons from '@/services/api/requests/references/fetchAcceptReasons'
 import fetchRefusalReasons from '@/services/api/requests/references/fetchRefusalReasons'
 
 const moduleName = 'request'
 export default {
-  name: 'DecisionNotification',
-  components: {
-    formBlock
-  },
+  name: 'DocumentsIssue',
   data() {
     return {
       refAcceptReasons: [],

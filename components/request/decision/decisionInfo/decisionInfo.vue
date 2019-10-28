@@ -22,14 +22,10 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
-import formBlock from '@/elements/formBlock'
 
 const moduleName = 'request'
 export default {
   name: 'DecisionInfo',
-  components: {
-    formBlock
-  },
   computed: {
     ...mapState(moduleName, {
       request: (state) => state.request

@@ -16,14 +16,14 @@
 <script>
 import decisionInfo from '@/components/request/decision/decisionInfo'
 import decisionNotification from '@/components/request/decision/decisionNotification'
-import deliveryDocuments from '@/components/request/decision/deliveryDocuments'
+import documentsIssue from '@/components/request/decision/documentsIssue'
 
 export default {
   name: 'RequestDecision',
   components: {
     decisionInfo,
     decisionNotification,
-    deliveryDocuments
+    documentsIssue
   },
   computed: {
     requestId() {
