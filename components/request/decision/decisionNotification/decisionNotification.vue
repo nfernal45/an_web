@@ -14,12 +14,11 @@
             div {{ getTheRightReason }}
           
           el-col(v-show='decisionType === "R"')
-            //- el-checkbox-group(v-model='selectValue')
-            //-   el-checkbox(v-for='item in refRefusalReasons'
-            //-             :key='item.typeId'
-            //-             :value='item'
-            //-             :label='item && item.typeName'
-            //-             style='margin-bottom: 3px')
+            el-checkbox-group(v-model='gfRefusalReasonRequestId')
+              el-checkbox(v-for='item in refRefusalReasons'
+                        :key='item.reasonId'
+                        :label='item.reasonId'
+                        style='margin-bottom: 3px') {{ item.reasonName }}
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
@@ -39,7 +38,8 @@ export default {
   },
   computed: {
     ...mapState(moduleName, {
-      request: (state) => state.request
+      request: (state) => state.request,
+      requestRefusalReason: (state) => state.request.gfRefusalReasonRequestId
     }),
     computedAcceptResouns() {
       return (
@@ -71,6 +71,26 @@ export default {
       },
       set(value) {
         this.set({ propName: 'decisionType', propValue: value })
+      }
+    },
+    gfRefusalReasonRequestId: {
+      get() {
+        return (
+          (this.request &&
+            this.request.gfRefusalReasonRequestId &&
+            this.request.gfRefusalReasonRequestId.map(
+              (refusalReason) => refusalReason.reasonId
+            )) ||
+          []
+        )
+      },
+      set(value) {
+        const result = []
+        value.forEach((reasonId) => {
+          result.push({ reasonId })
+        })
+
+        this.set({ propName: 'gfRefusalReasonRequestId', propValue: result })
       }
     }
   },
