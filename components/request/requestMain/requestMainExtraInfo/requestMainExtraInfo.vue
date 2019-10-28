@@ -47,6 +47,7 @@
           el-col(:span='12')
             el-form-item(label='Дата выдачи действующей лицензии')
               el-date-picker(
+                :picker-options='{ firstDayOfWeek: 1 }' 
                 v-model='currentLicenseDate'
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
