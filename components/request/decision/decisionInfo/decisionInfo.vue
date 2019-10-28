@@ -10,7 +10,8 @@
             el-form-item(label='Дата приостановления')
               el-date-picker(v-model='decisionDate'
                              format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
+                             value-format="dd.MM.yyyy"
+                             :picker-options='{ firstDayOfWeek: 1 }')
           el-col(:span='11')
             employee-picker(v-model='licSignerId' label='Руководитель')
 

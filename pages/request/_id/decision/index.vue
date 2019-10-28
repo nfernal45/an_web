@@ -10,8 +10,7 @@
 
     el-row.mb-20
       // Выдача документов
-      delivery-documents
-
+      documents-issue
 </template>
 <script>
 import decisionInfo from '@/components/request/decision/decisionInfo'

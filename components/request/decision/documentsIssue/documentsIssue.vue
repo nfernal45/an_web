@@ -7,7 +7,8 @@
             el-form-item(label='Дата выдачи решения')
               el-date-picker(v-model='docsIssueDate'
                              format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy")
+                             value-format="dd.MM.yyyy"
+                             :picker-options='{ firstDayOfWeek: 1 }')
           el-col(:span='10')
             employee-picker(label='Документы выдал' v-model='licEmployeeId')
 
