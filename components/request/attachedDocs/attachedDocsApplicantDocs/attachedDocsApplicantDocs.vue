@@ -21,11 +21,14 @@
                     )
                 el-col(:span='7')
                   el-form-item(label='Дата')
-                    el-date-picker(v-model='doc.docDate'
-                                   type='date'
-                                   format="dd.MM.yyyy"
-                                   value-format="dd.MM.yyyy"
-                                   placeholder='Выберите дату')
+                    el-date-picker(
+                      :picker-options='{ firstDayOfWeek: 1 }'
+                      v-model='doc.docDate'
+                      type='date'
+                      format="dd.MM.yyyy"
+                      value-format="dd.MM.yyyy"
+                      placeholder='Выберите дату'
+                    )
                 el-col(:span='7' v-show='doc.docFileName')
                   el-form-item(label=' ')
                     span.file(@click='downloadFile(doc)')

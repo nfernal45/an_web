@@ -13,18 +13,24 @@
               el-row(:gutter='20')
                 el-col(:span='6')
                   el-form-item(label='Дата запроса')
-                    el-date-picker(v-model='doc.queryDate'
-                                  type='date'
-                                  format="dd.MM.yyyy"
-                                  value-format="dd.MM.yyyy"
-                                  placeholder='Выберите дату')
+                    el-date-picker(
+                      :picker-options='{ firstDayOfWeek: 1 }'
+                      v-model='doc.queryDate'
+                      type='date'
+                      format="dd.MM.yyyy"
+                      value-format="dd.MM.yyyy"
+                      placeholder='Выберите дату'
+                    )
                 el-col(:span='6')
                   el-form-item(label='Дата ответа')
-                    el-date-picker(v-model='doc.receiveDate'
-                                  type='date'
-                                  format="dd.MM.yyyy"
-                                  value-format="dd.MM.yyyy"
-                                  placeholder='Выберите дату')
+                    el-date-picker(
+                      :picker-options='{ firstDayOfWeek: 1 }'
+                      v-model='doc.receiveDate'
+                      type='date'
+                      format="dd.MM.yyyy"
+                      value-format="dd.MM.yyyy"
+                      placeholder='Выберите дату'
+                    )
               el-row
                 el-col(:span='12')
                   el-form-item(label='Примечание')

@@ -28,6 +28,7 @@
                   placeholder='Укажите плановый срок оказания ГУ'
                   format='dd.MM.yyyy'
                   value-format='dd.MM.yyyy'
+                  :picker-options='{ firstDayOfWeek: 1 }'
                 )
         
         el-row.mb-20(:gutter='20')
@@ -57,10 +58,12 @@
                 placeholder='Укажите дату подачи заявления'
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
+                :picker-options='{ firstDayOfWeek: 1 }'
               )
 
             el-form-item(v-if='regPlaceId === 2' label='Дата получения в МЖИ')
               el-date-picker(
+                :picker-options='{ firstDayOfWeek: 1 }' 
                 v-model='requestDate'
                 placeholder='Укажите дату получения в МЖИ'
                 format='dd.MM.yyyy'
@@ -81,6 +84,7 @@
           el-col(:span='6' v-if='regPlaceId === 2')
             el-form-item(label='Дата подачи на портале')
               el-date-picker(
+                :picker-options='{ firstDayOfWeek: 1 }' 
                 v-model='outerRequestDate'
                 placeholder='Укажите дату подачи заявления'
                 format='dd.MM.yyyy'
