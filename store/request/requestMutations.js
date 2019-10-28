@@ -11,6 +11,9 @@ export default {
   [mutationTypes.SET_PROP]: (state, { propName, propValue }) => {
     state.request[propName] = propValue
   },
+  [mutationTypes.SET_PROP_DOC_CHECK]: (state, { propName, propValue }) => {
+    state.docCheck[propName] = propValue
+  },
   [mutationTypes.SET_ARRAY]: (state, { propName, propValue }) => {
     Vue.set(state.request, propName, propValue)
   },
