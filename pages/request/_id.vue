@@ -31,11 +31,11 @@ export default {
     redirectToRegistry() {
       if (this.$route.name === 'request-id') this.$router.replace('/registry')
     },
-    fetchRequestHandler() {
+    async fetchRequestHandler() {
       if (this.request.requestId) {
         this.fetchRequestStatuses()
       } else {
-        this.fetchRequestById(this.$route.params.id)
+        await this.fetchRequestById(this.$route.params.id)
       }
     }
   }

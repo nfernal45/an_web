@@ -2,6 +2,11 @@ import { actionTypes, mutationTypes } from '@/store/types/request'
 import fetchRequestRecord from '@/services/api/requests/fetchRequestRecord'
 import saveRequestRecord from '~/services/api/requests/saveRequestRecord'
 import fetchNextRequestStatuses from '~/services/api/requests/fetchNextRequestStatuses'
+// import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
+import fetchDocCheckByRequestId from '@/services/api/requests/fetchDocCheckByRequestId'
+import saveDocCheck from '@/services/api/requests/saveDocCheck'
+import defaultDocCheck from '@/constants/defaultDocCheck'
+import changeRequestStatus from '@/services/api/requests/changeRequestStatus'
 
 export default {
   [actionTypes.FETCH_REQUEST_LIST]: async ({ commit }) => {
@@ -15,27 +20,31 @@ export default {
 
   [actionTypes.RESET_REQUEST]: ({ state, commit }) => {
     commit(mutationTypes.SET_REQUEST, {})
+    commit(mutationTypes.SET_DOC_CHECK, {})
   },
 
-  async [actionTypes.FETCH_REQUEST]({ dispatch }, requestId) {
+  async [actionTypes.FETCH_REQUEST]({ state, dispatch }, requestId) {
+    const currentRequestId = requestId || state.request.requestId
     try {
       const request = await fetchRequestRecord({
         axiosModule: this.$axios,
         router: this.$router,
-        requestId
+        requestId: currentRequestId
       })
       delete request._links
       await dispatch(mutationTypes.SET_REQUEST, request)
       dispatch(actionTypes.FETCH_REQUEST_STATUSES)
+      dispatch(actionTypes.FETCH_DOC_CHECK)
     } catch (error) {
       throw error
     }
   },
 
-  async [actionTypes.SAVE_REQUEST]({ state, commit }) {
+  async [actionTypes.SAVE_REQUEST]({ state, commit, dispatch }) {
     try {
       const data = await saveRequestRecord(this.$axios, state.request)
       await commit(mutationTypes.SET_REQUEST, data)
+      dispatch(actionTypes.FETCH_DOC_CHECK)
     } catch (error) {
       throw error
     }
@@ -102,5 +111,49 @@ export default {
       arrayName: 'gfAbeyancesByRequestId',
       arrayValue: state.gfAbeyancesByRequestIdDefault()
     })
+  },
+  async [actionTypes.FETCH_DOC_CHECK]({ state, commit }) {
+    if (state.request.requestId && state.request.requestStatusId >= 2) {
+      const data = await fetchDocCheckByRequestId({
+        axiosModule: this.$axios,
+        requestId: state.request.requestId
+      })
+
+      if (data.length) {
+        commit(mutationTypes.SET_DOC_CHECK, data[0])
+      } else if (state.request.requestStatusId === 2) {
+        commit(
+          mutationTypes.SET_DOC_CHECK,
+          Object.assign({}, defaultDocCheck(), {
+            requestId: state.request.requestId
+          })
+        )
+      }
+    }
+  },
+  async [actionTypes.SAVE_DOC_CHECK]({ state, commit }) {
+    if (state.request.requestStatusId >= 2) {
+      const data = await saveDocCheck({
+        axiosModule: this.$axios,
+        docCheckEntity: state.docCheck
+      })
+      commit(mutationTypes.SET_DOC_CHECK, data)
+    }
+  },
+  async [actionTypes.CHANGE_REQUEST_STATUS]({ state, dispatch }, nextStatusId) {
+    await dispatch(actionTypes.SAVE_REQUEST_RELATED)
+
+    await changeRequestStatus({
+      axiosModule: this.$axios,
+      requestId: state.request.requestId,
+      nextStatusId,
+      requestStatusId: state.request.requestStatusId
+    })
+
+    await dispatch(actionTypes.FETCH_REQUEST)
+  },
+  async [actionTypes.SAVE_REQUEST_RELATED]({ dispatch }) {
+    await dispatch(actionTypes.SAVE_DOC_CHECK)
+    await dispatch(actionTypes.SAVE_REQUEST)
   }
 }

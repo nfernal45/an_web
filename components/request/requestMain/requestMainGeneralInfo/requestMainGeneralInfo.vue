@@ -99,13 +99,9 @@ import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
-import EmployeePicker from '@/elements/employeePicker/employeePicker'
 const moduleName = 'request'
 export default {
   name: 'RequestMainGeneralInfo',
-  components: {
-    EmployeePicker
-  },
   data() {
     return {
       requestTypesOptions: [],
