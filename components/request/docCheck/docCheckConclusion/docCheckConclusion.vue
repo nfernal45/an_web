@@ -14,7 +14,7 @@
                              :picker-options='{ firstDayOfWeek: 1 }')
           el-col(:span='10')
             employee-picker(v-model='signerId' label='Руководитель')
-          el-col(v-if='executors.length' :span='10' :offset='12')
+          el-col(:span='10' :offset='12')
             div(v-for='(item, index) in executors' :key='index')
               employee-picker(v-model='executors[index].executorId' @change='changeExecutorsArray($event, index)' label='Исполнитель')
           el-col(:span='10' :offset='12')
@@ -91,15 +91,16 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log('executors', this.executors)
-  },
   methods: {
     ...mapMutations(moduleName, {
       setPropDocCheck: mutationTypes.SET_PROP_DOC_CHECK
     }),
     addExecutor() {
-      const array = [...this.docCheck.executors]
+      let array
+
+      if (this.docCheck.executors) array = [...this.docCheck.executors]
+      else array = []
+
       array.push(null)
       this.executors = array
     },
