@@ -13,7 +13,6 @@
 import docCheckDirection from '@/components/request/docCheck/docCheckDirection'
 import docCheckConclusion from '@/components/request/docCheck/docCheckConclusion'
 import docCheckOrder from '@/components/request/docCheck/docCheckOrder'
-
 export default {
   name: 'AppealDocCheckPage',
   components: {

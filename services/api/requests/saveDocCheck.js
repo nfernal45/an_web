@@ -1,9 +1,9 @@
 import { restApiGf } from '@/services/api/endpoints'
 
-export default async function({ axiosModule, requestId, docCheckEntity }) {
+export default async function({ axiosModule, docCheckEntity }) {
   try {
     const { data } = await axiosModule({
-      method: requestId ? 'PUT' : 'POST',
+      method: docCheckEntity.checkId ? 'PUT' : 'POST',
       url: `${restApiGf.gfDocCheck.save}`,
       data: docCheckEntity
     })

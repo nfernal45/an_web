@@ -5,6 +5,8 @@ import fetchNextRequestStatuses from '~/services/api/requests/fetchNextRequestSt
 // import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
 import fetchDocCheckByRequestId from '@/services/api/requests/fetchDocCheckByRequestId'
 import saveDocCheck from '@/services/api/requests/saveDocCheck'
+import defaultDocCheck from '@/constants/defaultDocCheck'
+import changeRequestStatus from '@/services/api/requests/changeRequestStatus'
 
 export default {
   [actionTypes.FETCH_REQUEST_LIST]: async ({ commit }) => {
@@ -18,39 +20,34 @@ export default {
 
   [actionTypes.RESET_REQUEST]: ({ state, commit }) => {
     commit(mutationTypes.SET_REQUEST, {})
+    commit(mutationTypes.SET_DOC_CHECK, {})
   },
 
-  async [actionTypes.FETCH_REQUEST]({ dispatch }, requestId) {
+  async [actionTypes.FETCH_REQUEST]({ state, dispatch }, requestId) {
+    const currentRequestId = requestId || state.request.requestId
     try {
       const request = await fetchRequestRecord({
         axiosModule: this.$axios,
         router: this.$router,
-        requestId
+        requestId: currentRequestId
       })
       delete request._links
       await dispatch(mutationTypes.SET_REQUEST, request)
       dispatch(actionTypes.FETCH_REQUEST_STATUSES)
+      dispatch(actionTypes.FETCH_DOC_CHECK)
     } catch (error) {
       throw error
     }
   },
 
   async [actionTypes.SAVE_REQUEST]({ state, commit, dispatch }) {
-    const data = await saveRequestRecord(this.$axios, state.request)
-    await commit(mutationTypes.SET_REQUEST, data)
-
-    // Логика ниже нужна для корректного сохранения сущности doc-check.
-    // Поместил её сюда, что бы по кнопке "Сохранить", сохранялось всё вместе.
-    const docCheck = Object.assign({}, state.docCheck)
-
-    await dispatch(actionTypes.FETCH_DOC_CHECK, state.request.requestId)
-    docCheck.versionNumber = state.docCheck.versionNumber
-
-    await commit(mutationTypes.SET_DEFAULT_OBJECT, {
-      objectName: 'docCheck',
-      objectValue: docCheck
-    })
-    await dispatch(actionTypes.SAVE_DOC_CHECK)
+    try {
+      const data = await saveRequestRecord(this.$axios, state.request)
+      await commit(mutationTypes.SET_REQUEST, data)
+      dispatch(actionTypes.FETCH_DOC_CHECK)
+    } catch (error) {
+      throw error
+    }
   },
 
   async [actionTypes.FETCH_REQUEST_STATUSES]({ state, commit }) {
@@ -115,29 +112,48 @@ export default {
       arrayValue: state.gfAbeyancesByRequestIdDefault()
     })
   },
-  async [actionTypes.FETCH_DOC_CHECK]({ state, commit }, requestId) {
-    const { data } = await fetchDocCheckByRequestId({
-      axiosModule: this.$axios,
-      requestId
-    })
-
-    if (data.length) {
-      commit(mutationTypes.SET_DEFAULT_OBJECT, {
-        objectName: 'docCheck',
-        objectValue: data[0]
+  async [actionTypes.FETCH_DOC_CHECK]({ state, commit }) {
+    if (state.request.requestId && state.request.requestStatusId >= 2) {
+      const data = await fetchDocCheckByRequestId({
+        axiosModule: this.$axios,
+        requestId: state.request.requestId
       })
+
+      if (data.length) {
+        commit(mutationTypes.SET_DOC_CHECK, data[0])
+      } else if (state.request.requestStatusId === 2) {
+        commit(
+          mutationTypes.SET_DOC_CHECK,
+          Object.assign({}, defaultDocCheck(), {
+            requestId: state.request.requestId
+          })
+        )
+      }
     }
   },
   async [actionTypes.SAVE_DOC_CHECK]({ state, commit }) {
-    const data = await saveDocCheck({
+    if (state.request.requestStatusId >= 2) {
+      const data = await saveDocCheck({
+        axiosModule: this.$axios,
+        docCheckEntity: state.docCheck
+      })
+      commit(mutationTypes.SET_DOC_CHECK, data)
+    }
+  },
+  async [actionTypes.CHANGE_REQUEST_STATUS]({ state, dispatch }, nextStatusId) {
+    await dispatch(actionTypes.SAVE_REQUEST_RELATED)
+
+    await changeRequestStatus({
       axiosModule: this.$axios,
       requestId: state.request.requestId,
-      docCheckEntity: state.docCheck
+      nextStatusId,
+      requestStatusId: state.request.requestStatusId
     })
 
-    commit(mutationTypes.SET_DEFAULT_OBJECT, {
-      objectName: 'docCheck',
-      objectValue: data
-    })
+    await dispatch(actionTypes.FETCH_REQUEST)
+  },
+  async [actionTypes.SAVE_REQUEST_RELATED]({ dispatch }) {
+    await dispatch(actionTypes.SAVE_DOC_CHECK)
+    await dispatch(actionTypes.SAVE_REQUEST)
   }
 }
