@@ -36,7 +36,6 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
-// import { actionTypes, mutationTypes } from '@/store/types/request'
 import fetchRefDept from '@/services/api/references/fetchRefDept'
 const moduleName = 'request'
 export default {

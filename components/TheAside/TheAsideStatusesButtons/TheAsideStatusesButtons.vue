@@ -33,7 +33,6 @@ export default {
   methods: {
     ...mapActions(moduleName, {
       fetchRequestById: requestActionTypes.FETCH_REQUEST,
-      saveRequest: requestActionTypes.SAVE_REQUEST,
       changeRequestStatus: requestActionTypes.CHANGE_REQUEST_STATUS
     }),
     async onStatusChange(nextStatusId) {

@@ -20,13 +20,10 @@
 
 </template>
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
-import {
-  actionTypes as requestActionTypes,
-  mutationTypes as requestMutationTypes
-} from '@/store/types/request'
+import { actionTypes as requestActionTypes } from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
 
 const moduleName = 'request'
@@ -53,9 +50,6 @@ export default {
   methods: {
     ...mapActions(moduleName, {
       saveRequestRelated: requestActionTypes.SAVE_REQUEST_RELATED
-    }),
-    ...mapMutations(moduleName, {
-      setDefaultObject: requestMutationTypes.SET_DEFAULT_OBJECT
     }),
     openNewCreatedRequestPage() {
       if (!isNumber(this.$route.params.id)) {
