@@ -14,9 +14,12 @@
                              :picker-options='{ firstDayOfWeek: 1 }')
           el-col(:span='10')
             employee-picker(v-model='signerId' label='Руководитель')
-
+          el-col(v-if='executors.length' :span='10' :offset='12')
+            div(v-for='(item, index) in executors' :key='index')
+              employee-picker(v-model='executors[index].executorId' @change='changeExecutorsArray($event, index)' label='Исполнитель')
           el-col(:span='10' :offset='12')
-            employee-picker(v-model='test1' label='Исполнитель')
+            el-button(size='small'
+                      @click='addExecutor') Добавить исполнителя
         
         el-row.mb-10
           el-col
@@ -35,7 +38,7 @@ export default {
   },
   data() {
     return {
-      test1: ''
+      docCheckExecutors: []
     }
   },
   computed: {
@@ -73,12 +76,38 @@ export default {
       set(value) {
         this.setPropDocCheck({ propName: 'conclusion', propValue: value })
       }
+    },
+    executors: {
+      get() {
+        return (
+          (this.docCheck &&
+            this.docCheck.executors &&
+            this.docCheck.executors.map((item) => ({ executorId: item }))) ||
+          []
+        )
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'executors', propValue: value })
+      }
     }
+  },
+  mounted() {
+    console.log('executors', this.executors)
   },
   methods: {
     ...mapMutations(moduleName, {
       setPropDocCheck: mutationTypes.SET_PROP_DOC_CHECK
-    })
+    }),
+    addExecutor() {
+      const array = [...this.docCheck.executors]
+      array.push(null)
+      this.executors = array
+    },
+    changeExecutorsArray(value, index) {
+      const array = [...this.docCheck.executors]
+      array[index] = value
+      this.executors = array
+    }
   }
 }
 </script>

@@ -14,11 +14,9 @@
                              :picker-options='{ firstDayOfWeek: 1 }')
 
           el-col(:span='10')
-            el-form-item(label='Руководитель:')
-              el-input(disabled)
+            employee-picker(label='Руководитель' v-movel='employeeSigner')
           el-col(:span='10' :offset='12')
-            el-form-item(label='Исполнитель:')
-              el-input(disabled)
+            employee-picker(label='Исполнитель' v-model='employeeExecutor')
 
 </template>
 <script>
@@ -28,6 +26,12 @@ const moduleName = 'request'
 
 export default {
   name: 'DocCheckOrder',
+  data() {
+    return {
+      employeeSigner: '',
+      employeeExecutor: ''
+    }
+  },
   computed: {
     ...mapState(moduleName, {
       docCheck: (state) => state.docCheck
