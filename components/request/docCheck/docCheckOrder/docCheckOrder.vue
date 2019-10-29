@@ -14,7 +14,7 @@
                              :picker-options='{ firstDayOfWeek: 1 }')
 
           el-col(:span='10')
-            employee-picker(label='Руководитель' v-movel='employeeSigner')
+            employee-picker(label='Руководитель' v-model='employeeSigner')
           el-col(:span='10' :offset='12')
             employee-picker(label='Исполнитель' v-model='employeeExecutor')
 

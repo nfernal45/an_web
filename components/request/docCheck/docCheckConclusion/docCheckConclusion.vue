@@ -15,8 +15,8 @@
           el-col(:span='10')
             employee-picker(v-model='signerId' label='Руководитель')
           el-col(:span='10' :offset='12')
-            div(v-for='(item, index) in executors' :key='index')
-              employee-picker(:value='executors[index].executorId' @input='changeExecutorsArray($event, index)' label='Исполнитель')
+            div(v-for='(item, index) in executors' :key='item.executorId')
+              employee-picker(:value='item.executorId' @input='changeExecutorsArray($event, index)' label='Исполнитель')
           el-col(:span='10' :offset='12')
             el-button(size='small'
                       @click='addExecutor') Добавить исполнителя
@@ -35,11 +35,6 @@ export default {
   name: 'DocCheckConclusion',
   components: {
     employeePicker
-  },
-  data() {
-    return {
-      docCheckExecutors: []
-    }
   },
   computed: {
     ...mapState(moduleName, {
