@@ -16,7 +16,7 @@
             employee-picker(v-model='signerId' label='Руководитель')
           el-col(:span='10' :offset='12')
             div(v-for='(item, index) in executors' :key='index')
-              employee-picker(v-model='executors[index].executorId' @change='changeExecutorsArray($event, index)' label='Исполнитель')
+              employee-picker(:value='executors[index].executorId' @input='changeExecutorsArray($event, index)' label='Исполнитель')
           el-col(:span='10' :offset='12')
             el-button(size='small'
                       @click='addExecutor') Добавить исполнителя

@@ -10,7 +10,6 @@
       no-data-text="По Вашему запросу сотрудник не найден"
       :loading="isLoading"
       autocomplete
-      @change='$emit("change", $event)'
     )
       el-option(v-for='orgStructure in employeeOptions'
         :key='orgStructure.orgStrctId'
