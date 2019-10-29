@@ -34,8 +34,9 @@
 
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
-import { actionTypes, mutationTypes } from '@/store/types/request'
+import { mapState, mapMutations } from 'vuex'
+import { mutationTypes } from '@/store/types/request'
+// import { actionTypes, mutationTypes } from '@/store/types/request'
 import fetchRefDept from '@/services/api/references/fetchRefDept'
 const moduleName = 'request'
 export default {
@@ -78,13 +79,9 @@ export default {
     }
   },
   mounted() {
-    this.fetchDocCheck(this.requestId)
     this.fetchRefDept()
   },
   methods: {
-    ...mapActions(moduleName, {
-      fetchDocCheck: actionTypes.FETCH_DOC_CHECK
-    }),
     ...mapMutations(moduleName, {
       setPropDocCheck: mutationTypes.SET_PROP_DOC_CHECK
     }),

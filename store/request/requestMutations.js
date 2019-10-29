@@ -27,5 +27,8 @@ export default {
   },
   [mutationTypes.SET_DEFAULT_OBJECT]: (state, { objectName, objectValue }) => {
     state[objectName] = objectValue
+  },
+  [mutationTypes.SET_DOC_CHECK]: (state, value) => {
+    state.docCheck = value
   }
 }

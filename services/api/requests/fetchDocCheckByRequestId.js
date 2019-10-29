@@ -7,8 +7,8 @@ export default async function({ axiosModule, requestId }) {
   }
 
   try {
-    const response = await axiosModule.$get(url, { params })
-    return response
+    const { data } = await axiosModule.$get(url, { params })
+    return data
   } catch (error) {
     throw error
   }
