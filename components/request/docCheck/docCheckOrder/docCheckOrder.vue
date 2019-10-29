@@ -1,10 +1,59 @@
 <template lang="pug">
-  div
-    h2 Распоряжение на проведение проверки
+  form-block.mb-10(title='Распоряжение на проведение проверки')
+    template(slot='content')
+      el-form(label-position='top' size='small')
+        el-row(:gutter='20')
+          el-col(:span='6')
+            el-form-item(label='Номер')
+              el-input(v-model='instructionNo')
+          el-col(:span='6')
+            el-form-item(label='Дата:')
+              el-date-picker(v-model='instructionDate'
+                             format="dd.MM.yyyy"
+                             value-format="dd.MM.yyyy"
+                             :picker-options='{ firstDayOfWeek: 1 }')
+
+          el-col(:span='10')
+            el-form-item(label='Руководитель:')
+              el-input(disabled)
+          el-col(:span='10' :offset='12')
+            el-form-item(label='Исполнитель:')
+              el-input(disabled)
+
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex'
+import { mutationTypes } from '@/store/types/request'
+const moduleName = 'request'
+
 export default {
-  name: 'DocCheckOrder'
+  name: 'DocCheckOrder',
+  computed: {
+    ...mapState(moduleName, {
+      docCheck: (state) => state.docCheck
+    }),
+    instructionNo: {
+      get() {
+        return this.docCheck && this.docCheck.instructionNo
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'instructionNo', propValue: value })
+      }
+    },
+    instructionDate: {
+      get() {
+        return this.docCheck && this.docCheck.instructionDate
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'instructionDate', propValue: value })
+      }
+    }
+  },
+  methods: {
+    ...mapMutations(moduleName, {
+      setPropDocCheck: mutationTypes.SET_PROP_DOC_CHECK
+    })
+  }
 }
 </script>
 <style lang="sass"></style>

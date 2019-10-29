@@ -22,9 +22,10 @@ const restApiGf = {
     byId: '/gf-attached-docs/{id}',
     list: '/gf-attached-docs/list'
   },
-  gfocCheck: {
+  gfDocCheck: {
     byId: '/gf-doc-checks/{id}',
-    list: '/gf-doc-checks/list'
+    list: '/gf-doc-checks/list',
+    save: '/gf-doc-checks/'
   }
 }
 
@@ -43,7 +44,7 @@ const restApiGfRef = {
   },
   gfRefRequestStatuses: {
     byId: '/ref-gf-request-statuses/',
-    list: '/ref-gf-request-,statuses/list'
+    list: '/ref-gf-request-statuses/list'
   },
   gfRefAgreementFoundations: {
     list: '/ref-agreement-foundations/list'
@@ -77,6 +78,9 @@ const restApiGuRef = {
   },
   guRefAbeyanceReasons: {
     list: '/ref-abeyance-reasons/list'
+  },
+  guRefRefusalReasons: {
+    list: '/ref-refusal-reasons/list'
   }
 }
 
@@ -84,6 +88,9 @@ const restApiNsi = {
   nsiRefOrgStructure: {
     byId: '/ref-org-strct-official/{id}',
     list: '/ref-org-strct-official/list'
+  },
+  nsiRefDept: {
+    list: '/ref-depts/list'
   }
 }
 
