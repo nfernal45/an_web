@@ -22,11 +22,11 @@ export default function({ $axios, $auth, redirect, base, route }) {
     // if (config.url.match(/^\/nsi-api/)) {
     //   config.url = config.url.replace('/nsi-api', process.env.APP_REST_API_NSI)
     // }
-    
+    console.info('Making request to', config.url)
   })
 
   $axios.onResponse((response) => {
-    // console.info('Getting response from', response.config.url)
+    console.info('Getting response from', response.config.url)
   })
 
   $axios.onError((error) => {

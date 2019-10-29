@@ -94,6 +94,12 @@ const restApiNsi = {
   }
 }
 
+const restApiAuth = {
+  checkToken: '/as/oauth/check_token',
+  checkUser: '/as/commons/users/{login}',
+  passwordReset: '/as/users/password-reset-page'
+}
+
 function setApiPrefix({ prefix, links }) {
   Object.keys(links).forEach((key) => {
     Object.keys(links[key]).forEach((subKey) => {
@@ -118,5 +124,6 @@ export {
   restApiGuRef,
   restApiNsi,
   restApiGfActiviti,
-  restApiGfRabbitmq
+  restApiGfRabbitmq,
+  restApiAuth
 }
