@@ -39,7 +39,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request.request
+      request: (state) => state.request.request,
+      docCheck: (state) => state.request.docCheck
     }),
 
     styles() {
@@ -48,7 +49,7 @@ export default {
   },
   methods: {
     ...mapActions(moduleName, {
-      saveRequest: requestActionTypes.SAVE_REQUEST
+      saveRequestRelated: requestActionTypes.SAVE_REQUEST_RELATED
     }),
     openNewCreatedRequestPage() {
       if (!isNumber(this.$route.params.id)) {
@@ -61,7 +62,7 @@ export default {
     async onSave() {
       this.isRequestSaving = true
       try {
-        await this.saveRequest()
+        await this.saveRequestRelated()
         this.openNewCreatedRequestPage()
         this.isRequestSaving = false
       } catch (error) {

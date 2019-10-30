@@ -4,13 +4,17 @@
       // Документы заявителя
       attached-docs-applicant-docs
 
+      attached-docs-mzhi-docs
+
 </template>
 <script>
 import attachedDocsApplicantDocs from '@/components/request/attachedDocs/attachedDocsApplicantDocs'
+import attachedDocsMzhiDocs from '@/components/request/attachedDocs/attachedDocsMzhiDocs'
 export default {
   name: 'RequestAttachedDocsPage',
   components: {
-    attachedDocsApplicantDocs
+    attachedDocsApplicantDocs,
+    attachedDocsMzhiDocs
   },
   computed: {
     requestId() {
