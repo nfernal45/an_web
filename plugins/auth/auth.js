@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import checkToken from '@/services/api/auth/checkToken'
 import checkUser from '@/services/api/auth/checkUser'
+import changePassword from '@/services/api/auth/changePassword'
 export default function({ $axios, $auth, base, redirect }) {
   if (process.client) {
     console.group('Auth plugin')
@@ -15,10 +16,14 @@ export default function({ $axios, $auth, base, redirect }) {
           accessToken: $auth.getToken('oauth2').split(' ')[1]
         })
 
-        await checkUser({
+        const { isResetPassword } = await checkUser({
           axiosModule: $axios,
           login: user_name
         })
+
+        if (isResetPassword) {
+          changePassword({ redirectModule: redirect, userLogin: user_name })
+        }
 
         console.log(user_name)
       })()
