@@ -98,7 +98,7 @@ const restApiAuth = {
   checkToken: '/as/oauth/check_token',
   // checkUser: '/as/commons/users/{login}',
   checkUser: '/as/users/{login}',
-  passwordReset: '/as/users/password-reset-page/{login}'
+  passwordReset: '/as/user/password-reset-page'
 }
 
 function setApiPrefix({ prefix, links }) {

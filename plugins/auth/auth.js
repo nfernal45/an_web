@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import checkToken from '@/services/api/auth/checkToken'
 import checkUser from '@/services/api/auth/checkUser'
-import changePassword from '@/services/api/auth/changePassword'
-export default function({ $axios, $auth, base, redirect }) {
+import resetPassword from '@/services/api/auth/resetPassword'
+export default function({ $axios, $auth, base, redirect, $router }) {
   if (process.client) {
     console.group('Auth plugin')
     if ($auth.loggedIn) {
@@ -21,11 +21,9 @@ export default function({ $axios, $auth, base, redirect }) {
           login: user_name
         })
 
-        if (isResetPassword) {
-          changePassword({ redirectModule: redirect, userLogin: user_name })
+        if (isResetPassword === 'Y') {
+          resetPassword({ redirect })
         }
-
-        console.log(user_name)
       })()
     }
     console.log('is loggen in', $auth.loggedIn)
