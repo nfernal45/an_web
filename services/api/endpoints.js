@@ -89,6 +89,9 @@ const restApiNsi = {
     byId: '/ref-org-strct-official/{id}',
     list: '/ref-org-strct-official/list'
   },
+  rsysSettings: {
+    list: '/rsys-settings/list'
+  },
   nsiRefDept: {
     list: '/ref-depts/list'
   }
