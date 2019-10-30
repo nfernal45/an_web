@@ -1,23 +1,32 @@
 # rlic-gf-front
 
-> Gos Funciya
+> Московская Жилищная Инспекция. Подсистема &#34;Выдача лицензий&#34;
 
-## Build Setup
-
+## Настройка сборки
 ``` bash
 # install dependencies
-$ npm install # Or yarn install
+$ yarn install
 
 # serve with hot reload at localhost:3000
-$ npm run dev
+$ yarn dev
 
 # build for production and launch server
-$ npm run build
-$ npm start
+$ yarn build
+$ yarn start
 
 # generate static project
-$ npm run generate
+$ yarn generate
 ```
 
-For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
+### Конфигурация nginx веб-сервера
+[nginx.conf](https://nextcloud.c-i-p.ru/s/zBcqYjxUoKvAb3H "Конфигурация nginx")  
+
+### Примечание
+Проект необходимо запускать параллельно с проктов Реестр лицензиатов. Гос. услуга.
+[bitbucket](https://bitbucket.c-i-p.ru/projects/LIC/repos/rlic-front/browse "Репозиторий РЛИЦ ГУ")
+
+### Препроцессинг
+Для teamplate используется pug
+Для style используется sass
