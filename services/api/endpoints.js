@@ -26,6 +26,9 @@ const restApiGf = {
     byId: '/gf-doc-checks/{id}',
     list: '/gf-doc-checks/list',
     save: '/gf-doc-checks/'
+  },
+  gfRptForm: {
+    list: '/gf-report-form-request-type-request-statuses/list'
   }
 }
 
@@ -89,6 +92,9 @@ const restApiNsi = {
     byId: '/ref-org-strct-official/{id}',
     list: '/ref-org-strct-official/list'
   },
+  rsysSettings: {
+    list: '/rsys-settings/list'
+  },
   nsiRefDept: {
     list: '/ref-depts/list'
   }
@@ -115,8 +121,6 @@ setApiPrefix({ prefix: restApiNameSpaces.gfActiviti, links: restApiGfActiviti })
 setApiPrefix({ prefix: restApiNameSpaces.gfRabbitmq, links: restApiGfRabbitmq })
 setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
 setApiPrefix({ prefix: restApiNameSpaces.nsi, links: restApiNsi })
-
-// console.log(restApiGf)
 
 export {
   restApiGf,

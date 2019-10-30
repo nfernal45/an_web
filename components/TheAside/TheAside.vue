@@ -18,6 +18,8 @@
     // Кнопки стасусов
     the-aside-statuses-buttons
 
+    print-form-dialog(:isDialogVisible='isDialogVisible' @close='isDialogVisible = false')
+
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
@@ -25,22 +27,25 @@ import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
+import printFormDialog from '@/components/printFormDialog/printFormDialog'
 
 const moduleName = 'request'
 export default {
   name: 'TheAside',
   components: {
-    TheAsideStatusesButtons
+    TheAsideStatusesButtons,
+    printFormDialog
   },
   data() {
     return {
-      isRequestSaving: false
+      isRequestSaving: false,
+      isDialogVisible: false
     }
   },
   computed: {
-    ...mapState({
-      request: (state) => state.request.request,
-      docCheck: (state) => state.request.docCheck
+    ...mapState(moduleName, {
+      request: (state) => state.request,
+      docCheck: (state) => state.docCheck
     }),
 
     styles() {
@@ -70,7 +75,7 @@ export default {
       }
     },
     print() {
-      alert('Функционал находится в разработке')
+      this.isDialogVisible = true
     }
   }
 }
