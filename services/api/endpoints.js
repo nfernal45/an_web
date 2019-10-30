@@ -28,8 +28,7 @@ const restApiGf = {
     save: '/gf-doc-checks/'
   },
   gfRptForm: {
-    list:
-      '/gf-report-form-request-type-request-statuses/ref-report-forms/list/requestTypeId/{requestTypeId}/statusId/{statusId}'
+    list: '/gf-report-form-request-type-request-statuses/list'
   }
 }
 
