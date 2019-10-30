@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import { restApiGuRef } from '@/services/api/endpoints'
+import { restApiGfRef } from '@/services/api/endpoints'
 
-const refName = 'ref_regPlaceList'
+const refName = 'ref_reorganizationForms'
 
 export default async function({ axiosModule }) {
   const refOptions = Vue.ls.get(refName)
@@ -9,7 +9,9 @@ export default async function({ axiosModule }) {
   if (refOptions) return refOptions
 
   try {
-    const { data } = await axiosModule.$get(restApiGuRef.guRefRegPlaces.list)
+    const { data } = await axiosModule.$get(
+      restApiGfRef.gfRefReorgationzationForms.list
+    )
     Vue.ls.set(refName, data)
     return data
   } catch (error) {
