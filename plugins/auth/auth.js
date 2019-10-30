@@ -4,7 +4,7 @@ import checkUser from '@/services/api/auth/checkUser'
 import resetPassword from '@/services/api/auth/resetPassword'
 export default function({ $axios, $auth, base, redirect, $router }) {
   if (process.client) {
-    console.group('Auth plugin')
+    // console.group('Auth plugin')
     if ($auth.loggedIn) {
       // console.log('Token', $auth.getToken('oauth2'))
 
@@ -22,20 +22,20 @@ export default function({ $axios, $auth, base, redirect, $router }) {
         })
 
         if (isResetPassword === 'Y') {
-          resetPassword({ redirect })
+          resetPassword({ redirect, base })
         }
       })()
     }
-    console.log('is loggen in', $auth.loggedIn)
-    console.groupEnd()
+    // console.log('is loggen in', $auth.loggedIn)
+    // console.groupEnd()
   }
 
   $auth.$storage.watchState('loggedIn', (newValue) => {
-    console.log('state watcher is logged in', newValue)
+    // console.log('state watcher is logged in', newValue)
   })
 
   $auth.onRedirect((to, from) => {
-    console.log('Auth redirect from', from, 'to', to)
+    // console.log('Auth redirect from', from, 'to', to)
     if (to === '/login') {
       $auth.$storage.setCookie('redirect', `${base.slice(0, -1)}${from}`, false)
     }
