@@ -115,8 +115,6 @@ setApiPrefix({ prefix: restApiNameSpaces.gfRabbitmq, links: restApiGfRabbitmq })
 setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
 setApiPrefix({ prefix: restApiNameSpaces.nsi, links: restApiNsi })
 
-// console.log(restApiGf)
-
 export {
   restApiGf,
   restApiGfRef,
