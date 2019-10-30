@@ -2,23 +2,37 @@
   div.attached-docs
     el-row
       // Документы заявителя
-      attached-docs-applicant-docs
+      attached-docs-licensee-docs(:refDocTypes='refDocTypes')
 
-      attached-docs-mzhi-docs
+      attached-docs-mzhi-docs(:refDocTypes='refDocTypes')
 
 </template>
 <script>
-import attachedDocsApplicantDocs from '@/components/request/attachedDocs/attachedDocsApplicantDocs'
+import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
+import attachedDocsLicenseeDocs from '@/components/request/attachedDocs/attachedDocsLicenseeDocs'
 import attachedDocsMzhiDocs from '@/components/request/attachedDocs/attachedDocsMzhiDocs'
 export default {
   name: 'RequestAttachedDocsPage',
   components: {
-    attachedDocsApplicantDocs,
+    attachedDocsLicenseeDocs,
     attachedDocsMzhiDocs
+  },
+  data() {
+    return {
+      refDocTypes: []
+    }
   },
   computed: {
     requestId() {
       return this.$route.params.id
+    }
+  },
+  mounted() {
+    this.fetchDocTypes()
+  },
+  methods: {
+    async fetchDocTypes() {
+      this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
     }
   }
 }

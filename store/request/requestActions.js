@@ -42,7 +42,14 @@ export default {
 
   async [actionTypes.SAVE_REQUEST]({ state, commit, dispatch }) {
     try {
-      const data = await saveRequestRecord(this.$axios, state.request)
+      const request = {
+        ...state.request,
+        gfAttachedDocsByRequestId: [
+          ...state.licenseeAttachedDocs,
+          ...state.mzhiAttachedDocs
+        ]
+      }
+      const data = await saveRequestRecord(this.$axios, request)
       await commit(mutationTypes.SET_REQUEST, data)
       dispatch(actionTypes.FETCH_DOC_CHECK)
     } catch (error) {
@@ -74,6 +81,27 @@ export default {
       })
     }
 
+    const licenseeAttachedDocs = request.gfAttachedDocsByRequestId
+      .filter((attachedDoc) => {
+        return (
+          attachedDoc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId ===
+          1
+        )
+      })
+      .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
+
+    const mzhiAttachedDocs = request.gfAttachedDocsByRequestId
+      .filter((attachedDoc) => {
+        return (
+          attachedDoc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId ===
+          2
+        )
+      })
+      .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
+
+    commit(mutationTypes.SET_LICENSEE_ATTAHCHED_DOCS, licenseeAttachedDocs)
+    commit(mutationTypes.SET_MZHI_ATTAHCHED_DOCS, mzhiAttachedDocs)
+    request.gfAttachedDocsByRequestId = null
     commit(mutationTypes.SET_REQUEST, request)
   },
 
@@ -112,6 +140,7 @@ export default {
       arrayValue: state.gfAbeyancesByRequestIdDefault()
     })
   },
+
   async [actionTypes.FETCH_DOC_CHECK]({ state, commit }) {
     if (state.request.requestId && state.request.requestStatusId >= 2) {
       const data = await fetchDocCheckByRequestId({
