@@ -52,7 +52,8 @@ export default {
   },
   data() {
     return {
-      chedSettings: {}
+      chedSettings: {},
+      chedSettingsLoaded: false
     }
   },
   computed: {

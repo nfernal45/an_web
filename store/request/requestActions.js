@@ -20,7 +20,8 @@ export default {
 
   [actionTypes.RESET_REQUEST]: ({ state, commit }) => {
     commit(mutationTypes.SET_REQUEST, {})
-    commit(mutationTypes.SET_DOC_CHECK, {})
+    commit(mutationTypes.SET_LICENSEE_ATTAHCHED_DOCS, [])
+    commit(mutationTypes.SET_MZHI_ATTAHCHED_DOCS, [])
   },
 
   async [actionTypes.FETCH_REQUEST]({ state, dispatch }, requestId) {
@@ -79,29 +80,30 @@ export default {
       defaultArraysNames.forEach((defaultObject) => {
         request = Object.assign({}, request, { [defaultObject]: null })
       })
+    } else {
+      const licenseeAttachedDocs = request.gfAttachedDocsByRequestId
+        .filter((attachedDoc) => {
+          return (
+            attachedDoc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId
+              .groupId === 1
+          )
+        })
+        .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
+
+      const mzhiAttachedDocs = request.gfAttachedDocsByRequestId
+        .filter((attachedDoc) => {
+          return (
+            attachedDoc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId
+              .groupId === 2
+          )
+        })
+        .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
+
+      commit(mutationTypes.SET_LICENSEE_ATTAHCHED_DOCS, licenseeAttachedDocs)
+      commit(mutationTypes.SET_MZHI_ATTAHCHED_DOCS, mzhiAttachedDocs)
+      request.gfAttachedDocsByRequestId = null
     }
 
-    const licenseeAttachedDocs = request.gfAttachedDocsByRequestId
-      .filter((attachedDoc) => {
-        return (
-          attachedDoc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId ===
-          1
-        )
-      })
-      .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
-
-    const mzhiAttachedDocs = request.gfAttachedDocsByRequestId
-      .filter((attachedDoc) => {
-        return (
-          attachedDoc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId ===
-          2
-        )
-      })
-      .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
-
-    commit(mutationTypes.SET_LICENSEE_ATTAHCHED_DOCS, licenseeAttachedDocs)
-    commit(mutationTypes.SET_MZHI_ATTAHCHED_DOCS, mzhiAttachedDocs)
-    request.gfAttachedDocsByRequestId = null
     commit(mutationTypes.SET_REQUEST, request)
   },
 
@@ -160,6 +162,7 @@ export default {
       }
     }
   },
+
   async [actionTypes.SAVE_DOC_CHECK]({ state, commit }) {
     if (state.request.requestStatusId >= 2) {
       const data = await saveDocCheck({
@@ -169,6 +172,7 @@ export default {
       commit(mutationTypes.SET_DOC_CHECK, data)
     }
   },
+
   async [actionTypes.CHANGE_REQUEST_STATUS]({ state, dispatch }, nextStatusId) {
     await dispatch(actionTypes.SAVE_REQUEST_RELATED)
 
@@ -181,6 +185,7 @@ export default {
 
     await dispatch(actionTypes.FETCH_REQUEST)
   },
+
   async [actionTypes.SAVE_REQUEST_RELATED]({ dispatch }) {
     await dispatch(actionTypes.SAVE_DOC_CHECK)
     await dispatch(actionTypes.SAVE_REQUEST)
