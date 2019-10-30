@@ -22,7 +22,7 @@ export default function({ $axios, $auth, base, redirect, $router }) {
         })
 
         if (isResetPassword === 'Y') {
-          resetPassword({ redirect })
+          resetPassword({ redirect, base })
         }
       })()
     }
