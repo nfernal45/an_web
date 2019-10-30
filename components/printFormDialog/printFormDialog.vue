@@ -1,18 +1,19 @@
 <template lang="pug">
   el-dialog(title="Список доступных печатных форм"
-            :visible.sync="dialogIsVisible"
+            :visible.sync="isDialogVisible"
             custom-class='rptFormDialog'
             :before-close="handleClose"
             :destroy-on-close='true'
             :close-on-click-modal='false'
+            append-to-body
             width="50%")
-    div(v-if='rptFormData.length')
-      div(v-for='item in rptFormData'
-                                      @click='openRptForm(item)')
-        div.list-item.flex.align-center(v-if='rptLinkIsVisible(item)')
+    div(v-if='printFormData.length')
+      div(v-for='item in printFormData'
+          @click='openRptForm(item)'
+         )
+        div.list-item.flex.align-center(v-if='isRptLinkVisible(item)')
           el-icon.el-icon-document(style='margin-right: 5px')
           h6 {{ item.refReportFormByReportFormId.reportName.toUpperCase() }}
-          //- h6 {{ rptLinkIsVisible(item) }}
     div.flex.align-center(v-else style='opacity: 0.5')
       h4 В данном статусе формирование печатных форм не предусмотрено
 
@@ -22,20 +23,21 @@
 </template>
 
 <script>
+// rptFormDialog
 import { mapState } from 'vuex'
 import fetchRptFormList from '@/services/api/requests/fetchRptFormList'
 import fetchSettings from '@/services/api/settings/fetchSettings'
 const moduleName = 'request'
 export default {
   props: {
-    dialogIsVisible: {
+    isDialogVisible: {
       type: Boolean,
       default: false
     }
   },
   data() {
     return {
-      rptFormData: [],
+      printFormData: [],
       systemSettings: null
     }
   },
@@ -43,7 +45,7 @@ export default {
     ...mapState(moduleName, {
       request: (state) => state.request
     }),
-    rptLinkIsVisible() {
+    isRptLinkVisible() {
       return (item) => {
         const status = this.request.requestStatusId
         if (status === 6 || status === 7) {
@@ -56,7 +58,7 @@ export default {
     }
   },
   watch: {
-    dialogIsVisible(value) {
+    isDialogVisible(value) {
       if (value) this.fetchRptFormData()
     }
   },
@@ -89,7 +91,7 @@ export default {
         requestTypeId: typeId,
         statusId: requestStatusId
       })
-      this.rptFormData = response
+      this.printFormData = response
     },
     openRptForm(item) {
       const host =
