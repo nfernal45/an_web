@@ -5,7 +5,7 @@ export default async function({ axiosModule, login }) {
 
   try {
     const data = await axiosModule.$get(url)
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
     throw error
