@@ -7,7 +7,7 @@
             el-form-item(label='Номер')
               el-input(v-model='decisionNum')
           el-col(:span='6')
-            el-form-item(label='Дата приостановления')
+            el-form-item(label='Дата решения')
               el-date-picker(v-model='decisionDate'
                              format="dd.MM.yyyy"
                              value-format="dd.MM.yyyy"
