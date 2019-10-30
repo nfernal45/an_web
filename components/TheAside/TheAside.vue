@@ -34,13 +34,15 @@ export default {
   },
   data() {
     return {
-      isRequestSaving: false
+      isRequestSaving: false,
+      rptFormDialogIsVisible: false,
+      rptFormData: []
     }
   },
   computed: {
-    ...mapState({
-      request: (state) => state.request.request,
-      docCheck: (state) => state.request.docCheck
+    ...mapState(moduleName, {
+      request: (state) => state.request,
+      docCheck: (state) => state.docCheck
     }),
 
     styles() {
@@ -70,7 +72,7 @@ export default {
       }
     },
     print() {
-      alert('Функционал находится в разработке')
+      this.$emit('callRptForm')
     }
   }
 }
