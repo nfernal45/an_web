@@ -14,7 +14,7 @@
    
 </template>
 <script>
-import fetchChedSettings from '@/services/api/ched/fetchChedSettings'
+import fetchSettings from '@/services/api/settings/fetchSettings'
 export default {
   name: 'ChedForm',
   data() {
@@ -22,18 +22,7 @@ export default {
       chedSettings: {},
       isChedFormLoading: false,
       isChedFormVisible: false,
-      uFormInstance: null,
-      settingList: [
-        'RL_CHED_FORM_CHANNEL',
-        'RL_CHED_FORM_DOMAIN',
-        'RL_CHED_FORM_DOMAIN_BR',
-        'RL_CHED_FORM_SERVICE',
-        'RL_CHED_FORM_URL',
-        'RL_CHED_GET_URL',
-        'RL_CHED_MZHI_OS',
-        'RL_CHED_OS',
-        'RL_CHED_SCRIPT_URL'
-      ]
+      uFormInstance: null
     }
   },
   async mounted() {
@@ -113,9 +102,21 @@ export default {
     },
 
     async fetchChedSettings() {
-      const chedSettings = await fetchChedSettings({
+      const chedDettingList = [
+        'RL_CHED_FORM_CHANNEL',
+        'RL_CHED_FORM_DOMAIN',
+        'RL_CHED_FORM_DOMAIN_BR',
+        'RL_CHED_FORM_SERVICE',
+        'RL_CHED_FORM_URL',
+        'RL_CHED_GET_URL',
+        'RL_CHED_MZHI_OS',
+        'RL_CHED_OS',
+        'RL_CHED_SCRIPT_URL'
+      ]
+
+      const chedSettings = await fetchSettings({
         axiosModule: this.$axios,
-        query: this.settingList
+        query: chedDettingList
       })
 
       this.chedSettings = chedSettings.reduce((result, item, index, array) => {
