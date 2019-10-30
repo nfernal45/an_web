@@ -51,6 +51,9 @@ const restApiGfRef = {
   },
   gfRefAgreementFoundations: {
     list: '/ref-agreement-foundations/list'
+  },
+  gfRefReorgationzationForms: {
+    list: '/ref-reorganization-forms/list'
   }
 }
 
