@@ -38,6 +38,7 @@
               el-row
                 el-col
                   el-button(type='primary'
+                            :loading='isSendingToEtp'
                             v-show='!doc.queryDate'
                             @click='sendToEtp(doc.queryId)') Запросить документ в БР
 
@@ -45,26 +46,29 @@
 
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
 import fetchRequiredInterParam from '@/services/api/requests/fetchRequiredInterParam'
 import sendToEtp from '@/services/api/requests/sendToEtp'
-
+import { actionTypes } from '@/store/types/request'
+const moduleName = 'request'
 export default {
   name: 'QueriedDocsInderdeptRequest',
   data() {
     return {
-      refDocTypes: []
+      refDocTypes: [],
+      isSendingToEtp: false
     }
   },
   computed: {
-    ...mapState({
-      queriedDocs: (state) => state.request.request.gfQueriedDocsByRequestId
+    ...mapState(moduleName, {
+      request: (state) => state.request
     }),
     computedQueriedDocs() {
       return (
-        this.queriedDocs &&
-        this.queriedDocs.map((doc) => {
+        this.request &&
+        this.request.gfQueriedDocsByRequestId &&
+        this.request.gfQueriedDocsByRequestId.map((doc) => {
           const docTypeName =
             this.refDocTypes.length &&
             this.refDocTypes.find((item) => item.typeId === doc.docTypeId)
@@ -78,17 +82,23 @@ export default {
     this.fetchDocTypes()
   },
   methods: {
+    ...mapActions(moduleName, {
+      fetchRequest: actionTypes.FETCH_REQUEST
+    }),
     async sendToEtp(documentQueryId) {
+      this.isSendingToEtp = true
       // TODO: fetchRequiredInterParam return respones with data. If data is not empty, need display this for user.
       await fetchRequiredInterParam({
         axiosModule: this.$axios,
         documentQueryId
       })
 
-      sendToEtp({
+      await sendToEtp({
         axiosModule: this.$axios,
         documentQueryId
       })
+
+      await this.fetchRequest(this.request.requestId)
     },
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
