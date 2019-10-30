@@ -7,6 +7,7 @@
         the-aside.sticky(style="flex-basis: 200px; position: sticky; top: 100px; align-self: flex-start;")
         el-main(style="flex: 1 0 0;")
           nuxt
+        
 </template>
 
 <script>

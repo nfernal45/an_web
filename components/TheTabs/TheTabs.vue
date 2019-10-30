@@ -11,7 +11,7 @@
 
       div
         strong Статус:
-        span {{ requestStatusName }}
+        span {{ requestStatusName }} {{ request.requestStatusId }}
 
     el-button-group(:class="styles.tabs")
       nuxt-link.el-button(
@@ -24,13 +24,15 @@
 import { mapState } from 'vuex'
 import styles from './TheTabs.module.sass?module'
 import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
-
+const moduleName = 'request'
 export default {
   name: 'TheTabs',
   data() {
     return {
       requestStatusesOptions: [],
-      tabs: [
+      requestStatusesConstants: [],
+      tabs: [],
+      initialTabs: [
         {
           title: 'Заявление',
           link: 'main'
@@ -59,8 +61,8 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      request: (state) => state.request.request
+    ...mapState(moduleName, {
+      request: (state) => state.request
     }),
 
     regnum() {
@@ -68,7 +70,11 @@ export default {
     },
 
     licenseeFullname() {
-      return this.request.licenseeFullname || 'Название не указано'
+      return (
+        this.request.licenseeFullname ||
+        this.request.licenseeShortname ||
+        'Название не указано'
+      )
     },
 
     requestStatusName() {
@@ -87,10 +93,91 @@ export default {
     },
 
     tabsComputed() {
-      return this.tabs
+      const activeTabs = this.initialTabs.map((tab) => {
+        function setActiveStatuses(tab, activeStatusesArray) {
+          tab.activeStatuses = activeStatusesArray
+        }
+
+        switch (tab.link) {
+          case 'queried-docs':
+            setActiveStatuses(tab, [
+              this.requestStatusesConstants.REGISTERED,
+              this.requestStatusesConstants.DOCSQUERIED,
+              this.requestStatusesConstants.INFORMATIONRECEIVED,
+              this.requestStatusesConstants.REVIEW,
+              this.requestStatusesConstants.DECISIONPREPARING,
+              this.requestStatusesConstants.DECISIONMADE,
+              this.requestStatusesConstants.NOTICEPREPARING,
+              this.requestStatusesConstants.VIOLATIONELIMINATION,
+              this.requestStatusesConstants.RESUMED,
+              this.requestStatusesConstants.DOCSQUERIED2,
+              this.requestStatusesConstants.INFORMATIONRECEIVED2
+            ])
+            break
+
+          case 'abeyance':
+            if (
+              this.request.gfAbeyancesByRequestId &&
+              this.request.gfAbeyancesByRequestId.length
+            ) {
+              setActiveStatuses(tab, [
+                this.requestStatusesConstants.REVIEW,
+                this.requestStatusesConstants.DECISIONPREPARING,
+                this.requestStatusesConstants.DECISIONMADE,
+                this.requestStatusesConstants.NOTICEPREPARING,
+                this.requestStatusesConstants.VIOLATIONELIMINATION,
+                this.requestStatusesConstants.RESUMED,
+                this.requestStatusesConstants.DOCSQUERIED2,
+                this.requestStatusesConstants.INFORMATIONRECEIVED2
+              ])
+            } else {
+              setActiveStatuses(tab, [
+                this.requestStatusesConstants.NOTICEPREPARING
+              ])
+            }
+
+            break
+
+          case 'doc-check':
+            setActiveStatuses(tab, [
+              this.requestStatusesConstants.REGISTERED,
+              this.requestStatusesConstants.DOCSQUERIED,
+              this.requestStatusesConstants.INFORMATIONRECEIVED,
+              this.requestStatusesConstants.REVIEW,
+              this.requestStatusesConstants.DECISIONPREPARING,
+              this.requestStatusesConstants.DECISIONMADE,
+              this.requestStatusesConstants.NOTICEPREPARING,
+              this.requestStatusesConstants.VIOLATIONELIMINATION,
+              this.requestStatusesConstants.RESUMED,
+              this.requestStatusesConstants.DOCSQUERIED2,
+              this.requestStatusesConstants.INFORMATIONRECEIVED2
+            ])
+
+            break
+
+          case 'decision':
+            setActiveStatuses(tab, [
+              this.requestStatusesConstants.REVIEW,
+              this.requestStatusesConstants.DECISIONPREPARING,
+              this.requestStatusesConstants.DECISIONMADE,
+              this.requestStatusesConstants.NOTICEPREPARING,
+              this.requestStatusesConstants.VIOLATIONELIMINATION,
+              this.requestStatusesConstants.RESUMED,
+              this.requestStatusesConstants.DOCSQUERIED2,
+              this.requestStatusesConstants.INFORMATIONRECEIVED2
+            ])
+
+            break
+        }
+
+        return tab
+      })
+
+      return activeTabs
         .filter((tab) => {
           return (
-            !tab.activeStatus || tab.activeStatus.includes(this.requestStatus)
+            !tab.activeStatuses ||
+            tab.activeStatuses.includes(this.request.requestStatusId)
           )
         })
         .map((tab) => ({
@@ -120,6 +207,14 @@ export default {
       this.requestStatusesOptions = await fetchRequestStatusesOptions({
         axiosModule: this.$axios
       })
+
+      this.requestStatusesConstants = this.requestStatusesOptions.reduce(
+        (result, item, index, array) => {
+          result[item.statusShortName] = item.statusId
+          return result
+        },
+        {}
+      )
     }
   }
 }

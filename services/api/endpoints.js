@@ -22,9 +22,13 @@ const restApiGf = {
     byId: '/gf-attached-docs/{id}',
     list: '/gf-attached-docs/list'
   },
-  gfocCheck: {
+  gfDocCheck: {
     byId: '/gf-doc-checks/{id}',
-    list: '/gf-doc-checks/list'
+    list: '/gf-doc-checks/list',
+    save: '/gf-doc-checks/'
+  },
+  gfRptForm: {
+    list: '/gf-report-form-request-type-request-statuses/list'
   }
 }
 
@@ -43,7 +47,7 @@ const restApiGfRef = {
   },
   gfRefRequestStatuses: {
     byId: '/ref-gf-request-statuses/',
-    list: '/ref-gf-request-,statuses/list'
+    list: '/ref-gf-request-statuses/list'
   },
   gfRefAgreementFoundations: {
     list: '/ref-agreement-foundations/list'
@@ -80,6 +84,9 @@ const restApiGuRef = {
   },
   guRefAbeyanceReasons: {
     list: '/ref-abeyance-reasons/list'
+  },
+  guRefRefusalReasons: {
+    list: '/ref-refusal-reasons/list'
   }
 }
 
@@ -87,7 +94,20 @@ const restApiNsi = {
   nsiRefOrgStructure: {
     byId: '/ref-org-strct-official/{id}',
     list: '/ref-org-strct-official/list'
+  },
+  rsysSettings: {
+    list: '/rsys-settings/list'
+  },
+  nsiRefDept: {
+    list: '/ref-depts/list'
   }
+}
+
+const restApiAuth = {
+  checkToken: '/as/oauth/check_token',
+  // checkUser: '/as/commons/users/{login}',
+  checkUser: '/as/users/{login}',
+  passwordReset: '/as/user/password-reset-page'
 }
 
 function setApiPrefix({ prefix, links }) {
@@ -105,8 +125,6 @@ setApiPrefix({ prefix: restApiNameSpaces.gfRabbitmq, links: restApiGfRabbitmq })
 setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
 setApiPrefix({ prefix: restApiNameSpaces.nsi, links: restApiNsi })
 
-// console.log(restApiGf)
-
 export {
   restApiGf,
   restApiGfRef,
@@ -114,5 +132,6 @@ export {
   restApiGuRef,
   restApiNsi,
   restApiGfActiviti,
-  restApiGfRabbitmq
+  restApiGfRabbitmq,
+  restApiAuth
 }

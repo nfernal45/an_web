@@ -18,6 +18,8 @@
     // Кнопки стасусов
     the-aside-statuses-buttons
 
+    print-form-dialog(:isDialogVisible='isDialogVisible' @close='isDialogVisible = false')
+
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
@@ -25,21 +27,25 @@ import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
+import printFormDialog from '@/components/printFormDialog/printFormDialog'
 
 const moduleName = 'request'
 export default {
   name: 'TheAside',
   components: {
-    TheAsideStatusesButtons
+    TheAsideStatusesButtons,
+    printFormDialog
   },
   data() {
     return {
-      isRequestSaving: false
+      isRequestSaving: false,
+      isDialogVisible: false
     }
   },
   computed: {
-    ...mapState({
-      request: (state) => state.request.request
+    ...mapState(moduleName, {
+      request: (state) => state.request,
+      docCheck: (state) => state.docCheck
     }),
 
     styles() {
@@ -48,7 +54,7 @@ export default {
   },
   methods: {
     ...mapActions(moduleName, {
-      saveRequest: requestActionTypes.SAVE_REQUEST
+      saveRequestRelated: requestActionTypes.SAVE_REQUEST_RELATED
     }),
     openNewCreatedRequestPage() {
       if (!isNumber(this.$route.params.id)) {
@@ -61,7 +67,7 @@ export default {
     async onSave() {
       this.isRequestSaving = true
       try {
-        await this.saveRequest()
+        await this.saveRequestRelated()
         this.openNewCreatedRequestPage()
         this.isRequestSaving = false
       } catch (error) {
@@ -69,7 +75,7 @@ export default {
       }
     },
     print() {
-      alert('Функционал находится в разработке')
+      this.isDialogVisible = true
     }
   }
 }

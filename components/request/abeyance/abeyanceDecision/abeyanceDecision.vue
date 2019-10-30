@@ -80,15 +80,11 @@
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import fetchAbeyanceReasons from '@/services/api/requests/references/fetchAbeyanceReasons'
-import employeePicker from '@/elements/employeePicker'
 
 const moduleName = 'request'
 
 export default {
   name: 'AbeyanceDecision',
-  components: {
-    employeePicker
-  },
   data() {
     return {
       refAbeyanceReasonsOptions: []
