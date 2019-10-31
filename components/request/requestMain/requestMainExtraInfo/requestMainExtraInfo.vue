@@ -52,17 +52,30 @@
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
               )
+  
+        el-row(:gutter='20' v-if='request.typeId === 9 && request.licenseeType === "L" && isReorg === "Y"')
+          el-col(:span='14')
+            el-select.width-100(v-model='reorganizationFormId' size='small' placeholder='Укажите форму реорганизации')
+              el-option(
+                v-for='item in reorganizationFormsOptions'
+                :key='item.id'
+                :label='item.name'
+                :value='item.id'
+              )
+
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import fetchAgreementFoundations from '@/services/api/references/fetchAgreementFoundations'
+import fetchReorganizationForms from '@/services/api/references/fetchReorganizationForms'
 const moduleName = 'request'
 export default {
   name: 'RequestMainExtraInfo',
   data() {
     return {
       agreementFoundationsOptions: [],
+      reorganizationFormsOptions: [],
       yesNoOptions: [
         {
           id: 'Y',
@@ -76,8 +89,8 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      request: (state) => state.request.request
+    ...mapState(moduleName, {
+      request: (state) => state.request
     }),
 
     agreementFoundationId: {
@@ -136,6 +149,7 @@ export default {
   },
   mounted() {
     this.fetchAgreementFoundations()
+    this.fetchReorganizationForms()
   },
   methods: {
     ...mapMutations(moduleName, {
@@ -144,6 +158,12 @@ export default {
 
     async fetchAgreementFoundations() {
       this.agreementFoundationsOptions = await fetchAgreementFoundations({
+        axiosModule: this.$axios
+      })
+    },
+
+    async fetchReorganizationForms() {
+      this.reorganizationFormsOptions = await fetchReorganizationForms({
         axiosModule: this.$axios
       })
     }

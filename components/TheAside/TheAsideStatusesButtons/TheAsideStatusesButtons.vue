@@ -4,7 +4,9 @@
       style='margin-top: 40px; min-height: 38px;')
     ul(:class='styles["list"]')
       li(v-for='(button, index) in requestStatuses' :key='index' :class='styles["list-item"]')
-        el-button(type='warning' plain :class='styles["list-button"]' @click='onStatusChange(button.statusId)') {{ button.buttonName }}
+        el-button(type='warning' 
+                  plain 
+                  :class='styles["list-button", "status-button"]' @click='onStatusChange(button.statusId)') {{ button.buttonName }}
 
 </template>
 <script>
