@@ -2,7 +2,9 @@
 import checkToken from '@/services/api/auth/checkToken'
 import checkUser from '@/services/api/auth/checkUser'
 import resetPassword from '@/services/api/auth/resetPassword'
-export default function({ $axios, $auth, base, redirect, $router }) {
+import logout from '@/services/auth'
+
+export default function({ $axios, $auth, base, redirect, route }) {
   if (process.client) {
     // console.group('Auth plugin')
     if ($auth.loggedIn) {
@@ -22,6 +24,13 @@ export default function({ $axios, $auth, base, redirect, $router }) {
         })
 
         if (isResetPassword === 'Y') {
+          logout({
+            authModule: $auth,
+            baseRoute: base,
+            currentRoute: route.path,
+            redirectFunction: redirect
+          })
+
           resetPassword({ redirect, base })
         }
       })()
