@@ -39,6 +39,7 @@ export default {
       }).then(() => {
         logout({
           authModule: this.$auth,
+          axiosModule: this.$axios,
           baseRoute: this.$router.options.base,
           currentRoute: this.$route.path,
           redirectFunction: this.redirect
