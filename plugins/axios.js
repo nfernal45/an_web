@@ -22,7 +22,7 @@ export default function({ $axios, $auth, redirect, base, route }) {
     // if (config.url.match(/^\/nsi-api/)) {
     //   config.url = config.url.replace('/nsi-api', process.env.APP_REST_API_NSI)
     // }
-    
+    // console.info('Making request to', config.url)
   })
 
   $axios.onResponse((response) => {
@@ -46,7 +46,13 @@ export default function({ $axios, $auth, redirect, base, route }) {
     })
 
     if (code === 401) {
-      logout({ authModule: $auth, baseRoute: base, currentRoute: route.path, redirectFunction: redirect })
+      logout({
+        authModule: $auth,
+        axiosModule: $axios,
+        baseRoute: base,
+        currentRoute: route.path,
+        redirectFunction: redirect
+      })
       return
     }
   })

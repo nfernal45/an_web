@@ -5,21 +5,31 @@
         el-button(
           :loading='isChedFormLoading'
           type='primary'
-          @click='openUform') Добавить документ
-    el-row.mt-10(:gutter='20' v-show="isChedFormVisible")
-      el-col
-        div(style='position:relative;display:inline-block;')
-          div(id='uform-container')
-          el-button(type='primary' style='position:absolute;top:10px;right:10px' @click='closeUform') Закрыть
+          @click='openUform'
+        ) Добавить документ
+
+    el-dialog(
+      :visible='isChedFormVisible'
+      width='786px'
+      :lock-scroll='false'
+      :close-on-click-modal='false'
+      @close='closeUform'
+    )
+      div(style='position:relative;display:inline-block;')
+        div(id='uform-container')
    
 </template>
 <script>
-import fetchSettings from '@/services/api/settings/fetchSettings'
 export default {
   name: 'ChedForm',
+  props: {
+    chedSettings: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
-      chedSettings: {},
       isChedFormLoading: false,
       isChedFormVisible: false,
       uFormInstance: null
@@ -27,8 +37,7 @@ export default {
   },
   async mounted() {
     this.isChedFormLoading = true
-    await this.fetchChedSettings()
-    this.addChedScript()
+    await this.addChedScript()
     this.isChedFormLoading = false
   },
   beforeDestroy() {
@@ -36,55 +45,75 @@ export default {
     this.destroyUform()
   },
   methods: {
-    async openUform() {
+    openUform() {
       if (!this.uFormInstance) {
         this.isChedFormLoading = true
-        await this.createUform()
-        this.isChedFormVisible = true
-        this.isChedFormLoading = false
+        this.createUform()
       } else {
         this.isChedFormVisible = true
       }
     },
 
+    onFormLoad() {
+      this.isChedFormVisible = true
+      this.isChedFormLoading = false
+    },
+
+    onUpload(data) {
+      this.closeUform()
+      this.$notify.success({
+        title: 'Загружено',
+        message: 'Файл загружен'
+      })
+      this.$emit('upload', data)
+    },
+
+    onFormError(error) {
+      this.isChedFormVisible = false
+      this.isChedFormLoading = false
+      this.$notify.error({
+        title: 'Ошибка',
+        message: error.template
+      })
+    },
+
     closeUform() {
       this.isChedFormVisible = false
+      this.destroyUform()
     },
 
     createUform() {
       // const docType = this.getDocTypeForChed()
-      return new Promise((resolve, reject) => {
-        const config = {
-          domain: this.chedSettings.RL_CHED_FORM_URL,
-          domContainerId: 'uform-container',
-          channel: this.chedSettings.RL_CHED_FORM_CHANNEL,
-          service: this.chedSettings.RL_CHED_FORM_SERVICE,
-          callbacks: {
-            onFormLoad: () => {
-              resolve()
-            },
-            onUpload: (data) => {
-              this.$emit('upload', data)
-            },
-            onError: (error) => {
-              reject(error)
-            }
+      const config = {
+        domain: this.chedSettings.RL_CHED_FORM_URL,
+        domContainerId: 'uform-container',
+        channel: this.chedSettings.RL_CHED_FORM_CHANNEL,
+        service: this.chedSettings.RL_CHED_FORM_SERVICE,
+        callbacks: {
+          onFormLoad: this.onFormLoad(),
+          onUpload: (data) => {
+            this.onUpload(data)
+          },
+          onError: (error) => {
+            this.onFormError(error)
           }
-          // bindings: {
-          // [docType]: () => {}
-          // }
         }
-        // eslint-disable-next-line no-undef
-        this.uFormInstance = createUForm(config)
-      })
+        // bindings: {
+        // [docType]: () => {}
+        // }
+      }
+      // eslint-disable-next-line no-undef
+      this.uFormInstance = createUForm(config)
     },
 
     destroyUform() {
-      this.uFormInstance.remove()
-      this.uFormInstance = null
+      if (this.uFormInstance) {
+        this.uFormInstance.remove()
+        this.uFormInstance = null
+      }
     },
 
-    addChedScript() {
+    async addChedScript() {
       const tag = document.createElement('script')
       tag.src = this.chedSettings.RL_CHED_SCRIPT_URL
       tag.async = true
@@ -92,37 +121,13 @@ export default {
       tag.onload = () => {
         // this.resolve()
       }
-      const firstScriptTag = document.getElementsByTagName('script')[0]
+      const firstScriptTag = await document.getElementsByTagName('script')[0]
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
     },
 
     removeChedScript() {
       const chedScript = document.getElementById('ched-script')
-      chedScript.parentNode.removeChild(chedScript)
-    },
-
-    async fetchChedSettings() {
-      const chedDettingList = [
-        'RL_CHED_FORM_CHANNEL',
-        'RL_CHED_FORM_DOMAIN',
-        'RL_CHED_FORM_DOMAIN_BR',
-        'RL_CHED_FORM_SERVICE',
-        'RL_CHED_FORM_URL',
-        'RL_CHED_GET_URL',
-        'RL_CHED_MZHI_OS',
-        'RL_CHED_OS',
-        'RL_CHED_SCRIPT_URL'
-      ]
-
-      const chedSettings = await fetchSettings({
-        axiosModule: this.$axios,
-        query: chedDettingList
-      })
-
-      this.chedSettings = chedSettings.reduce((result, item, index, array) => {
-        result[item.settingId] = item.settingValString
-        return result
-      }, {})
+      if (chedScript) chedScript.parentNode.removeChild(chedScript)
     }
   }
 }

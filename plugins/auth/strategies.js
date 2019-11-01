@@ -10,7 +10,8 @@ const authStrategies = function() {
       response_type: 'code',
       redirect_uri: `${process.env.APP_HOST}${process.env.APP_BASE_ROUTE}/login`,
       token_type: 'Bearer',
-      client_id: process.env.APP_AUTH_CLIENT_ID
+      client_id: process.env.APP_AUTH_CLIENT_ID,
+      userinfo_endpoint: false
     }
   }
 }
