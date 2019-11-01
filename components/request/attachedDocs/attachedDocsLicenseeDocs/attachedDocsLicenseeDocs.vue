@@ -34,7 +34,7 @@
               :key='index'
               shadow='hover'
             )
-              h4.mb-10 {{ doc.refDocTypeByDocTypeId.typeName }} {{ doc.docId }}
+              h4.mb-10 {{ doc.refDocTypeByDocTypeId.typeName }}
               el-row(:gutter='20')
                 el-col(:span='7')
                   el-form-item(label='Номер')
