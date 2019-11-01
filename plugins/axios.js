@@ -46,7 +46,13 @@ export default function({ $axios, $auth, redirect, base, route }) {
     })
 
     if (code === 401) {
-      logout({ authModule: $auth, baseRoute: base, currentRoute: route.path, redirectFunction: redirect })
+      logout({
+        authModule: $auth,
+        axiosModule: $axios,
+        baseRoute: base,
+        currentRoute: route.path,
+        redirectFunction: redirect
+      })
       return
     }
   })

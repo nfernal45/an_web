@@ -26,6 +26,7 @@ export default function({ $axios, $auth, base, redirect, route }) {
         if (isResetPassword === 'Y') {
           logout({
             authModule: $auth,
+            axiosModule: $axios,
             baseRoute: base,
             currentRoute: route.path,
             redirectFunction: redirect
