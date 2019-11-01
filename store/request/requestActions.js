@@ -22,6 +22,7 @@ export default {
     commit(mutationTypes.SET_REQUEST, {})
     commit(mutationTypes.SET_LICENSEE_ATTAHCHED_DOCS, [])
     commit(mutationTypes.SET_MZHI_ATTAHCHED_DOCS, [])
+    commit(mutationTypes.SET_REQUEST_STATUSES, [])
   },
 
   async [actionTypes.FETCH_REQUEST]({ state, dispatch }, requestId) {
