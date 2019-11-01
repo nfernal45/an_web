@@ -5,10 +5,27 @@
 
         el-row(:gutter='20')
           el-col(:span='10')
-            el-button(
-              type='primary'
-              @click='addDocumentDialogIsVisible = true'
-            ) Добавить документ
+            el-popover(placement='top'
+                       width='430'
+                       v-model='isAddDocumentPopoverVisible')
+              el-form-item(label='Тип документа')
+                el-select(v-model='additionalDocumentTypeId' 
+                          size='small'
+                          style='width: 400px')
+                  el-option(v-for='item in licenseeDocTypesOptions'
+                            :key='item.typeId'
+                            :value='item.typeId'
+                            :label='item.typeName')
+              div
+                el-button(size='mini' 
+                          type='primary' 
+                           @click='addDocument(additionalDocumentTypeId)' 
+                           :disabled='!additionalDocumentTypeId') Добавить
+                el-button(size='mini' 
+                          type='text'
+                          @click='isAddDocumentPopoverVisible = false') Отмена
+              el-button(slot='reference'
+                        type='primary') Добавить документ
 
         el-row.mt-20(:gutter='20')
           el-col
@@ -41,17 +58,6 @@
                       i.el-icon-document 
                       span {{ doc.docFileName }}
           
-        el-dialog(title='Добавление документа' :visible.sync='addDocumentDialogIsVisible')
-          el-form-item(label='Тип документа')
-            el-select(v-model='additionalDocumentType' 
-                      size='small'
-                      style='width: 500px')
-              el-option(v-for='item in licenseeDocTypesOptions'
-                        :key='item.typeName'
-                        :value='item'
-                        :label='item.typeName')
-          el-button(type='primary' @click='addDocument(additionalDocumentType)' :disabled='!additionalDocumentType') Добавить документ
-          
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
@@ -68,8 +74,8 @@ export default {
   },
   data() {
     return {
-      addDocumentDialogIsVisible: false,
-      additionalDocumentType: null
+      isAddDocumentPopoverVisible: false,
+      additionalDocumentTypeId: null
     }
   },
   computed: {
@@ -97,14 +103,17 @@ export default {
       setLicenseeAttachedDocs: requestMutationTypes.SET_LICENSEE_ATTAHCHED_DOCS
     }),
 
-    addDocument(refDocTypeByDocTypeId) {
+    addDocument(additionalDocumentTypeId) {
       const array = [...this.licenseeAttachedDocs]
+      const item = this.licenseeDocTypesOptions.find(
+        (el) => el.typeId === additionalDocumentTypeId
+      )
 
-      array.push(Object.assign({}, { refDocTypeByDocTypeId }))
+      array.push(Object.assign({}, { refDocTypeByDocTypeId: item }))
 
       this.setLicenseeAttachedDocs(array)
 
-      this.addDocumentDialogIsVisible = false
+      this.isAddDocumentPopoverVisible = false
     }
   }
 }
