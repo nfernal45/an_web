@@ -51,7 +51,7 @@ export default {
         ]
       }
       const data = await saveRequestRecord(this.$axios, request)
-      await commit(mutationTypes.SET_REQUEST, data)
+      await dispatch(actionTypes.SET_REQUEST, data)
       dispatch(actionTypes.FETCH_DOC_CHECK)
     } catch (error) {
       throw error
