@@ -105,7 +105,7 @@ const restApiNsi = {
 
 const restApiAuth = {
   checkToken: '/as/oauth/check_token',
-  // checkUser: '/as/commons/users/{login}',
+  refreshToken: '/as/login',
   checkUser: '/as/users/{login}',
   passwordReset: '/as/user/password-reset-page',
   exit: '/as/exit'
