@@ -1,5 +1,5 @@
 <template lang="pug">
-  el-table(:data="computedRequestsList" border style="width: 100%")
+  el-table(:data="computedRequestsList" style="width: 100%")
     el-table-column(prop="requestDate" label="Дата подачи заявления" width="120")
     el-table-column(prop="regnum" label="Рег. №" width="120")
     el-table-column(prop="licenseeFullname" label="Заявитель")

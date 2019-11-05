@@ -1,38 +1,75 @@
 <template lang="pug">
   div
-    el-button(type="primary" @click="onSearch" :loading="isSearchLoading") Поиск
-    el-button(type="success" @click="createRequest") Создать новое заявление
-    el-form.mt-20(size='small' label-position='top')
-      el-row.mb-20(:gutter='20')
-        el-col(:span='6')
-          el-form-item(label='ЕНО')
-            el-input(v-model='searchForm.eno')
-        el-col(:span='6')
-          el-form-item(label='ИНН')
-            el-input(v-model='searchForm.licenseeInn')
-      
-      el-row.mb-20
-        el-col
+    el-button(@click='isDrawerVisible = true'
+              icon="el-icon-s-operation") Фильтр поиска
+    el-button.mb-20(type="success"
+                    icon='el-icon-document-add' 
+                    @click="createRequest") Создать новое заявление
 
-          el-form-item(label='Место подачи документов')
-            el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='searchForm.regPlaceId')
-                el-checkbox(v-for="item in regPlaceOptions"
-                            :key='item.regPlaceId'
-                            :label='item.regPlaceId'
-                ) {{ item.regPlaceName }}
-      el-row.mb-20
-        el-col(:span='12')
-          el-form-item(label='Полное наименование заявителя')
-            el-input(v-model='searchForm.licenseeFullname')
-      
-      el-row.mb-20
-        el-col(:span='6')
-          el-form-item(label='Дата подачи заявления')
-            el-date-picker(
-            :picker-options='{ firstDayOfWeek: 1 }'
-            v-model='searchForm.requestDate'
-            format='dd.MM.yyyy'
-          )
+    el-drawer(title='Фильтр поиска'
+              :visible.sync='isDrawerVisible'
+              direction='rtl'
+              size='35%')
+      div(style='padding: 20px')
+        el-button(type="primary" 
+                  @click="onSearch" 
+                  :loading="isSearchLoading"
+                  icon='el-icon-search') Поиск
+        
+        el-form.mt-20(size='small' label-position='top')
+          el-row(:gutter='20')
+            el-col
+              el-divider(content-position="left") One
+
+              el-col(:span='12')
+                el-form-item(label='Регистрационный номер заявления')
+                  el-input(v-model='searchForm.regnum')
+              el-col(:span='12')
+                el-form-item(label='Регистрационный номер портала')
+                    el-input(v-model='searchForm.outerRegnum')
+
+            el-col
+              el-col(:span='12')
+                el-form-item(label='ЕНО')
+                  el-input(v-model='searchForm.eno')
+              el-col(:span='12')
+                el-form-item(label='ИНН')
+                    el-input(v-model='searchForm.licenseeInn')
+
+          el-row(:gutter='20')
+            el-col
+              el-form-item(label='Место подачи документов')
+                el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='searchForm.regPlaceId')
+                    el-checkbox(v-for="item in regPlaceOptions"
+                                :key='item.regPlaceId'
+                                :label='item.regPlaceId'
+                    ) {{ item.regPlaceName }}
+          el-row(:gutter='20')
+            el-col(:span='12')
+              el-form-item(label='Полное наименование заявителя')
+                el-input(v-model='searchForm.licenseeFullname')
+
+            el-col
+              el-form-item(label='Заявитель') 
+                // TODO: not working
+                el-checkbox-group.flex.flex-column.justify-start.align-start(v-model='searchForm.regPlaceId')
+                    el-checkbox(v-for="item in regPlaceOptions"
+                                :key='item.regPlaceId'
+                                :label='item.regPlaceId'
+                    ) {{ item.regPlaceName }}
+          
+          el-row
+            el-col(:span='6')
+              el-form-item(label='Дата подачи заявления')
+                el-date-picker(
+                :picker-options='{ firstDayOfWeek: 1 }'
+                v-model='searchForm.requestDate'
+                format='dd.MM.yyyy'
+              )
+
+    
+    
+    
 </template>
 <script>
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
@@ -48,13 +85,18 @@ export default {
   data() {
     return {
       searchForm: {
+        regnum: '', // Рег номер заявления
+        outerRegnum: '', // Рег номер портала
+
         eno: '',
         licenseeInn: '',
         regPlaceId: [],
         licenseeFullname: '',
         requestDate: ''
       },
-      regPlaceOptions: []
+      regPlaceOptions: [],
+      applicantOptions: [],
+      isDrawerVisible: false
     }
   },
   computed: {
