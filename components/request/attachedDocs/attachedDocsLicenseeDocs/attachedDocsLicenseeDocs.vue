@@ -54,7 +54,7 @@
                     )
                 el-col(:span='7' v-show='doc.docFileName')
                   el-form-item(label=' ')
-                    a.file-link(:href='doc.fileLink')
+                    a.file-link(@click='downloadFile(doc)')
                       i.el-icon-document 
                       span {{ doc.docFileName }}
           
@@ -62,6 +62,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes as requestMutationTypes } from '@/store/types/request'
+import fetchSettings from '@/services/api/settings/fetchSettings'
 
 const moduleName = 'request'
 export default {
@@ -75,34 +76,41 @@ export default {
   data() {
     return {
       isAddDocumentPopoverVisible: false,
-      additionalDocumentTypeId: null
+      additionalDocumentTypeId: null,
+      systemSettings: []
     }
   },
   computed: {
     ...mapState(moduleName, {
       licenseeAttachedDocs: (state) => state.licenseeAttachedDocs
     }),
-
-    computedLicenseeAttachedDocs() {
-      return this.map((doc) => {
-        Object.assign(doc, {
-          fileLink: `https://stage-doc-upload.mos.ru/uform3.0/service/getcontent?os=GU_DOCS&id=${doc.warehouseLink}`
-        })
-      })
-    },
-
     licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
         return item.refDocTypeGroupByGroupId.groupId === 1
       })
     }
   },
+  mounted() {
+    this.fetchSettings()
+  },
   methods: {
     ...mapMutations(moduleName, {
       setArrayObjectProp: requestMutationTypes.SET_ARRAY_OBJECT_PROP,
       setLicenseeAttachedDocs: requestMutationTypes.SET_LICENSEE_ATTAHCHED_DOCS
     }),
+    async fetchSettings() {
+      const query = [
+        'RL_CHED_FORM_DOMAIN',
+        'RL_CHED_MZHI_OS',
+        'RL_CHED_FORM_DOMAIN_BR',
+        'RL_CHED_OS'
+      ]
 
+      this.systemSettings = await fetchSettings({
+        axiosModule: this.$axios,
+        query
+      })
+    },
     addDocument(additionalDocumentTypeId) {
       const array = [...this.licenseeAttachedDocs]
       const item = this.licenseeDocTypesOptions.find(
@@ -114,6 +122,43 @@ export default {
       this.setLicenseeAttachedDocs(array)
 
       this.isAddDocumentPopoverVisible = false
+    },
+    downloadFile(doc) {
+      const documentId = doc.warehouseLink
+      const groupId = doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId
+      const interdepRequest = doc.refDocTypeByDocTypeId.interdepRequest
+
+      const { settingValString: RCHED_DOMAIN } =
+        this.systemSettings &&
+        this.systemSettings.find(
+          (item) => item.settingId === 'RL_CHED_FORM_DOMAIN'
+        )
+
+      const { settingValString: RCHED_REPOSITORY } =
+        this.systemSettings &&
+        this.systemSettings.find((item) => item.settingId === 'RL_CHED_MZHI_OS')
+
+      const { settingValString: CHED_DOMAIN } =
+        this.systemSettings &&
+        this.systemSettings.find(
+          (item) => item.settingId === 'RL_CHED_FORM_DOMAIN_BR'
+        )
+
+      const { settingValString: CHED_REPOSITORY } =
+        this.systemSettings &&
+        this.systemSettings.find((item) => item.settingId === 'RL_CHED_OS')
+
+      let fileLink
+
+      if (groupId === 1 && !interdepRequest) {
+        fileLink = `https://${RCHED_DOMAIN}/uform3.0/service/getcontent?os=${RCHED_REPOSITORY}&id=${documentId}`
+      } else if (groupId === 1 && interdepRequest) {
+        fileLink = `https://${CHED_DOMAIN}/uform3.0/service/getcontent?os=${CHED_REPOSITORY}&id=${documentId}`
+      } else if (groupId === 2 && !interdepRequest) {
+        fileLink = `https://${RCHED_DOMAIN}/uform3.0/service/getcontent?os=${RCHED_REPOSITORY}&id=${documentId}`
+      }
+
+      window.open(fileLink)
     }
   }
 }
