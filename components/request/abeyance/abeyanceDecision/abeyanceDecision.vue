@@ -79,7 +79,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
-import fetchAbeyanceReasons from '@/services/api/requests/references/fetchAbeyanceReasons'
+import fetchAbeyanceReasons from '@/services/api/references/fetchAbeyanceReasons'
 
 const moduleName = 'request'
 

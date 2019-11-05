@@ -1,12 +1,12 @@
 import { actionTypes, mutationTypes } from '@/store/types/request'
-import fetchRequestRecord from '@/services/api/requests/fetchRequestRecord'
-import saveRequestRecord from '~/services/api/requests/saveRequestRecord'
-import fetchNextRequestStatuses from '~/services/api/requests/fetchNextRequestStatuses'
+import fetchRequestRecord from '@/services/api/request/fetchRequestRecord'
+import saveRequestRecord from '~/services/api/request/saveRequestRecord'
+import fetchNextRequestStatuses from '~/services/api/request/fetchNextRequestStatuses'
 // import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
-import fetchDocCheckByRequestId from '@/services/api/requests/fetchDocCheckByRequestId'
-import saveDocCheck from '@/services/api/requests/saveDocCheck'
+import fetchDocCheckByRequestId from '@/services/api/request/fetchDocCheckByRequestId'
+import saveDocCheck from '@/services/api/request/saveDocCheck'
 import defaultDocCheck from '@/constants/defaultDocCheck'
-import changeRequestStatus from '@/services/api/requests/changeRequestStatus'
+import changeRequestStatus from '@/services/api/request/changeRequestStatus'
 
 export default {
   [actionTypes.FETCH_REQUEST_LIST]: async ({ commit }) => {

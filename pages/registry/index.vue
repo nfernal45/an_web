@@ -11,7 +11,7 @@
 <script>
 import RegistrySearchForm from '@/components/registry/registrySearchForm'
 import RegistryRequestsTable from '@/components/registry/registryRequestsTable'
-import fetchRequestsList from '@/services/api/requests/fetchRequestsList'
+import fetchRequestsList from '@/services/api/request/fetchRequestsList'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
 export default {
