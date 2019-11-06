@@ -2,6 +2,30 @@
   form-block(title='Запрос документов в базовом регистре для проверки предоставленных сведений')
     template(slot='content')
       el-form(size='small' label-position='top')
+        el-row.mb-10
+          el-col
+            el-popover(placement='top'
+                       width='430'
+                       v-model='isAddDocumentPopoverVisible')
+              el-form-item(label='Тип документа')
+                el-select(v-model='additionalDocumentTypeId' 
+                          size='small'
+                          style='width: 400px')
+                  el-option(v-for='item in refDocTypes'
+                            :key='item.typeId'
+                            :value='item.typeId'
+                            :label='item.typeName')
+              div
+                el-button(size='mini' 
+                          type='primary' 
+                           @click='addDocument(additionalDocumentTypeId)' 
+                           :disabled='!additionalDocumentTypeId') Добавить
+                el-button(size='mini' 
+                          type='text'
+                          @click='isAddDocumentPopoverVisible = false') Отмена
+              el-button(slot='reference'
+                        type='primary') Добавить документ
+
         el-row
           el-col
             el-card.mb-20(v-for='(doc, index) in computedQueriedDocs'
@@ -42,22 +66,26 @@
                             v-show='!doc.queryDate'
                             @click='sendToEtp(doc.queryId, index)') Запросить документ в БР
 
+        
           
 
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
 import { Loading } from 'element-ui'
+import { mapState, mapActions, mapMutations } from 'vuex'
+import { mutationTypes, actionTypes } from '@/store/types/request'
 import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
 import fetchRequiredInterParam from '@/services/api/requests/fetchRequiredInterParam'
 import sendToEtp from '@/services/api/requests/sendToEtp'
-import { actionTypes } from '@/store/types/request'
+
 const moduleName = 'request'
 export default {
   name: 'QueriedDocsInderdeptRequest',
   data() {
     return {
-      refDocTypes: []
+      refDocTypes: [],
+      isAddDocumentPopoverVisible: false,
+      additionalDocumentTypeId: null
     }
   },
   computed: {
@@ -83,7 +111,11 @@ export default {
   },
   methods: {
     ...mapActions(moduleName, {
-      fetchRequest: actionTypes.FETCH_REQUEST
+      fetchRequest: actionTypes.FETCH_REQUEST,
+      saveRequest: actionTypes.SAVE_REQUEST
+    }),
+    ...mapMutations(moduleName, {
+      setProp: mutationTypes.SET_PROP
     }),
     async sendToEtp(documentQueryId, index) {
       const el = this.$refs.etp[index].$el
@@ -109,6 +141,19 @@ export default {
     },
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
+    },
+    addDocument(docTypeId) {
+      const array = [...this.request.gfQueriedDocsByRequestId]
+      const item = { docTypeId }
+
+      array.push(item)
+
+      this.setProp({ propName: 'gfQueriedDocsByRequestId', propValue: array })
+
+      this.isAddDocumentPopoverVisible = false
+      this.additionalDocumentTypeId = null
+
+      this.saveRequest()
     }
   }
 }
