@@ -2,15 +2,20 @@
   div.attached-docs
     el-row
       // Документы заявителя
-      attached-docs-licensee-docs(:refDocTypes='refDocTypes')
+      attached-docs-licensee-docs(:refDocTypes='refDocTypes'
+                                  :chedSettings='chedSettings'
+                                  :chedSettingsLoaded='chedSettingsLoaded')
 
-      attached-docs-mzhi-docs(:refDocTypes='refDocTypes')
+      attached-docs-mzhi-docs(:refDocTypes='refDocTypes'
+                              :chedSettings='chedSettings'
+                              :chedSettingsLoaded='chedSettingsLoaded')
 
 </template>
 <script>
 import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
 import attachedDocsLicenseeDocs from '@/components/request/attachedDocs/attachedDocsLicenseeDocs'
 import attachedDocsMzhiDocs from '@/components/request/attachedDocs/attachedDocsMzhiDocs'
+import fetchSettings from '@/services/api/settings/fetchSettings'
 export default {
   name: 'RequestAttachedDocsPage',
   components: {
@@ -19,7 +24,9 @@ export default {
   },
   data() {
     return {
-      refDocTypes: []
+      refDocTypes: [],
+      chedSettings: {},
+      chedSettingsLoaded: false
     }
   },
   computed: {
@@ -29,10 +36,36 @@ export default {
   },
   mounted() {
     this.fetchDocTypes()
+    this.fetchChedSettings()
   },
   methods: {
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
+    },
+    async fetchChedSettings() {
+      const chedDettingList = [
+        'RL_CHED_FORM_CHANNEL',
+        'RL_CHED_FORM_SERVICE',
+        'RL_CHED_FORM_URL',
+        'RL_CHED_GET_URL',
+        'RL_CHED_SCRIPT_URL',
+        'RL_CHED_FORM_DOMAIN',
+        'RL_CHED_MZHI_OS',
+        'RL_CHED_FORM_DOMAIN_BR',
+        'RL_CHED_OS'
+      ]
+
+      const chedSettings = await fetchSettings({
+        axiosModule: this.$axios,
+        query: chedDettingList
+      })
+
+      this.chedSettings = chedSettings.reduce((result, item, index, array) => {
+        result[item.settingId] = item.settingValString
+        return result
+      }, {})
+
+      this.chedSettingsLoaded = true
     }
   }
 }
