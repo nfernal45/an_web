@@ -26,6 +26,9 @@ const restApiGf = {
     byId: '/gf-doc-checks/{id}',
     list: '/gf-doc-checks/list',
     save: '/gf-doc-checks/'
+  },
+  gfRptForm: {
+    list: '/gf-report-form-request-type-request-statuses/list'
   }
 }
 
@@ -48,6 +51,9 @@ const restApiGfRef = {
   },
   gfRefAgreementFoundations: {
     list: '/ref-agreement-foundations/list'
+  },
+  gfRefReorgationzationForms: {
+    list: '/ref-reorganization-forms/list'
   }
 }
 
@@ -97,6 +103,14 @@ const restApiNsi = {
   }
 }
 
+const restApiAuth = {
+  checkToken: '/as/oauth/check_token',
+  // checkUser: '/as/commons/users/{login}',
+  checkUser: '/as/users/{login}',
+  passwordReset: '/as/user/password-reset-page',
+  exit: '/as/exit'
+}
+
 function setApiPrefix({ prefix, links }) {
   Object.keys(links).forEach((key) => {
     Object.keys(links[key]).forEach((subKey) => {
@@ -112,8 +126,6 @@ setApiPrefix({ prefix: restApiNameSpaces.gfRabbitmq, links: restApiGfRabbitmq })
 setApiPrefix({ prefix: restApiNameSpaces.gu, links: restApiGuRef })
 setApiPrefix({ prefix: restApiNameSpaces.nsi, links: restApiNsi })
 
-// console.log(restApiGf)
-
 export {
   restApiGf,
   restApiGfRef,
@@ -121,5 +133,6 @@ export {
   restApiGuRef,
   restApiNsi,
   restApiGfActiviti,
-  restApiGfRabbitmq
+  restApiGfRabbitmq,
+  restApiAuth
 }

@@ -3,6 +3,8 @@ export default () => ({
     gfAttachedDocsByRequestId: []
   },
   docCheck: {},
+  licenseeAttachedDocs: [],
+  mzhiAttachedDocs: [],
   requestStatuses: [],
   gfAbeyancesByRequestIdDefault: null,
   gfAttachedDocsByRequestIdDefault: null,

@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.flex.justify-center.flex-wrap(v-show="isReady" style="background:#f8f8f8")
+  div.flex.justify-center.flex-wrap(v-show="isReady" class='layout')
     the-header.header.sticky(style="flex: 1 0 0; position: sticky; top: 0;")
     el-container.flex-wrap(style="position: relative;")
       the-tabs(style="flex-basis: 100%;")
@@ -7,6 +7,7 @@
         the-aside.sticky(style="flex-basis: 200px; position: sticky; top: 100px; align-self: flex-start;")
         el-main(style="flex: 1 0 0;")
           nuxt
+        
 </template>
 
 <script>
@@ -102,4 +103,10 @@ html {
   transform: translate3d(0, 0, 0);
   will-change: position, transform;
 }
+</style>
+<style lang="sass">
+@import '@/assets/scss/element-variables.scss';
+
+.layout
+  background: $--color-secondary-light-9
 </style>

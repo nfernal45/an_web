@@ -2,23 +2,70 @@
   div.attached-docs
     el-row
       // Документы заявителя
-      attached-docs-applicant-docs
+      attached-docs-licensee-docs(:refDocTypes='refDocTypes'
+                                  :chedSettings='chedSettings'
+                                  :chedSettingsLoaded='chedSettingsLoaded')
 
-      attached-docs-mzhi-docs
+      attached-docs-mzhi-docs(:refDocTypes='refDocTypes'
+                              :chedSettings='chedSettings'
+                              :chedSettingsLoaded='chedSettingsLoaded')
 
 </template>
 <script>
-import attachedDocsApplicantDocs from '@/components/request/attachedDocs/attachedDocsApplicantDocs'
+import fetchDocTypes from '@/services/api/references/fetchDocTypes'
+import attachedDocsLicenseeDocs from '@/components/request/attachedDocs/attachedDocsLicenseeDocs'
 import attachedDocsMzhiDocs from '@/components/request/attachedDocs/attachedDocsMzhiDocs'
+import fetchSettings from '@/services/api/settings/fetchSettings'
 export default {
   name: 'RequestAttachedDocsPage',
   components: {
-    attachedDocsApplicantDocs,
+    attachedDocsLicenseeDocs,
     attachedDocsMzhiDocs
+  },
+  data() {
+    return {
+      refDocTypes: [],
+      chedSettings: {},
+      chedSettingsLoaded: false
+    }
   },
   computed: {
     requestId() {
       return this.$route.params.id
+    }
+  },
+  mounted() {
+    this.fetchDocTypes()
+    this.fetchChedSettings()
+  },
+  methods: {
+    async fetchDocTypes() {
+      this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
+    },
+    async fetchChedSettings() {
+      const chedDettingList = [
+        'RL_CHED_FORM_CHANNEL',
+        'RL_CHED_FORM_SERVICE',
+        'RL_CHED_FORM_URL',
+        'RL_CHED_GET_URL',
+        'RL_CHED_SCRIPT_URL',
+        'RL_CHED_FORM_DOMAIN',
+        'RL_CHED_MZHI_OS',
+        'RL_CHED_FORM_DOMAIN_BR',
+        'RL_CHED_OS'
+      ]
+
+      const chedSettings = await fetchSettings({
+        axiosModule: this.$axios,
+        query: chedDettingList
+      })
+
+      this.chedSettings = chedSettings.reduce((result, item, index, array) => {
+        result[item.settingId] = item.settingValString
+        return result
+      }, {})
+
+      this.chedSettingsLoaded = true
     }
   }
 }

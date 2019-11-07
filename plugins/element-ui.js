@@ -29,7 +29,8 @@ import {
   TableColumn,
   Dialog,
   Dropdown,
-  DropdownItem
+  DropdownItem,
+  Popover
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-RU'
 import locale from 'element-ui/lib/locale'
@@ -65,6 +66,8 @@ Vue.use(TableColumn)
 Vue.use(Dialog)
 Vue.use(Dropdown)
 Vue.use(DropdownItem)
+Vue.use(Popover)
 
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$notify = Notification
+Vue.prototype.$loading = Loading.service

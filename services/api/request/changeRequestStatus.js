@@ -19,7 +19,6 @@ export default async function({
     const { data } = await axiosModule.post(url, qs.stringify(query))
     Vue.prototype.$notify.success({
       title: 'Статус изменен',
-      offset: 180,
       message: `Текущий статус изменён на "${data.statusName}".`
     })
   } catch (error) {
