@@ -23,8 +23,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
-import fetchAcceptReasons from '@/services/api/requests/references/fetchAcceptReasons'
-import fetchRefusalReasons from '@/services/api/requests/references/fetchRefusalReasons'
+import fetchAcceptReasons from '@/services/api/references/fetchAcceptReasons'
+import fetchRefusalReasons from '@/services/api/references/fetchRefusalReasons'
 
 const moduleName = 'request'
 export default {
