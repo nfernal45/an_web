@@ -8,7 +8,7 @@
 
 </template>
 <script>
-import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
+import fetchDocTypes from '@/services/api/references/fetchDocTypes'
 import attachedDocsLicenseeDocs from '@/components/request/attachedDocs/attachedDocsLicenseeDocs'
 import attachedDocsMzhiDocs from '@/components/request/attachedDocs/attachedDocsMzhiDocs'
 export default {

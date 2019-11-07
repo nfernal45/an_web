@@ -25,7 +25,7 @@
 <script>
 // rptFormDialog
 import { mapState } from 'vuex'
-import fetchRptFormList from '@/services/api/requests/fetchRptFormList'
+import fetchRptFormList from '@/services/api/request/fetchRptFormList'
 import fetchSettings from '@/services/api/settings/fetchSettings'
 const moduleName = 'request'
 export default {
