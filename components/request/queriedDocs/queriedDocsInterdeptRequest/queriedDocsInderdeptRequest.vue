@@ -48,7 +48,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { Loading } from 'element-ui'
-import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
+import fetchDocTypes from '@/services/api/references/fetchDocTypes'
 import fetchRequiredInterParam from '@/services/api/request/fetchRequiredInterParam'
 import sendToEtp from '@/services/api/request/sendToEtp'
 import { actionTypes } from '@/store/types/request'
