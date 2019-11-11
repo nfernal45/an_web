@@ -4,8 +4,7 @@
       el-form(label-position='top' size='small')
         el-row(:gutter='20')
           el-col(:span='16')
-            el-form-item(label='Адрес')
-              el-input
+            address-picker(v-model='addressId')
             el-form-item(label='Адрес МКД, указанный заявителем на МПГУ')
               el-input(:value="request.addressName" readonly)
             el-form-item(label='Тип номера')
@@ -85,6 +84,15 @@ export default {
       },
       set(value) {
         this.set({ propName: 'condNum', propValue: value })
+      }
+    },
+
+    addressId: {
+      get() {
+        return this.request.addressId
+      },
+      set(value) {
+        this.set({ propName: 'addressId', propValue: value })
       }
     }
   },
