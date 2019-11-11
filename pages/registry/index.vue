@@ -1,11 +1,19 @@
 <template lang="pug">
   div
     h1 Список заявлений на внесение изменений в реестр лицензий субъекта
-    registry-search-form(@onSearch="searchRequests" :isSearchLoading="isSearchLoading").mt-10
+    registry-search-form(@onSearch="searchRequests"
+                         @onCleanSearchFilter='cleanSearchFilter'
+                         :search-string.sync='searchString'
+                         :isSearchLoading="isSearchLoading").mt-10
+    div {{ searchParams }}
+    div {{ searchString }} dd
     registry-requests-table(
+      :isSearchLoading='isSearchLoading'
       :requests-list="requestsList"
       :requestTypesOptions="requestTypesOptions"
       :requestStatusesOptions="requestStatusesOptions"
+      :pagination-params.sync='paginationParams'
+      @tablePageChange="tablePageChange"
     )
 </template>
 <script>
@@ -23,9 +31,19 @@ export default {
   data() {
     return {
       isSearchLoading: false,
+      searchParams: {},
+      searchString: '',
       requestsList: [],
       requestTypesOptions: [],
-      requestStatusesOptions: []
+      requestStatusesOptions: [],
+
+      paginationParams: {
+        limit: 20,
+        start: 0,
+        total: 0,
+        currentPage: 1,
+        relate: false
+      }
     }
   },
   mounted() {
@@ -33,13 +51,31 @@ export default {
     this.fetchRequestStatusesOptions()
   },
   methods: {
-    async searchRequests(searchParams) {
+    async searchRequests() {
       this.isSearchLoading = true
-      this.requestsList = await fetchRequestsList({
+      this.searchParams = Object.assign({}, this.paginationParams)
+      delete this.searchParams.total
+      if (this.searchString.length) this.searchParams.search = this.searchString
+
+      const { data, total } = await fetchRequestsList({
         axiosModule: this.$axios,
-        searchParams
+        searchParams: this.searchParams
       })
+
+      this.requestsList = data
+      this.paginationParams.total = total
       this.isSearchLoading = false
+    },
+    cleanSearchFilter() {
+      this.searchString = ''
+      this.tablePageChange(1)
+    },
+    tablePageChange(currentPage) {
+      this.paginationParams.currentPage = currentPage
+      this.paginationParams.start =
+        (this.paginationParams.currentPage - 1) * this.paginationParams.limit
+      // this.$emit('update:paginationParams', this.paginationParams)
+      this.searchRequests()
     },
     async fetchRequestTypesOptions() {
       this.requestTypesOptions = await fetchRequestTypesOptions({

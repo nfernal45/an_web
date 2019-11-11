@@ -1,20 +1,33 @@
 <template lang="pug">
-  el-table(:data="computedRequestsList" style="width: 100%")
-    el-table-column(prop="requestDate" label="Дата подачи заявления" width="120")
-    el-table-column(prop="regnum" label="Рег. №" width="120")
-    el-table-column(prop="licenseeFullname" label="Заявитель")
-    el-table-column(prop="addressName" label="Адрес МКД")
-    el-table-column(prop="typeId" label="Цель обращения" width="200")
-    el-table-column(prop="statusId" label="Статус заявления" width="160")
-    el-table-column(fixed="right" label="" width="60")
-      template(slot-scope="scope")
-        el-button.d-flex.justify-center.align-center(
-          type="primary"
-          size="small"
-          style="width:40px;height:40px;padding:0;"
-          @click="openRequest(scope.row.requestId)"
-        )
-          font-awesome-icon(icon="pen" style="margin:0;")
+  el-row
+    el-col
+      el-pagination.mb-10(layout="prev, pager, next"
+                          background
+                          :page-size="paginationParams.limit"
+                          :total="paginationParams.total"
+                          :current-page='paginationParams.currentPage'
+                          class="mb-15"
+                          @current-change="tablePageChange")
+    el-col
+      el-table(:data="computedRequestsList" 
+               :lazy='isSearchLoading'
+               
+               style="width: 100%")
+        el-table-column(prop="requestDate" label="Дата подачи заявления" width="120")
+        el-table-column(prop="regnum" label="Рег. №" width="120")
+        el-table-column(prop="licenseeFullname" label="Заявитель")
+        el-table-column(prop="addressName" label="Адрес МКД")
+        el-table-column(prop="typeId" label="Цель обращения" width="200")
+        el-table-column(prop="statusId" label="Статус заявления" width="160")
+        el-table-column(fixed="right" label="" width="60")
+          template(slot-scope="scope")
+            el-button.d-flex.justify-center.align-center(
+              type="primary"
+              size="small"
+              style="width:40px;height:40px;padding:0;"
+              @click="openRequest(scope.row.requestId)"
+            )
+              font-awesome-icon(icon="pen" style="margin:0;")
 </template>
 <script>
 export default {
@@ -31,6 +44,14 @@ export default {
     requestTypesOptions: {
       type: Array,
       default: () => []
+    },
+    paginationParams: {
+      type: Object,
+      required: true
+    },
+    isSearchLoading: {
+      type: Boolean,
+      required: true
     }
   },
   computed: {
@@ -50,6 +71,11 @@ export default {
       })
     }
   },
+  // watch: {
+  //   paginationParams(value) {
+  //     this.$emit
+  //   }
+  // },
   methods: {
     openRequest(requestId) {
       this.$router.push({
@@ -65,6 +91,9 @@ export default {
           (status) => status.statusId === requestStatusId
         ).statusName
       }
+    },
+    tablePageChange(currentPage) {
+      this.$emit('tablePageChange', currentPage)
     }
   }
 }

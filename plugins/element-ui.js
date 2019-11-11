@@ -32,7 +32,8 @@ import {
   DropdownItem,
   Popover,
   Drawer,
-  Divider
+  Divider,
+  Pagination
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/ru-RU'
 import locale from 'element-ui/lib/locale'
@@ -71,6 +72,7 @@ Vue.use(DropdownItem)
 Vue.use(Popover)
 Vue.use(Drawer)
 Vue.use(Divider)
+Vue.use(Pagination)
 
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$notify = Notification

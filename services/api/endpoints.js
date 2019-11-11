@@ -101,10 +101,13 @@ const restApiNsi = {
   nsiRefDept: {
     list: '/ref-depts/list'
   },
-  nsiRefDistricts: {
+  nsiRefAdmDistricts: {
     list: '/adm-districts/',
     byId: '/adm-districts/{id}',
     byShortName: '/adm-districts/find-by-short-name'
+  },
+  nsiRefDistricts: {
+    byName: '/ref-districts/find-by-name-and-admdistrict'
   },
   nsiRefStreets: {
     list: '/ref-streets/find-by-name-and-admdistric-and-district'
