@@ -100,6 +100,28 @@ const restApiNsi = {
   },
   nsiRefDept: {
     list: '/ref-depts/list'
+  },
+  nsiAddresses: {
+    paramsSearch: '/ref-addresses/address-search',
+    list: '/ref-addresses/list'
+  },
+  nsiAdmDistricts: {
+    list: '/adm-districts/'
+  },
+  nsiDistricts: {
+    list: '/ref-districts/find-by-name-and-admdistrict'
+  },
+  nsiStreets: {
+    list: '/ref-streets/find-by-name-and-admdistric-and-district'
+  },
+  nsiHouseNumbers: {
+    list: '/ref-addresses/address-search/houses'
+  },
+  nsiCorpNumbers: {
+    list: '/ref-addresses/address-search/corps'
+  },
+  nsiConstrctNumbers: {
+    list: '/ref-addresses/address-search/constrcts'
   }
 }
 
