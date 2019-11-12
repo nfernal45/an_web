@@ -46,7 +46,7 @@
           )
             el-option(v-for='district in districtsOptions'
               :key='district.districtId'
-              :label='district.shortNameDistr'
+              :label='district.baseName'
               :value='district.districtId'
             )
 
