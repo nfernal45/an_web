@@ -15,12 +15,12 @@
                   @click="onSearch" 
                   :loading="isSearchLoading"
                   :disabled='requestsCount || errorAddressMessage.length'
-                  icon='el-icon-search') {{ searchButtonText }}
+                  icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
         el-button(type="warning" 
                   @click="clearSearchFilter" 
                   icon='el-icon-circle-close') Очистить поиск
         
-        el-form.mt-20(size='small' label-position='top')
+        el-form.mt-20(size='mini' label-position='top')
           el-row
             el-col(:span='15')
               el-row(:gutter='20')
@@ -125,7 +125,7 @@
                       el-divider(content-position="left") Заявитель
                 
                 el-col(:span='11')
-                  el-form-item.mb-10(label='Тип заявителя')
+                  el-form-item(label='Тип заявителя')
                       el-checkbox-group.flex.justify-start.align-start(v-model='searchForm.licenseeType')
                         el-checkbox(label='L') Юридическое лицо
                         el-checkbox(label='I') ИП
@@ -138,7 +138,7 @@
                   el-form-item(label='Наименование')
                       el-input(v-model='searchForm.licenseeName')
                         
-              el-row.mb-10(:gutter='10')
+              el-row(:gutter='10')
                 el-row
                   el-col(:span='22')
                     el-divider(content-position="left") Адрес МКД
@@ -287,9 +287,7 @@ export default {
       isDistrictSelectLoading: false,
       isStreetsSelectLoading: false,
       isSearchButtonDisabled: false,
-      requestsCount: 0,
-
-      searchButtonText: 'Поиск'
+      requestsCount: 0
     }
   },
   computed: {
@@ -420,29 +418,24 @@ export default {
     },
     async fetchRefAdmDisctricts() {
       this.requestsCount++
-      this.searchButtonText = 'Пожалуйста, подождите...'
       this.refAdmDisctricts = await fetchRefAdmDisctricts({
         axiosModule: this.$axios
       })
       this.requestsCount--
-      this.searchButtonText = 'Поиск'
     },
     async fetchRefDisctricts() {
       this.isDistrictSelectLoading = true
       this.requestsCount++
-      this.searchButtonText = 'Пожалуйста, подождите...'
       this.refDistricts = await fetchRefDisctricts({
         axiosModule: this.$axios,
         admDisctrict: this.searchAddress.admDisctrict
       })
       this.requestsCount--
-      this.searchButtonText = 'Поиск'
       this.isDistrictSelectLoading = false
     },
     async fetchStreets() {
       this.isStreetsSelectLoading = true
       this.requestsCount++
-      this.searchButtonText = 'Пожалуйста, подождите...'
 
       this.refStreets = await fetchStreets({
         axiosModule: this.$axios,
@@ -451,11 +444,9 @@ export default {
 
       this.isStreetsSelectLoading = false
       this.requestsCount--
-      this.searchButtonText = 'Поиск'
     },
     async fetchRefAddress() {
       this.requestsCount++
-      this.searchButtonText = 'Пожалуйста, подождите...'
 
       if (
         !this.searchAddress.admDisctrict &&
@@ -466,7 +457,6 @@ export default {
       ) {
         this.searchForm.addressesId = []
         this.requestsCount--
-        this.searchButtonText = 'Поиск'
         this.errorAddressMessage = ''
         return false
       }
@@ -494,7 +484,6 @@ export default {
       this.requestsCount--
 
       if (array.length) {
-        this.searchButtonText = 'Поиск'
         this.errorAddressMessage = ''
       } else {
         this.errorAddressMessage = 'Адрес не найден.'
