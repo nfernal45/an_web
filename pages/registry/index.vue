@@ -1,12 +1,11 @@
 <template lang="pug">
   div
     h1 Список заявлений на внесение изменений в реестр лицензий субъекта
-    registry-search-form(@onSearch="searchRequests"
-                         @onCleanSearchFilter='cleanSearchFilter'
+    registry-search-form(@onSearch="tablePageChange(1)"
+                         @onClearSearchFilter='clearSearchFilter'
                          :search-string.sync='searchString'
                          :isSearchLoading="isSearchLoading").mt-10
-    div {{ searchParams }}
-    div {{ searchString }} dd
+
     registry-requests-table(
       :isSearchLoading='isSearchLoading'
       :requests-list="requestsList"
@@ -66,7 +65,7 @@ export default {
       this.paginationParams.total = total
       this.isSearchLoading = false
     },
-    cleanSearchFilter() {
+    clearSearchFilter() {
       this.searchString = ''
       this.tablePageChange(1)
     },
@@ -74,7 +73,7 @@ export default {
       this.paginationParams.currentPage = currentPage
       this.paginationParams.start =
         (this.paginationParams.currentPage - 1) * this.paginationParams.limit
-      // this.$emit('update:paginationParams', this.paginationParams)
+
       this.searchRequests()
     },
     async fetchRequestTypesOptions() {

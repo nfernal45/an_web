@@ -5,10 +5,6 @@
                     @click="createRequest") Создать новое заявление
     el-button(@click='isDrawerVisible = true'
               icon="el-icon-s-operation") Показать фильтр
-    //- el-button.mb-20(type="warning"
-    //-                 icon='el-icon-circle-close' 
-    //-                 plain
-    //-                 @click="onSearch(true)") Очистить поиск
 
     el-drawer(title='Фильтр поиска'
               :visible.sync='isDrawerVisible'
@@ -21,7 +17,7 @@
                   :disabled='requestsCount || errorAddressMessage.length'
                   icon='el-icon-search') {{ searchButtonText }}
         el-button(type="warning" 
-                  @click="cleanSearchFilter" 
+                  @click="clearSearchFilter" 
                   icon='el-icon-circle-close') Очистить поиск
         
         el-form.mt-20(size='small' label-position='top')
@@ -301,6 +297,12 @@ export default {
       if (this.searchForm.eno.length)
         search.push(`eno==*${this.searchForm.eno}*`)
 
+      if (this.searchForm.regnum.length)
+        search.push(`regnum==${this.searchForm.regnum}`)
+
+      if (this.searchForm.outerRegnum.length)
+        search.push(`outerRegnum==${this.searchForm.outerRegnum}`)
+
       if (this.searchForm.licenseeInn.length)
         search.push(`licenseeInn=='${this.searchForm.licenseeInn}'`)
 
@@ -324,12 +326,12 @@ export default {
 
       if (this.searchForm.planConsidDate.start)
         search.push(
-          `requestDate>="${this.searchForm.planConsidDate.start}T00:00:00"`
+          `planConsidDate>="${this.searchForm.planConsidDate.start}T00:00:00"`
         )
 
       if (this.searchForm.planConsidDate.end)
         search.push(
-          `requestDate<="${this.searchForm.planConsidDate.end}T23:59:59"`
+          `planConsidDate<="${this.searchForm.planConsidDate.end}T23:59:59"`
         )
 
       if (this.searchForm.outerRequestDate.start)
@@ -403,11 +405,11 @@ export default {
     onSearch() {
       this.$emit('onSearch')
     },
-    cleanSearchFilter() {
+    clearSearchFilter() {
       this.searchForm = {
         ...this.cleanSearchForm
       }
-      this.$emit('onCleanSearchFilter')
+      this.$emit('onClearSearchFilter')
     },
     async fetchRegPlaceOptions() {
       this.regPlaceOptions = await fetchRegPlaceOptions({
@@ -508,8 +510,6 @@ export default {
       this.refRequestStatusesOptions = await fetchRequestStatusesOptions({
         axiosModule: this.$axios
       })
-
-      console.log('refRequestStatusesOptions', this.refRequestStatusesOptions)
     }
   }
 }

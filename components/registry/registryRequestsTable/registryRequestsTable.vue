@@ -71,11 +71,6 @@ export default {
       })
     }
   },
-  // watch: {
-  //   paginationParams(value) {
-  //     this.$emit
-  //   }
-  // },
   methods: {
     openRequest(requestId) {
       this.$router.push({
