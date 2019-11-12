@@ -9,7 +9,7 @@ export default async function({ axiosModule, admDisctrict }) {
 
     if (admDisctrict) params.adm_district = admDisctrict
 
-    const url = restApiNsi.nsiRefStreets.list
+    const url = restApiNsi.nsiStreets.list
 
     const data = await axiosModule.$get(url, { params })
     return data

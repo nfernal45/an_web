@@ -20,7 +20,7 @@ export default async function({
     if (house) params.house = house
     if (street) params.street = street
 
-    const url = restApiNsi.nsiRefAdresses.search
+    const url = restApiNsi.nsiAddresses.paramsSearch
 
     const data = await axiosModule.$get(url, { params })
 
