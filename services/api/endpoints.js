@@ -101,23 +101,27 @@ const restApiNsi = {
   nsiRefDept: {
     list: '/ref-depts/list'
   },
-  nsiRefAdmDistricts: {
-    list: '/adm-districts/',
-    byId: '/adm-districts/{id}',
-    byShortName: '/adm-districts/find-by-short-name'
+  nsiAddresses: {
+    paramsSearch: '/ref-addresses/address-search',
+    list: '/ref-addresses/list'
   },
-  nsiRefDistricts: {
-    byName: '/ref-districts/find-by-name-and-admdistrict'
+  nsiAdmDistricts: {
+    list: '/adm-districts/'
   },
-  nsiRefStreets: {
+  nsiDistricts: {
+    list: '/ref-districts/find-by-name-and-admdistrict'
+  },
+  nsiStreets: {
     list: '/ref-streets/find-by-name-and-admdistric-and-district'
   },
-  nsiRefAdresses: {
-    list: '/ref-addresses/list',
-    houses: '/ref-addresses/address-search/houses',
-    corps: '/ref-addresses/address-search/corps',
-    constrcts: '/ref-addresses/address-search/constrcts',
-    search: '/ref-addresses/address-search'
+  nsiHouseNumbers: {
+    list: '/ref-addresses/address-search/houses'
+  },
+  nsiCorpNumbers: {
+    list: '/ref-addresses/address-search/corps'
+  },
+  nsiConstrctNumbers: {
+    list: '/ref-addresses/address-search/constrcts'
   }
 }
 

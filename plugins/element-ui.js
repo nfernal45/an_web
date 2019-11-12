@@ -76,3 +76,4 @@ Vue.use(Pagination)
 
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$notify = Notification
+Vue.prototype.$loading = Loading.service
