@@ -153,6 +153,8 @@
                         ) {{ item.typeName }}
               el-form-item(label='Статус заявления')
                 el-select(v-model='searchForm.requestStatusesId'
+                          clearable
+                          filterable
                           multiple
                           style='width: 320px'
                           )

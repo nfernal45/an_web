@@ -3,15 +3,14 @@
     el-col
       el-pagination.mb-10(layout="prev, pager, next"
                           background
+                          :disabled='isSearchLoading'
                           :page-size="paginationParams.limit"
                           :total="paginationParams.total"
                           :current-page='paginationParams.currentPage'
                           class="mb-15"
                           @current-change="tablePageChange")
-    el-col
+    el-col(v-loading='isSearchLoading')
       el-table(:data="computedRequestsList" 
-               :lazy='isSearchLoading'
-               
                style="width: 100%")
         el-table-column(prop="requestDate" label="Дата подачи заявления" width="120")
         el-table-column(prop="regnum" label="Рег. №" width="120")

@@ -4,7 +4,7 @@
     registry-search-form(@onSearch="tablePageChange(1)"
                          @onClearSearchFilter='clearSearchFilter'
                          :search-string.sync='searchString'
-                         :isSearchLoading="isSearchLoading").mt-10
+                         :isSearchLoading="isSearchLoading").mt-10.mb-10
 
     registry-requests-table(
       :isSearchLoading='isSearchLoading'
@@ -37,7 +37,7 @@ export default {
       requestStatusesOptions: [],
 
       paginationParams: {
-        limit: 20,
+        limit: 10,
         start: 0,
         total: 0,
         currentPage: 1,
