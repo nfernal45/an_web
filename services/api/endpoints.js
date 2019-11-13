@@ -29,6 +29,9 @@ const restApiGf = {
   },
   gfRptForm: {
     list: '/gf-report-form-request-type-request-statuses/list'
+  },
+  gfAuth: {
+    refreshToken: '/login'
   }
 }
 
@@ -127,7 +130,6 @@ const restApiNsi = {
 
 const restApiAuth = {
   checkToken: '/as/oauth/check_token',
-  // checkUser: '/as/commons/users/{login}',
   checkUser: '/as/users/{login}',
   passwordReset: '/as/user/password-reset-page',
   exit: '/as/exit'
