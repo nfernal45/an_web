@@ -3,6 +3,7 @@ import { restApiNsi } from '@/services/api/endpoints'
 export default async function({
   axiosModule,
   admDistrictId,
+  district,
   construct,
   corp,
   street,
@@ -15,6 +16,7 @@ export default async function({
     }
 
     if (admDistrictId) params.adm_district = admDistrictId
+    if (district) params.district = district
     if (construct) params.construct = construct
     if (corp) params.corp = corp
     if (house) params.house = house

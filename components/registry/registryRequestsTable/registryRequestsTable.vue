@@ -1,7 +1,7 @@
 <template lang="pug">
   el-row
     el-col
-      el-pagination.mb-10(layout="prev, pager, next"
+      el-pagination.mb-10(layout="prev, pager, next, total"
                           background
                           :disabled='isSearchLoading'
                           :page-size="paginationParams.limit"
@@ -29,28 +29,36 @@
               font-awesome-icon(icon="pen" style="margin:0;")
 </template>
 <script>
+import fetchRequestsList from '@/services/api/request/fetchRequestsList'
+import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
+import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
 export default {
   name: 'RegistryRequestsTable',
   props: {
-    requestsList: {
-      type: Array,
-      default: () => []
-    },
-    requestStatusesOptions: {
-      type: Array,
-      default: () => []
-    },
-    requestTypesOptions: {
-      type: Array,
-      default: () => []
-    },
-    paginationParams: {
-      type: Object,
-      required: true
+    globalSearchFilters: {
+      type: String,
+      default: ''
     },
     isSearchLoading: {
       type: Boolean,
       required: true
+    }
+  },
+  data() {
+    return {
+      searchString: '',
+      requestsList: [],
+      requestTypesOptions: [],
+      requestStatusesOptions: [],
+
+      paginationParams: {
+        limit: 10,
+        start: 0,
+        total: 0,
+        sort: 'requestId-',
+        currentPage: 1,
+        relate: false
+      }
     }
   },
   computed: {
@@ -70,7 +78,42 @@ export default {
       })
     }
   },
+  watch: {
+    globalSearchFilters(value) {
+      this.searchString = value
+      this.tablePageChange(1)
+    }
+  },
+  mounted() {
+    this.fetchRequestTypesOptions()
+    this.fetchRequestStatusesOptions()
+    this.tablePageChange(1)
+  },
   methods: {
+    async searchRequests() {
+      this.$emit('update:isSearchLoading', true)
+
+      const searchParams = Object.assign({}, this.paginationParams)
+      delete searchParams.total
+
+      if (this.searchString.length) searchParams.search = this.searchString
+
+      const { data, total } = await fetchRequestsList({
+        axiosModule: this.$axios,
+        searchParams
+      })
+
+      this.requestsList = data
+      this.paginationParams.total = total
+      this.$emit('update:isSearchLoading', false)
+    },
+    tablePageChange(currentPage) {
+      this.paginationParams.currentPage = currentPage
+      this.paginationParams.start =
+        (this.paginationParams.currentPage - 1) * this.paginationParams.limit
+
+      this.searchRequests()
+    },
     openRequest(requestId) {
       this.$router.push({
         name: 'request-id-main',
@@ -86,8 +129,15 @@ export default {
         ).statusName
       }
     },
-    tablePageChange(currentPage) {
-      this.$emit('tablePageChange', currentPage)
+    async fetchRequestTypesOptions() {
+      this.requestTypesOptions = await fetchRequestTypesOptions({
+        axiosModule: this.$axios
+      })
+    },
+    async fetchRequestStatusesOptions() {
+      this.requestStatusesOptions = await fetchRequestStatusesOptions({
+        axiosModule: this.$axios
+      })
     }
   }
 }
