@@ -16,6 +16,8 @@
       :visible.sync='idAddressSearchModalVisible'
       width='30%'
       destroy-on-close
+      @closed='clearAddressSearchForm'
+      style='overscroll-behavior: contain;'
     )
       el-form(label-position='top' size='small')
         el-form-item(label='Округ')
@@ -37,16 +39,15 @@
             filterable
             remote
             :remote-method='fetchDistrictsOptions'
-            no-match-text="По Вашему запросу район не найден"
-            no-data-text="По Вашему запросу район не найден"
+            no-match-text='По Вашему запросу район не найден'
+            no-data-text='По Вашему запросу район не найден'
             autocomplete
             clearable
             :loading='isDistrictSelectLoading'
-            @clear='fetchDistrictsOptions'
           )
             el-option(v-for='district in districtsOptions'
               :key='district.districtId'
-              :label='district.shortNameDistr'
+              :label='district.baseName'
               :value='district.districtId'
             )
 
@@ -57,37 +58,78 @@
             filterable
             remote
             :remote-method='fetchStreetsOptions'
-            no-match-text="По Вашему запросу улица не найдена"
-            no-data-text="По Вашему запросу улица не найдена"
+            no-match-text='По Вашему запросу улица не найдена'
+            no-data-text='По Вашему запросу улица не найдена'
             autocomplete
             clearable
             :loading='isStreetSelectLoading'
-            @clear='fetchStreetsOptions'
           )
             el-option(v-for='street in streetsOptions'
               :key='street.streetId'
               :label='street.streetName'
               :value='street.streetId'
             )
+
         el-form-item(label='Номер дома')
           el-select.width-100(
             v-model='houseNum'
             :disabled='!streetId'
-            :placeholder='streetId ? "Выберите номер дома" : "Выберите улицу"'
+            :placeholder='streetId ? "Введите номер дома" : "Выберите улицу"'
             filterable
             remote
             :remote-method='fetchHouseNumbersOptions'
-            no-match-text="По Вашему запросу номер дома не найден"
-            no-data-text="По Вашему запросу номер дома не найден"
+            no-match-text='По Вашему запросу номер дома не найден'
+            no-data-text='По Вашему запросу номер дома не найден'
             autocomplete
             clearable
             :loading='isHouseNumSelectLoading'
-            @clear='fetchHouseNumbersOptions'
           )
             el-option(v-for='houseNumber in housesNumbersOptions'
               :key='houseNumber.houseNum'
               :label='houseNumber.houseNum'
               :value='houseNumber.houseNum'
+            )
+
+        el-form-item(label='Корпус дома')
+          el-select.width-100(
+            v-model='corp'
+            :disabled='!houseNum'
+            :placeholder='houseNum ? "Введите корпус дома" : "Укажите номер дома"'
+            filterable
+            remote
+            :remote-method='fetchCorpsNumbersOptions'
+            no-match-text='По Вашему запросу корпус дома не найден'
+            no-data-text='По Вашему запросу корпус дома не найден'
+            autocomplete
+            clearable
+            :loading='isCorpNumSelectLoading'
+            @clear='fetchAddressesOptions'
+          )
+            el-option(v-for='coprNumber in coprsNumbersOptions'
+              :key='coprNumber.corp'
+              :label='coprNumber.corp'
+              :value='coprNumber.corp'
+            )
+
+        el-form-item(label='Номер строения')
+          el-select.width-100(
+            v-model='construct'
+            :disabled='!houseNum'
+            :placeholder='houseNum ? "Введите номер строения" : "Укажите номер дома"'
+            filterable
+            remote
+            :remote-method='fetchConstrctsNumbersOptions'
+            no-match-text='По Вашему запросу номер строения не найден'
+            no-data-text='По Вашему запросу номер строения не найден'
+            autocomplete
+            clearable
+            :loading='isConstrctNumSelectLoading'
+            @clear='fetchAddressesOptions'
+          )
+            el-option(v-for='constrctNumber in constrctsNumbersOptions'
+              :key='constrctNumber.constrct'
+              :label='constrctNumber.constrct'
+              :value='constrctNumber.constrct'
             )
 
       div.flex.align-center.justify-center(v-loading='isAddresseSelectLoding' style='min-height: 50px')
@@ -99,7 +141,7 @@
             v-for='(address, index) in addressesOptions'
             :key='address.addressId'
             :class='{ [styles["selected"]]: address.selected }'
-            @click='selectAddress(index, address.addressId)'
+            @click='selectAddress(index, address)'
           ) {{ address.fullAddress }}
 
         span(
@@ -122,7 +164,7 @@ import fetchAdmDistrictsOptions from '@/services/api/references/addresses/fetchA
 import fetchDistrictsOptions from '@/services/api/references/addresses/fetchDistrictsOptions'
 import fetchStreetsOptions from '@/services/api/references/addresses/fetchStreetsOptions'
 import fetchHouseNumbersOptions from '@/services/api/references/addresses/fetchHouseNumbersOptions'
-import fetchCorpNumbersOptions from '@/services/api/references/addresses/fetchCorpNumbersOptions'
+import fetchCorpsNumbersOptions from '@/services/api/references/addresses/fetchCorpsNumbersOptions'
 import fetchConstrctsNumbersOptions from '@/services/api/references/addresses/fetchConstrctsNumbersOptions'
 export default {
   name: 'AddressPicker',
@@ -130,12 +172,16 @@ export default {
     value: {
       type: null,
       default: null
+    },
+    addressId: {
+      type: null,
+      default: null
     }
   },
   data() {
     return {
       selectedAddressId: null,
-      addressName: null,
+      addressName: '',
       addressesOptions: [],
       idAddressSearchModalVisible: false,
       isAddresseSelectLoding: false,
@@ -153,21 +199,15 @@ export default {
       isHouseNumSelectLoading: false,
       corp: null,
       coprsNumbersOptions: [],
-      constrct: null,
-      constrctNumbersOptions: []
+      isCorpNumSelectLoading: false,
+      construct: null,
+      constrctsNumbersOptions: [],
+      isConstrctNumSelectLoading: false
     }
   },
   computed: {
     styles() {
       return styles
-    },
-    addressId: {
-      get() {
-        return this.value
-      },
-      set(value) {
-        this.$emit('input', value)
-      }
     },
     isAddressesOptionsEmpty() {
       return (
@@ -193,13 +233,25 @@ export default {
     },
     streetId(value) {
       this.houseNum = null
-      if (value) this.fetchHouseNumbersOptions()
+      this.clearHouseNums()
       this.clearAdressesOptions()
     },
     houseNum(value) {
       this.corp = null
+      this.construct = null
       if (value) {
-        this.fetchCorpNumbersOptions()
+        this.fetchCorpsNumbersOptions()
+        this.fetchConstrctsNumbersOptions()
+        this.fetchAddressesOptions()
+      }
+    },
+    corp(value) {
+      if (value) {
+        this.fetchAddressesOptions()
+      }
+    },
+    construct(value) {
+      if (value) {
         this.fetchAddressesOptions()
       }
     }
@@ -209,7 +261,7 @@ export default {
   },
   methods: {
     async fetchAddreesNameById() {
-      if (!this.addressId) return
+      if (!this.addressId || this.addressName.length) return
       const addressesOptions = await fetchAddress({
         axiosModule: this.$axios,
         query: { addressId: this.addressId }
@@ -254,19 +306,21 @@ export default {
     },
 
     async fetchStreetsOptions(streetName) {
+      if (streetName && streetName.length < 3) return
       this.isStreetSelectLoading = true
       this.streetsOptions = await fetchStreetsOptions({
         axiosModule: this.$axios,
         query: {
           adm_district: this.admDistrictId ? this.admDistrictId : '',
           district: this.districtId ? this.districtId : '',
-          text: streetName && streetName.length > 1 ? streetName : ''
+          text: streetName && streetName.length > 2 ? streetName : ''
         }
       })
       this.isStreetSelectLoading = false
     },
 
     async fetchHouseNumbersOptions(houseNum) {
+      if (!houseNum || !houseNum.length) return
       this.isHouseNumSelectLoading = true
       this.housesNumbersOptions = await fetchHouseNumbersOptions({
         axiosModule: this.$axios,
@@ -274,26 +328,29 @@ export default {
           adm_district: this.admDistrictId ? this.admDistrictId : '',
           district: this.districtId ? this.districtId : '',
           street: this.streetId ? this.streetId : '',
-          text: houseNum && houseNum.length > 1 ? houseNum : ''
+          text: houseNum
         }
       })
       this.isHouseNumSelectLoading = false
     },
 
-    async fetchCorpNumbersOptions(corp) {
-      this.coprsNumbersOptions = await fetchCorpNumbersOptions({
+    async fetchCorpsNumbersOptions(corp) {
+      this.isCorpNumSelectLoading = true
+      this.coprsNumbersOptions = await fetchCorpsNumbersOptions({
         axiosModule: this.$axios,
         query: {
           adm_district: this.admDistrictId ? this.admDistrictId : '',
           district: this.districtId ? this.districtId : '',
           street: this.streetId ? this.streetId : '',
           house: this.houseNum ? this.houseNum : '',
-          text: corp && corp.length > 1 ? corp : ''
+          text: corp
         }
       })
+      this.isCorpNumSelectLoading = false
     },
 
     async fetchConstrctsNumbersOptions(constrcts) {
+      this.isConstrctNumSelectLoading = true
       this.constrctsNumbersOptions = await fetchConstrctsNumbersOptions({
         axiosModule: this.$axios,
         query: {
@@ -304,6 +361,7 @@ export default {
           text: constrcts && constrcts.length > 1 ? constrcts : ''
         }
       })
+      this.isConstrctNumSelectLoading = false
     },
 
     async openAddressSearchModal() {
@@ -315,7 +373,11 @@ export default {
 
     closeAddressSearchModal() {
       this.idAddressSearchModalVisible = false
-      this.clearAddressSearchForm()
+    },
+
+    clearHouseNums() {
+      this.houseNum = null
+      this.housesNumbersOptions = []
     },
 
     clearAdressesOptions() {
@@ -327,22 +389,30 @@ export default {
       this.districtId = null
       this.streetId = null
       this.houseNum = null
-      this.admDistrictsOptions = []
       this.districtsOptions = []
+      this.streetsOptions = []
       this.housesNumbersOptions = []
       this.coprsNumbersOptions = []
       this.constrctNumbersOptions = []
       this.clearAdressesOptions()
     },
 
-    selectAddress(index, addressId) {
+    selectAddress(index, { addressId, fiasHouseGuid }) {
+      this.addressesOptions.forEach((address) => {
+        if (address.selected) this.$set(address, 'selected', false)
+      })
       const option = this.addressesOptions[index]
       this.$set(option, 'selected', true)
       this.selectedAddressId = addressId
+      this.selectedFiasHouseGuid = fiasHouseGuid
     },
 
     confirmSelect() {
       this.addressId = this.selectedAddressId
+      this.$emit('selectAddress', {
+        addressId: this.selectedAddressId,
+        fiasHouseGuid: this.selectedFiasHouseGuid
+      })
       this.addressName = this.addressesOptions.find((option) => {
         return option.addressId === this.selectedAddressId
       }).fullAddress

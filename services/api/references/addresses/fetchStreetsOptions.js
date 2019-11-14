@@ -1,7 +1,7 @@
 import { restApiNsi } from '@/services/api/endpoints'
 
 export default async function({ axiosModule, query }) {
-  query.limit = 10
+  query.limit = 100
   query.page = 1
 
   const url = restApiNsi.nsiStreets.list

@@ -4,7 +4,7 @@
       el-form(label-position='top' size='small')
         el-row(:gutter='20')
           el-col(:span='16')
-            address-picker(v-model='addressId')
+            address-picker(:addressId = 'addressId' @selectAddress='selectAddress')
             el-form-item(label='Адрес МКД, указанный заявителем на МПГУ')
               el-input(:value="request.addressName" readonly)
             el-form-item(label='Тип номера')
@@ -99,7 +99,11 @@ export default {
   methods: {
     ...mapMutations(moduleName, {
       set: mutationTypes.SET_PROP
-    })
+    }),
+    selectAddress({ addressId, fiasHouseGuid }) {
+      this.addressId = addressId
+      if (fiasHouseGuid) this.fiasHouseguid = fiasHouseGuid
+    }
   }
 }
 </script>
