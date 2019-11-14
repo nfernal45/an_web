@@ -12,14 +12,24 @@
     el-col(v-loading='isSearchLoading')
       el-table(:data="computedRequestsList" 
                style="width: 100%")
-        el-table-column(prop="requestDate" label="Дата подачи заявления" width="120")
-        el-table-column(prop="regnum" label="Рег. №" width="120")
-        el-table-column(prop="licenseeFullname" label="Заявитель")
+        el-table-column(label="Рег. №" width="120")
+          template(slot-scope='scope')
+            span {{ scope.row.regnum }}  {{ scope.row.outerRegnum }}
+
+        el-table-column(prop="requestDate" label="Дата подачи заявления" width="115")
+        el-table-column(prop="planConsidDate" label="Плановая дата рассмотрения" width="100")
+        
+        el-table-column(label="Заявитель")
+          template(slot-scope='scope')
+            span {{ scope.row.licenseeShortname }} / {{ scope.row.licenseeInn }}
+
         el-table-column(label="Адрес МКД")
           template(slot-scope='scope')
             span {{ computedRequestAddress(scope.row.addressId) }}
         el-table-column(prop="typeId" label="Цель обращения" width="200")
-        el-table-column(prop="statusId" label="Статус заявления" width="160")
+        el-table-column(label="Статус заявления" width="160")
+          template(slot-scope='scope')
+            span {{ scope.row.statusId }}
         el-table-column(fixed="right" label="" width="60")
           template(slot-scope="scope")
             el-button.d-flex.justify-center.align-center(
@@ -70,9 +80,12 @@ export default {
       return this.requestsList.map((request) => {
         return {
           requestDate: request.requestDate,
+          planConsidDate: request.planConsidDate,
           regnum: request.regnum,
-          licenseeFullname: request.licenseeFullname,
+          outerRegnum: request.outerRegnum,
+          licenseeShortname: request.licenseeShortname,
           addressId: request.addressId,
+          licenseeInn: request.licenseeInn,
           typeId: this.requestTypesOptions.find(
             (type) => type.typeId === request.typeId
           ).typeName,
