@@ -12,7 +12,7 @@ export default async function({ axiosModule, query }) {
     })
     params = { search: search.join(';') }
   } else {
-    query.limit = 10
+    query.limit = 100
     query.start = 1
   }
 
