@@ -15,7 +15,9 @@
         el-table-column(prop="requestDate" label="Дата подачи заявления" width="120")
         el-table-column(prop="regnum" label="Рег. №" width="120")
         el-table-column(prop="licenseeFullname" label="Заявитель")
-        el-table-column(prop="addressName" label="Адрес МКД")
+        el-table-column(label="Адрес МКД")
+          template(slot-scope='scope')
+            span {{ computedRequestAddress(scope.row.addressId) }}
         el-table-column(prop="typeId" label="Цель обращения" width="200")
         el-table-column(prop="statusId" label="Статус заявления" width="160")
         el-table-column(fixed="right" label="" width="60")
@@ -32,6 +34,7 @@
 import fetchRequestsList from '@/services/api/request/fetchRequestsList'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
+import fetchRefAddressList from '@/services/api/references/fetchRefAddressList'
 export default {
   name: 'RegistryRequestsTable',
   props: {
@@ -48,6 +51,7 @@ export default {
     return {
       searchString: '',
       requestsList: [],
+      requestsAddressList: [],
       requestTypesOptions: [],
       requestStatusesOptions: [],
 
@@ -68,7 +72,7 @@ export default {
           requestDate: request.requestDate,
           regnum: request.regnum,
           licenseeFullname: request.licenseeFullname,
-          addressName: request.addressName,
+          addressId: request.addressId,
           typeId: this.requestTypesOptions.find(
             (type) => type.typeId === request.typeId
           ).typeName,
@@ -76,12 +80,31 @@ export default {
           statusId: this.getStatusNameById(request.requestStatusId)
         }
       })
+    },
+    computedRequestAddress() {
+      return (addressId) => {
+        const result = this.requestsAddressList.find(
+          (item) => item.addressId === addressId
+        )
+
+        if (result) return result.fullAddress
+        else return ''
+      }
     }
   },
   watch: {
     globalSearchFilters(value) {
       this.searchString = value
       this.tablePageChange(1)
+    },
+    requestsList(value) {
+      const requestsIdArray = []
+
+      for (const item of this.requestsList)
+        if (item.addressId) requestsIdArray.push(item.addressId)
+
+      const search = `addressId=in=(${requestsIdArray.join(',')})`
+      if (requestsIdArray.length) this.fetchRefAddressList(search)
     }
   },
   mounted() {
@@ -138,6 +161,14 @@ export default {
       this.requestStatusesOptions = await fetchRequestStatusesOptions({
         axiosModule: this.$axios
       })
+    },
+    async fetchRefAddressList(search) {
+      const { data } = await fetchRefAddressList({
+        axiosModule: this.$axios,
+        search
+      })
+
+      this.requestsAddressList = data
     }
   }
 }
