@@ -224,6 +224,7 @@ import fetchRefAdmDisctricts from '@/services/api/references/fetchRefAdmDisctric
 import fetchRefDisctricts from '@/services/api/references/fetchRefDisctricts'
 import fetchStreets from '@/services/api/references/fetchStreets'
 import fetchRefAddress from '@/services/api/references/fetchRefAddress'
+import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 
 export default {
   name: 'RegistrySearchForm',
@@ -402,6 +403,7 @@ export default {
     this.fetchRegPlaceOptions()
     this.fetchRefAdmDisctricts()
     this.fetchStreets()
+    this.fetchRequestTypesOptions()
 
     this.cleanSearchForm = Object.assign({}, { ...this.searchForm })
     this.cleanSearchAddress = Object.assign({}, { ...this.searchAddress })
@@ -525,6 +527,11 @@ export default {
     },
     clearAddressesInputs(keys) {
       keys.forEach((item) => (this.searchAddress[item] = ''))
+    },
+    async fetchRequestTypesOptions() {
+      this.refRequestTypes = await fetchRequestTypesOptions({
+        axiosModule: this.$axios
+      })
     }
   }
 }
