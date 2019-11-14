@@ -18,6 +18,7 @@
                   icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
         el-button(type="warning" 
                   @click="clearSearchFilter" 
+                  :disabled='!globalSearchFilters.length'
                   icon='el-icon-circle-close') Очистить поиск
         
         el-form.mt-20(size='mini' label-position='top')
@@ -223,7 +224,6 @@ import fetchRefAdmDisctricts from '@/services/api/references/fetchRefAdmDisctric
 import fetchRefDisctricts from '@/services/api/references/fetchRefDisctricts'
 import fetchStreets from '@/services/api/references/fetchStreets'
 import fetchRefAddress from '@/services/api/references/fetchRefAddress'
-import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 
 export default {
@@ -233,9 +233,9 @@ export default {
       type: Boolean,
       default: () => false
     },
-    searchString: {
+    globalSearchFilters: {
       type: String,
-      required: true
+      default: ''
     }
   },
   data() {
@@ -265,7 +265,6 @@ export default {
           end: ''
         }
       },
-      cleanSearchForm: {},
       searchAddress: {
         admDisctrict: '', // Округ
         district: '',
@@ -274,6 +273,8 @@ export default {
         constr: '', // Строение
         house: '' // Номер дома
       },
+      cleanSearchAddress: {},
+      cleanSearchForm: {},
       errorAddressMessage: '',
       regPlaceOptions: [],
       refAdmDisctricts: [],
@@ -354,7 +355,7 @@ export default {
         search.push(`addressId=in=(${this.searchForm.addressesId.join(',')})`)
 
       if (this.searchForm.licenseeType.length)
-        search.push(`licenseeType=='${this.searchForm.licenseeType}'`)
+        search.push(`licenseeType=in=(${this.searchForm.licenseeType})`)
 
       if (search.length) search = search.join(';')
       else search = ''
@@ -362,9 +363,15 @@ export default {
       return search
     },
     computedAddressesId() {
-      const { admDisctrict, constr, corp, house, street } = this.searchAddress
-
-      if (!admDisctrict && !constr && !corp && !house && !street) return []
+      if (
+        !this.searchAddress.admDisctrict &&
+        !this.searchAddress.district &&
+        !this.searchAddressconstr &&
+        !this.searchAddress.corp &&
+        !this.searchAddress.house &&
+        !this.searchAddress.street
+      )
+        return []
       else return this.searchForm.addressesId
     },
     computedRefRequestTypes() {
@@ -377,14 +384,19 @@ export default {
     }
   },
   watch: {
+    // searchForm: {
+    //   handler(value) {
+    //     sessionStorage.setItem('searchAddressFilter', JSON.stringify(value))
+    //   },
+    //   deep: true
+    // },
     searchAddress: {
-      handler(newValue, oldValue) {
+      handler(value) {
         this.fetchRefAddress()
+
+        // sessionStorage.setItem('searchFormFilter', JSON.stringify(value))
       },
       deep: true
-    },
-    searchParams(value) {
-      this.$emit('update:searchString', value)
     }
   },
   mounted() {
@@ -392,24 +404,44 @@ export default {
     this.fetchRefAdmDisctricts()
     this.fetchStreets()
     this.fetchRequestTypesOptions()
-    this.fetchRequestStatusesOptions()
 
-    this.cleanSearchForm = {
-      ...this.searchForm
-    }
+    this.cleanSearchForm = Object.assign({}, { ...this.searchForm })
+    this.cleanSearchAddress = Object.assign({}, { ...this.searchAddress })
+
+    // const searchFormFilter = sessionStorage.getItem('searchFormFilter')
+    // const searchAddressFilter = sessionStorage.getItem('searchAddressFilter')
+
+    // if (searchFormFilter) this.searchForm = JSON.parse(searchFormFilter)
+    // if (searchAddressFilter) this.searchAddress = JSON.parse(searchAddressFilter)
+
+    // if (searchFormFilter || searchAddressFilter) this.onSearch(true)
+    // else this.onSearch()
   },
   methods: {
     createRequest() {
       this.$router.push({ name: 'request-id-main', params: { id: 'create' } })
     },
-    onSearch() {
-      this.$emit('onSearch')
+    onSearch(empty = false) {
+      this.$emit('changeSearchFilters', this.searchParams)
     },
     clearSearchFilter() {
-      this.searchForm = {
-        ...this.cleanSearchForm
-      }
-      this.$emit('onClearSearchFilter')
+      this.searchForm = Object.assign({}, { ...this.cleanSearchForm })
+      this.searchAddress = Object.assign({}, { ...this.cleanSearchAddress })
+
+      const willBeClearFields = []
+
+      Object.keys(this.searchForm).forEach((key) => {
+        const clearingKeyItem = key.includes('Date') ? key : ''
+
+        if (clearingKeyItem.length) willBeClearFields.push(clearingKeyItem)
+      })
+
+      willBeClearFields.forEach((key) => {
+        this.searchForm[key].start = ''
+        this.searchForm[key].end = ''
+      })
+
+      this.$emit('changeSearchFilters', '')
     },
     async fetchRegPlaceOptions() {
       this.regPlaceOptions = await fetchRegPlaceOptions({
@@ -450,6 +482,7 @@ export default {
 
       if (
         !this.searchAddress.admDisctrict &&
+        !this.searchAddress.district &&
         !this.searchAddress.constr &&
         !this.searchAddress.corp &&
         !this.searchAddress.house &&
@@ -464,6 +497,7 @@ export default {
       let array = await fetchRefAddress({
         axiosModule: this.$axios,
         admDistrictId: this.searchAddress.admDisctrict,
+        district: this.searchAddress.district,
         construct: this.searchAddress.constr,
         corp: this.searchAddress.corp,
         house: this.searchAddress.house,
@@ -472,6 +506,7 @@ export default {
 
       if (
         !this.searchAddress.admDisctrict &&
+        !this.searchAddress.district &&
         !this.searchAddress.constr &&
         !this.searchAddress.corp &&
         !this.searchAddress.house &&
@@ -486,7 +521,8 @@ export default {
       if (array.length) {
         this.errorAddressMessage = ''
       } else {
-        this.errorAddressMessage = 'Адрес не найден.'
+        this.errorAddressMessage =
+          'Адрес не найден. Введите существующий адрес.'
       }
     },
     clearAddressesInputs(keys) {
@@ -494,11 +530,6 @@ export default {
     },
     async fetchRequestTypesOptions() {
       this.refRequestTypes = await fetchRequestTypesOptions({
-        axiosModule: this.$axios
-      })
-    },
-    async fetchRequestStatusesOptions() {
-      this.refRequestStatusesOptions = await fetchRequestStatusesOptions({
         axiosModule: this.$axios
       })
     }
