@@ -13,7 +13,7 @@
               icon="link"
               transform="shrink-3"
               size="2x"
-              title="Ссылки"
+              title="Переключение между модулями"
             )
             ul(:class='styles["links-list"]')
               li(v-for='(link, index) in links' :key='index')
@@ -29,12 +29,12 @@ export default {
   name: 'TheHeader',
   data() {
     return {
-      // TODO: взять значение из глобального head.title
-      title: `Подсистема "Реестр сведений о лицензиатах"
-        ЕИС МЖИ. Внесение изменений в реестр.`,
+      title:
+        'Подсистема "Реестр сведений о лицензиатах" ЕИС МЖИ. Внесение изменений в Реестр лицензий',
       links: [
         {
-          title: 'Модуль "Выдача лицензий"',
+          title:
+            'Модуль «Регистрации и обработки заявлений на выдачу лицензии / Лицензионных дел»',
           href: process.env.APP_HOST
         }
       ]
