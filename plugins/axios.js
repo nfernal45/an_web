@@ -49,14 +49,14 @@ export default function({ $axios, $auth, redirect, base, route }) {
           })
           .catch(() => {
             console.log('logout if session expired')
-            // logout({
-            //   authModule: $auth,
-            //   axiosModule: $axios,
-            //   baseRoute: base,
-            //   currentRoute: route.path,
-            //   redirectFunction: redirect
+            logout({
+              authModule: $auth,
+              axiosModule: $axios,
+              baseRoute: base,
+              currentRoute: route.path,
+              redirectFunction: redirect
           })
-      // })
+      })
 
       }
     }
