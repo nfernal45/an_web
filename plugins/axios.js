@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import refreshToken from '@/services/api/auth/refreshToken'
-// import logout from '@/services/auth'
 
 /* eslint-disable */
 export default function({ $axios, $auth, redirect, base, route }) {
@@ -30,49 +29,55 @@ export default function({ $axios, $auth, redirect, base, route }) {
     // console.info('Getting response from', response.config.url)
   })
 
-  $axios.onResponseError((error) => {
+  $axios.onError((error) => {
     const code = parseInt(error.response && error.response.status)
     const errorMsg = error.response ? error.response.data.error : ''
+    const refresh_token = $auth.getRefreshToken('oauth2').split(' ')[1]
 
     if (code === 404) {
       throw error
     }
 
-    if (code === 400 || code === 401) {
-      console.log('400 or 401')
-      // throw error
+    if (code === 400) {
       if (errorMsg === 'invalid_token') {
-        refreshToken({ authModule: $auth, axiosModule: $axios })
-          .then(() => {
-            console.log('token has refreshed')
-            // $axios.request(error.config)
-          })
-      //     .catch(() => {
-      //       logout({
-      //         authModule: $auth,
-      //         axiosModule: $axios,
-      //         baseRoute: base,
-      //         currentRoute: route.path,
-      //         redirectFunction: redirect
-      //       })
-      // })
-
+        refreshToken({ axiosModule: $axios, refreshToken: refresh_token })
       }
     }
 
-    // if (code === 401) {
-      // notify({ message: error.message, type: 'error' })
-      // return
-    // }
+    if (code === 401) {
+      if (errorMsg === 'invalid_token') {
+        refreshToken({ axiosModule: $axios, refreshToken: refresh_token })
+      }
+
+      // if (errorMsg === 'invalid_token' || errorMsg === 'Unauthorized') {
+      //   return store.dispatch(REFRESH_TOKEN)
+      //     .then(() => {
+      //       return axios.request(error.config)
+      //     })
+      //     .catch(error => {
+      //       return Promise.reject(error)
+      //     })
+      // }
+
+      
+      // logout({
+      //   authModule: $auth,
+      //   axiosModule: $axios,
+      //   baseRoute: base,
+      //   currentRoute: route.path,
+      //   redirectFunction: redirect
+      // })
+      notify(error)
+      return
+    }
   })
 
 }
 
 
-function notify({ message, type }) {
-  Vue.prototype.$notify({
-    type,
+function notify(error) {
+  Vue.prototype.$notify.error({
     title: 'Ошибка',
-    message
+    message: error.message
   })
 }

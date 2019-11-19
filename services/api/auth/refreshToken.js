@@ -1,57 +1,37 @@
-/* eslint-disable no-unreachable */
-/* eslint-disable no-console */
-import Vue from 'vue'
 import qs from 'qs'
-// import { restApiGf } from '@/services/api/endpoints'
-import {
-  setLastTokenDate,
-  checkUserSession
-} from '@/services/helpers/auth/userSession'
+import { restApiAuth } from '@/services/api/endpoints'
 
 let isRefreshing = false
 let refreshingCallState
 
-export default async function({ authModule, axiosModule }) {
-  const isUserSessionActive = checkUserSession()
-  if (!isUserSessionActive) {
-    notify({ message: 'Ваша сессия истекла', type: 'info' })
-    throw new Error('userSessionExpired')
-  }
-
-  const url = process.env.APP_AUTH_ACCESS_TOKEN_ENDPOINT
+export default async function({ axiosModule, refreshToken }) {
+  const url = restApiAuth.refreshToken
 
   if (isRefreshing) return refreshingCallState
 
   const params = {
     grant_type: 'refresh_token',
-    refresh_token: authModule.getRefreshToken('oauth2').split(' ')[1]
+    refresh_token: refreshToken
   }
 
-  const refreshingCall = function() {
-    return axiosModule.$post(url, qs.stringify(params))
+  const refreshingCall = async function() {
+    await axiosModule.$post(url, qs.stringify(params))
   }
+
+  console.log(refreshingCall)
 
   try {
     isRefreshing = true
     refreshingCallState = refreshingCall
     const response = await refreshingCall()
-    const token = `Bearer ${response.access_token}`
-    authModule.setUserToken(token).then(() => {
-      setLastTokenDate()
-    })
-    // axiosModule.setHeader('Authorization', token)
+    console.log('refresh is done', response)
     isRefreshing = false
     refreshingCallState = null
+
+    refreshingCallState = refreshingCall
   } catch (error) {
+    console.log('refresh is failed', error)
     isRefreshing = false
     refreshingCallState = null
   }
-}
-
-function notify({ message, type }) {
-  Vue.prototype.$notify({
-    type,
-    title: 'Внимание',
-    message
-  })
 }
