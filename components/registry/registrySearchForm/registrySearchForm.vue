@@ -8,6 +8,7 @@
 
     el-drawer(title='Фильтр поиска'
               :visible.sync='isDrawerVisible'
+              :wrapperClosable='false'
               direction='rtl'
               size='55%')
       div(style='padding: 0px 20px 20px 20px')
@@ -17,18 +18,16 @@
                   :disabled='requestsCount || errorAddressMessage.length'
                   icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
         el-button(type="warning" 
-                  @click="clearSearchFilter" 
-                  :disabled='!globalSearchFilters.length'
+                  @click="clearSearchFilter"
                   icon='el-icon-circle-close') Очистить поиск
         
         el-form.mt-20(size='mini' label-position='top')
           el-row
+            el-row
+                  el-col(:span='18')
+                    el-divider(content-position="left") Заявление
             el-col(:span='15')
               el-row(:gutter='20')
-                el-row
-                  el-col(:span='22')
-                    el-divider(content-position="left") Заявление
-
                 el-col(:span='6')
                   el-form-item(label='Рег.№')
                     el-input(v-model='searchForm.regnum')
@@ -119,39 +118,27 @@
                       format="dd.MM.yyyy"
                       value-format="dd.MM.yyyy"
                     )
-
-              el-row(:gutter='20')
-                el-row
-                    el-col(:span='22')
-                      el-divider(content-position="left") Заявитель
-                
-                el-col(:span='11')
-                  el-form-item(label='Тип заявителя')
-                      el-checkbox-group.flex.justify-start.align-start(v-model='searchForm.licenseeType')
-                        el-checkbox(label='L') Юридическое лицо
-                        el-checkbox(label='I') ИП
-
-                el-col(:span='11')
-                  el-form-item(label='ИНН')
-                      el-input(v-model='searchForm.licenseeInn')
-              el-row
-                el-col(:span='22')
-                  el-form-item(label='Наименование')
-                      el-input(v-model='searchForm.licenseeName')
-                        
-              el-row(:gutter='10')
-                el-row
-                  el-col(:span='22')
-                    el-divider(content-position="left") Адрес МКД
+                      
 
             el-col(:span='8')
-              el-form-item(label='Тип обращения')
-                    el-checkbox-group(v-model='searchForm.typeId')
-                        el-checkbox(v-for="item in computedRefRequestTypes"
-                                    :key='item.typeId'
-                                    :label='item.typeId'
+              //- el-form-item(label='Тип обращения')
+              //-       el-checkbox-group(v-model='searchForm.typeId')
+              //-           el-checkbox(v-for="item in computedRefRequestTypes"
+              //-                       :key='item.typeId'
+              //-                       :label='item.typeId'
                                     
-                        ) {{ item.typeName }}
+              //-           ) {{ item.typeName }}
+              el-form-item(label='Тип обращения')
+                el-select(v-model='searchForm.typeId'
+                          clearable
+                          filterable
+                          multiple
+                          style='width: 320px'
+                          )
+                  el-option(v-for="item in computedRefRequestTypes"
+                            :key='item.typeId'
+                            :label='item.typeName'
+                            :value='item.typeId')
               el-form-item(label='Статус заявления')
                 el-select(v-model='searchForm.requestStatusesId'
                           clearable
@@ -166,16 +153,18 @@
                   
           
           el-row(:gutter='20')
+            el-row
+              el-col(:span='18')
+                el-divider(content-position="left") Адрес МКД
             el-col(:span='24') 
               el-tag(v-show='errorAddressMessage.length'
                     type='danger'
                     size='small') {{ errorAddressMessage }}
-            el-col(:span='5')
+            el-col(:span='3')
               el-form-item(label='Округ')
                 el-select(v-model='searchAddress.admDisctrict'
                           filterable
-                          clearable
-                          @change='clearAddressesInputs(["street", "corp", "constr", "house", "district"])')
+                          clearable)
                   el-option(v-for='item in refAdmDisctricts'
                             :key='item.admDistrictId'
                             :label='item.shortNameAdmDistr'
@@ -187,8 +176,9 @@
                           :loading='isDistrictSelectLoading'
                           :filterable='!isDistrictSelectLoading'
                           clearable
-                          @focus='fetchRefDisctricts')
-                  el-option(v-for='item in refDistricts'
+                          remote
+                          :remote-method='fetchRefDisctricts')
+                  el-option(v-for='item in refDistricts' 
                             :key='item.districtId'
                             :label='item.districtName'
                             :value='item.districtId')
@@ -198,8 +188,9 @@
                 el-select(v-model='searchAddress.street'
                           :loading='isStreetsSelectLoading'
                           :filterable='!isStreetsSelectLoading'
-                          clearable
-                          @focus='fetchStreets')
+                          remote
+                          :remote-method='fetchStreets'
+                          clearable)
                   el-option(v-for='item in refStreets'
                             :key='item.streetId'
                             :label='item.streetName'
@@ -216,7 +207,26 @@
             el-col(:span='3')
               el-form-item(label='Строение')
                 el-input(v-model='searchAddress.constr' clearable)
-    
+
+          el-row(:gutter='20')
+            el-row
+                el-col(:span='18')
+                  el-divider(content-position="left") Заявитель
+            
+            el-col(:span='6')
+              el-form-item(label='Тип заявителя')
+                  el-checkbox-group.flex.justify-start.align-start(v-model='searchForm.licenseeType')
+                    el-checkbox(label='L') Юридическое лицо
+                    el-checkbox(label='I') ИП
+
+            el-col(:span='5')
+              el-form-item(label='ИНН')
+                  el-input(v-model='searchForm.licenseeInn')
+
+            el-col(:span='11')
+              el-form-item(label='Наименование')
+                  el-input(v-model='searchForm.licenseeName')
+          
 </template>
 <script>
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
@@ -225,6 +235,7 @@ import fetchRefDisctricts from '@/services/api/references/fetchRefDisctricts'
 import fetchStreets from '@/services/api/references/fetchStreets'
 import fetchRefAddress from '@/services/api/references/fetchRefAddress'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
+import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
 
 export default {
   name: 'RegistrySearchForm',
@@ -404,6 +415,7 @@ export default {
     this.fetchRefAdmDisctricts()
     this.fetchStreets()
     this.fetchRequestTypesOptions()
+    this.fetchRequestStatusesOptions()
 
     this.cleanSearchForm = Object.assign({}, { ...this.searchForm })
     this.cleanSearchAddress = Object.assign({}, { ...this.searchAddress })
@@ -455,23 +467,28 @@ export default {
       })
       this.requestsCount--
     },
-    async fetchRefDisctricts() {
+    async fetchRefDisctricts(query) {
+      if (query.length < 2) return false
+
       this.isDistrictSelectLoading = true
       this.requestsCount++
+
       this.refDistricts = await fetchRefDisctricts({
         axiosModule: this.$axios,
-        admDisctrict: this.searchAddress.admDisctrict
+        query
       })
       this.requestsCount--
       this.isDistrictSelectLoading = false
     },
-    async fetchStreets() {
+    async fetchStreets(query) {
+      if (query.length < 2) return false
+
       this.isStreetsSelectLoading = true
       this.requestsCount++
 
       this.refStreets = await fetchStreets({
         axiosModule: this.$axios,
-        admDisctrict: this.searchAddress.admDisctrict
+        query
       })
 
       this.isStreetsSelectLoading = false
@@ -530,6 +547,11 @@ export default {
     },
     async fetchRequestTypesOptions() {
       this.refRequestTypes = await fetchRequestTypesOptions({
+        axiosModule: this.$axios
+      })
+    },
+    async fetchRequestStatusesOptions() {
+      this.refRequestStatusesOptions = await fetchRequestStatusesOptions({
         axiosModule: this.$axios
       })
     }
