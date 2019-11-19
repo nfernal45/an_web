@@ -17,8 +17,7 @@ export default function({ $axios, $auth, base, redirect, route }) {
         // eslint-disable-next-line camelcase
         const { user_name } = await checkToken({
           axiosModule: $axios,
-          accessToken: localStorage.getItem('auth._token.oauth2').split(' ')[1]
-          // accessToken: $auth.getToken('oauth2').split(' ')[1]
+          accessToken: $auth.getToken('oauth2').split(' ')[1]
         })
 
         const { isResetPassword } = await checkUser({

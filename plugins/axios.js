@@ -47,19 +47,19 @@ export default function({ $axios, $auth, redirect, base, route }) {
             console.log('token has refreshed')
             // $axios.request(error.config)
           })
-          .catch(() => {
-            console.log('logout if session expired')
-            logout({
-              authModule: $auth,
-              axiosModule: $axios,
-              baseRoute: base,
-              currentRoute: route.path,
-              redirectFunction: redirect
-          })
-      })
+      //     .catch(() => {
+      //       logout({
+      //         authModule: $auth,
+      //         axiosModule: $axios,
+      //         baseRoute: base,
+      //         currentRoute: route.path,
+      //         redirectFunction: redirect
+      //       })
+      // })
 
       }
     }
+
     // if (code === 401) {
       // notify({ message: error.message, type: 'error' })
       // return

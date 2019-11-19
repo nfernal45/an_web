@@ -1,9 +1,8 @@
 import { restApiAuth } from '@/services/api/endpoints'
 
 export default async function({ axiosModule, accessToken }) {
+  // console.log('fetch user login', accessToken)
   const url = restApiAuth.checkToken
-  // eslint-disable-next-line no-console
-  console.log('checkToken', accessToken)
 
   const params = {
     token: accessToken
