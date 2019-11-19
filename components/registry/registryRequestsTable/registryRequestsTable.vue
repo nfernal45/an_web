@@ -1,7 +1,7 @@
 <template lang="pug">
   el-row
     el-col
-      el-pagination.mb-10(layout="prev, pager, next, total"
+      el-pagination.mb-10(layout="prev, pager, next, slot"
                           background
                           :disabled='isSearchLoading'
                           :page-size="paginationParams.limit"
@@ -9,6 +9,7 @@
                           :current-page='paginationParams.currentPage'
                           class="mb-15"
                           @current-change="tablePageChange")
+        span Найдено заявлений: {{ paginationParams.total }}
     el-col(v-loading='isSearchLoading')
       el-table(:data="computedRequestsList" 
                style="width: 100%")
