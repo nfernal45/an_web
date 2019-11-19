@@ -10,7 +10,8 @@ import {
   faReply,
   faChevronUp,
   faChevronDown,
-  faPen
+  faPen,
+  faLink
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -22,7 +23,8 @@ library.add(
   faReply,
   faChevronUp,
   faChevronDown,
-  faPen
+  faPen,
+  faLink
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
