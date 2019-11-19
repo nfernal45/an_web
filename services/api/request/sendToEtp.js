@@ -13,9 +13,9 @@ export default async function({ axiosModule, documentQueryId }) {
     })
     return response
   } catch (error) {
-    Vue.prototype.error({
+    Vue.prototype.$notify.error({
       title: 'Внимание',
-      message: 'Всё печально'
+      message: 'Произошла ошибка. Повторите попытку позже.'
     })
     return error
   }
