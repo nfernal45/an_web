@@ -99,10 +99,10 @@
 import { Loading } from 'element-ui'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { mutationTypes, actionTypes } from '@/store/types/request'
-import fetchDocTypes from '@/services/api/requests/references/fetchDocTypes'
-import fetchRequiredInterParams from '@/services/api/requests/fetchRequiredInterParams'
-import updateRequiredInterParams from '@/services/api/requests/updateRequiredInterParams'
-import sendToEtp from '@/services/api/requests/sendToEtp'
+import fetchDocTypes from '@/services/api/request/references/fetchDocTypes'
+import fetchRequiredInterParams from '@/services/api/request/fetchRequiredInterParams'
+import updateRequiredInterParams from '@/services/api/request/updateRequiredInterParams'
+import sendToEtp from '@/services/api/request/sendToEtp'
 
 const moduleName = 'request'
 export default {
