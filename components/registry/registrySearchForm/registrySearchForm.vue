@@ -121,13 +121,6 @@
                       
 
             el-col(:span='8')
-              //- el-form-item(label='Тип обращения')
-              //-       el-checkbox-group(v-model='searchForm.typeId')
-              //-           el-checkbox(v-for="item in computedRefRequestTypes"
-              //-                       :key='item.typeId'
-              //-                       :label='item.typeId'
-                                    
-              //-           ) {{ item.typeName }}
               el-form-item(label='Тип обращения')
                 el-select(v-model='searchForm.typeId'
                           clearable
