@@ -2,15 +2,13 @@ import checkToken from '@/services/api/auth/checkToken'
 import checkUser from '@/services/api/auth/checkUser'
 import resetPassword from '@/services/api/auth/resetPassword'
 import logout from '@/services/auth'
-import { clearUserSession } from '@/services/helpers/auth/userSession'
 
 export default function({ $axios, $auth, base, redirect, route }) {
   if (process.client) {
-    $auth.$storage.watchState('loggedIn', (newValue) => {
-      if (!newValue) clearUserSession()
-    })
-
+    // console.group('Auth plugin')
     if ($auth.loggedIn) {
+      // console.log('Token', $auth.getToken('oauth2'))
+
       // eslint-disable-next-line prettier/prettier
       (async function() {
         // eslint-disable-next-line camelcase
@@ -37,6 +35,8 @@ export default function({ $axios, $auth, base, redirect, route }) {
         }
       })()
     }
+    // console.log('is loggen in', $auth.loggedIn)
+    // console.groupEnd()
   }
 
   $auth.onRedirect((to, from) => {

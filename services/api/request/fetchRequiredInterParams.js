@@ -2,7 +2,7 @@ import { restApiGf } from '@/services/api/endpoints'
 
 export default async function({ axiosModule, documentQueryId }) {
   try {
-    const url = restApiGf.gfQueriedDocs.requiredInterParam.replace(
+    const url = restApiGf.gfQueriedDocs.requiredInterParams.replace(
       '{id}',
       documentQueryId
     )

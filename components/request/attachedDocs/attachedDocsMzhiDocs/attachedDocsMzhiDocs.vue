@@ -35,7 +35,6 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
-import fetchSettings from '@/services/api/settings/fetchSettings'
 import ChedForm from '@/components/request/attachedDocs/chedForm'
 import { mutationTypes as requestMutationTypes } from '@/store/types/request'
 const moduleName = 'request'
@@ -48,12 +47,14 @@ export default {
     refDocTypes: {
       type: Array,
       default: () => []
-    }
-  },
-  data() {
-    return {
-      chedSettings: {},
-      chedSettingsLoaded: false
+    },
+    chedSettings: {
+      type: Object,
+      default: () => {}
+    },
+    chedSettingsLoaded: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -68,9 +69,6 @@ export default {
         })
       })
     }
-  },
-  async mounted() {
-    await this.fetchChedSettings()
   },
   methods: {
     ...mapMutations(moduleName, {
@@ -98,32 +96,6 @@ export default {
       )
 
       this.setMzhiAttachedDocs(array)
-    },
-
-    async fetchChedSettings() {
-      const chedDettingList = [
-        'RL_CHED_FORM_CHANNEL',
-        'RL_CHED_FORM_DOMAIN',
-        'RL_CHED_FORM_DOMAIN_BR',
-        'RL_CHED_FORM_SERVICE',
-        'RL_CHED_FORM_URL',
-        'RL_CHED_GET_URL',
-        'RL_CHED_MZHI_OS',
-        'RL_CHED_OS',
-        'RL_CHED_SCRIPT_URL'
-      ]
-
-      const chedSettings = await fetchSettings({
-        axiosModule: this.$axios,
-        query: chedDettingList
-      })
-
-      this.chedSettings = chedSettings.reduce((result, item, index, array) => {
-        result[item.settingId] = item.settingValString
-        return result
-      }, {})
-
-      this.chedSettingsLoaded = true
     }
   }
 }

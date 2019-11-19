@@ -37,7 +37,14 @@
     
 
 
-// Групповые анимации
+
+.flip-list-enter, .flip-list-leave-to
+  opacity: 0
+  tansform: translateY(30px)
+
+.flip-list-leave-active 
+  position: absolute
+
 .flip-list-move 
   transition: transform 1s
 
