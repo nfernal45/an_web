@@ -2,7 +2,6 @@
   form-block.mb-10(title='Документы заявителя')
     template(slot='content')
       el-form(size='small' label-position='top')
-
         el-row(:gutter='20')
           el-col(:span='10')
             el-popover(placement='top'
@@ -27,10 +26,11 @@
               el-button(slot='reference'
                         type='primary') Добавить документ
 
-        el-row.mt-20(:gutter='20')
+        el-row.mt-20(:gutter='20'
+                     v-if='chedSettingsLoaded')
           el-col
             el-card.mb-20(
-              v-for='(doc, index) in licenseeAttachedDocs'
+              v-for='(doc, index) in computedLicenseeAttachedDocs'
               :key='index'
               shadow='hover'
             )
@@ -57,6 +57,10 @@
                     a.file-link(:href='doc.fileLink')
                       i.el-icon-document 
                       span {{ doc.docFileName }}
+        el-row(v-else)
+          el-col
+            div(style='height:200px'
+                v-loading='true')
           
 </template>
 <script>
@@ -70,6 +74,14 @@ export default {
     refDocTypes: {
       type: Array,
       default: () => []
+    },
+    chedSettings: {
+      type: Object,
+      default: () => {}
+    },
+    chedSettingsLoaded: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -82,18 +94,29 @@ export default {
     ...mapState(moduleName, {
       licenseeAttachedDocs: (state) => state.licenseeAttachedDocs
     }),
-
-    computedLicenseeAttachedDocs() {
-      return this.map((doc) => {
-        Object.assign(doc, {
-          fileLink: `https://stage-doc-upload.mos.ru/uform3.0/service/getcontent?os=GU_DOCS&id=${doc.warehouseLink}`
-        })
-      })
-    },
-
     licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
         return item.refDocTypeGroupByGroupId.groupId === 1
+      })
+    },
+    computedLicenseeAttachedDocs() {
+      return this.licenseeAttachedDocs.map((doc) => {
+        const documentId = doc.warehouseLink
+        const groupId =
+          doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId
+        const interdepRequest = doc.refDocTypeByDocTypeId.interdepRequest
+
+        let fileLink
+
+        if (groupId === 1 && !interdepRequest) {
+          fileLink = `https://${this.chedSettings.RL_CHED_FORM_DOMAIN}/uform3.0/service/getcontent?os=${this.chedSettings.RL_CHED_MZHI_OS}&id=${documentId}`
+        } else if (groupId === 1 && interdepRequest) {
+          fileLink = `https://${this.chedSettings.RL_CHED_FORM_DOMAIN_BR}/uform3.0/service/getcontent?os=${this.chedSettings.RL_CHED_OS}&id=${documentId}`
+        } else if (groupId === 2 && !interdepRequest) {
+          fileLink = `https://${this.chedSettings.RL_CHED_FORM_DOMAIN}/uform3.0/service/getcontent?os=${this.chedSettings.RL_CHED_MZHI_OS}&id=${documentId}`
+        }
+
+        return Object.assign(doc, { fileLink })
       })
     }
   },
@@ -102,7 +125,6 @@ export default {
       setArrayObjectProp: requestMutationTypes.SET_ARRAY_OBJECT_PROP,
       setLicenseeAttachedDocs: requestMutationTypes.SET_LICENSEE_ATTAHCHED_DOCS
     }),
-
     addDocument(additionalDocumentTypeId) {
       const array = [...this.licenseeAttachedDocs]
       const item = this.licenseeDocTypesOptions.find(
@@ -114,6 +136,7 @@ export default {
       this.setLicenseeAttachedDocs(array)
 
       this.isAddDocumentPopoverVisible = false
+      this.additionalDocumentTypeId = null
     }
   }
 }

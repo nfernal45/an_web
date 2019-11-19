@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import logout from '@/services/auth'
+import refreshToken from '@/services/api/auth/refreshToken'
+// import logout from '@/services/auth'
 
 /* eslint-disable */
 export default function({ $axios, $auth, redirect, base, route }) {
@@ -29,32 +30,49 @@ export default function({ $axios, $auth, redirect, base, route }) {
     // console.info('Getting response from', response.config.url)
   })
 
-  $axios.onError((error) => {
+  $axios.onResponseError((error) => {
     const code = parseInt(error.response && error.response.status)
-    
+    const errorMsg = error.response ? error.response.data.error : ''
+
     if (code === 404) {
       throw error
     }
 
-    if (code === 400) {
-      throw error
-    }
-
-    Vue.prototype.$notify.error({
-      title: 'Ошибка',
-      message: error.message
-    })
-
-    if (code === 401) {
-      logout({
-        authModule: $auth,
-        axiosModule: $axios,
-        baseRoute: base,
-        currentRoute: route.path,
-        redirectFunction: redirect
+    if (code === 400 || code === 401) {
+      console.log('400 or 401')
+      // throw error
+      if (errorMsg === 'invalid_token') {
+        refreshToken({ authModule: $auth, axiosModule: $axios })
+          .then(() => {
+            console.log('token has refreshed')
+            // $axios.request(error.config)
+          })
+          .catch(() => {
+            console.log('logout if session expired')
+            logout({
+              authModule: $auth,
+              axiosModule: $axios,
+              baseRoute: base,
+              currentRoute: route.path,
+              redirectFunction: redirect
+          })
       })
-      return
+
+      }
     }
+    // if (code === 401) {
+      // notify({ message: error.message, type: 'error' })
+      // return
+    // }
   })
 
+}
+
+
+function notify({ message, type }) {
+  Vue.prototype.$notify({
+    type,
+    title: 'Ошибка',
+    message
+  })
 }

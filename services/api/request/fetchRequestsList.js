@@ -2,10 +2,10 @@ import { restApiGf } from '@/services/api/endpoints'
 
 export default async function({ axiosModule, searchParams }) {
   try {
-    const { data } = await axiosModule.$get(restApiGf.gfRequest.list, {
+    const response = await axiosModule.$get(restApiGf.gfRequest.list, {
       params: searchParams
     })
-    return data
+    return response
   } catch (error) {
     throw error
   }

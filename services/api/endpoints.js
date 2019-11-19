@@ -30,6 +30,9 @@ const restApiGf = {
   },
   gfRptForm: {
     list: '/gf-report-form-request-type-request-statuses/list'
+  },
+  gfAuth: {
+    refreshToken: '/login'
   }
 }
 
@@ -101,12 +104,33 @@ const restApiNsi = {
   },
   nsiRefDept: {
     list: '/ref-depts/list'
+  },
+  nsiAddresses: {
+    paramsSearch: '/ref-addresses/address-search',
+    list: '/ref-addresses/list'
+  },
+  nsiAdmDistricts: {
+    list: '/adm-districts/'
+  },
+  nsiDistricts: {
+    list: '/ref-districts/find-by-name-and-admdistrict'
+  },
+  nsiStreets: {
+    list: '/ref-streets/find-by-name-and-admdistric-and-district'
+  },
+  nsiHouseNumbers: {
+    list: '/ref-addresses/address-search/houses'
+  },
+  nsiCorpNumbers: {
+    list: '/ref-addresses/address-search/corps'
+  },
+  nsiConstrctNumbers: {
+    list: '/ref-addresses/address-search/constrcts'
   }
 }
 
 const restApiAuth = {
   checkToken: '/as/oauth/check_token',
-  // checkUser: '/as/commons/users/{login}',
   checkUser: '/as/users/{login}',
   passwordReset: '/as/user/password-reset-page',
   exit: '/as/exit'
