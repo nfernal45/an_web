@@ -8,7 +8,6 @@
 </template>
 <script>
 import styles from './loginPage.module.sass?module'
-import { setLastTokenDate } from '@/services/helpers/auth/userSession'
 
 /* eslint-disable */
 export default {
@@ -39,9 +38,7 @@ export default {
   methods: {
     login() {
       try {
-        this.$auth.loginWith('oauth2').then(() => {
-          setLastTokenDate()
-        })
+        this.$auth.loginWith('oauth2')
       } catch(error) {
         redirect('/login')
       }
