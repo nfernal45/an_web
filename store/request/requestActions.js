@@ -33,6 +33,7 @@ export default {
         router: this.$router,
         requestId: currentRequestId
       })
+
       delete request._links
       await dispatch(mutationTypes.SET_REQUEST, request)
       dispatch(actionTypes.FETCH_REQUEST_STATUSES)
@@ -127,6 +128,8 @@ export default {
         requestId: 'empty'
       })
 
+      if (!defaultRequest) return
+
       defaultObjectsNames.forEach((defaultObject) => {
         commit(mutationTypes.SET_DEFAULT_OBJECT, {
           objectName: `${defaultObject}Default`,
@@ -138,6 +141,9 @@ export default {
 
   async [actionTypes.CREATE_ABEYANCE]({ state, commit, dispatch }) {
     await dispatch(actionTypes.FETCH_DEFAULT_OBJECTS)
+
+    if (!state.gfAbeyancesByRequestIdDefault) return
+
     await commit(mutationTypes.SET_ARRAY, {
       arrayName: 'gfAbeyancesByRequestId',
       arrayValue: state.gfAbeyancesByRequestIdDefault()

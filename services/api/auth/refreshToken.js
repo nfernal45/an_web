@@ -1,8 +1,5 @@
-/* eslint-disable no-unreachable */
-/* eslint-disable no-console */
 import Vue from 'vue'
 import qs from 'qs'
-// import { restApiGf } from '@/services/api/endpoints'
 import {
   setLastTokenDate,
   checkUserSession
@@ -10,13 +7,17 @@ import {
 
 let isRefreshing = false
 let refreshingCallState
+let isUserSessionChecked = false
 
-export default async function({ authModule, axiosModule }) {
+export default function({ authModule, axiosModule }) {
   const isUserSessionActive = checkUserSession()
 
   if (!isUserSessionActive) {
-    notify({ message: 'Ваша сессия истекла', type: 'info' })
-    throw new Error('userSessionExpired')
+    if (!isUserSessionChecked) {
+      notify({ message: 'Ваша сессия истекла', type: 'info' })
+    }
+    isUserSessionChecked = true
+    return Promise.reject(new Error('userSessionExpired'))
   }
 
   const url = process.env.APP_AUTH_ACCESS_TOKEN_ENDPOINT
@@ -28,29 +29,25 @@ export default async function({ authModule, axiosModule }) {
     refresh_token: authModule.getRefreshToken('oauth2').split(' ')[1]
   }
 
-  const refreshingCall = function() {
-    return axiosModule.$post(url, qs.stringify(params))
-  }
+  isRefreshing = true
 
-  try {
-    isRefreshing = true
-    refreshingCallState = refreshingCall
-    const response = await refreshingCall()
-    const token = `Bearer ${response.access_token}`
-    console.log('access_token')
-    authModule.setToken('oauth2', token)
-    setLastTokenDate()
+  const refreshingCall = axiosModule
+    .$post(url, qs.stringify(params))
+    .then((response) => {
+      const token = `Bearer ${response.access_token}`
+      axiosModule.setHeader('Authorization', token)
+      authModule.setToken('oauth2', token)
+      isRefreshing = false
+      refreshingCallState = undefined
+      setLastTokenDate()
+      return Promise.resolve(true)
+    })
+    .catch((error) => {
+      return Promise.reject(error)
+    })
 
-    axiosModule.setHeader('Authorization', token)
-
-    console.log('axiosModule', axiosModule)
-
-    isRefreshing = false
-    refreshingCallState = null
-  } catch (error) {
-    isRefreshing = false
-    refreshingCallState = null
-  }
+  refreshingCallState = refreshingCall
+  return refreshingCall
 }
 
 function notify({ message, type }) {

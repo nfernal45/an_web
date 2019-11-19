@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import Vue from 'vue'
 import refreshToken from '@/services/api/auth/refreshToken'
-// import logout from '@/services/auth'
+import logout from '@/services/auth'
 
 /* eslint-disable */
-export default function({ $axios, $auth, redirect, base, route }) {
+export default function({ $axios, $auth, base, redirect, route }) {
 
   $axios.onRequest((config) => {
 
@@ -11,26 +12,9 @@ export default function({ $axios, $auth, redirect, base, route }) {
       config.headers.common.accept = 'application/hal+json'
       config.url = config.url.replace('/root-links', '/')
     }
-
-    // if (config.url.match(/^\/gf-api/)) {
-    //   config.url = config.url.replace('/gf-api', process.env.APP_REST_API_GF)
-    // }
-
-    // if (config.url.match(/^\/gu-api/)) {
-    //   config.url = config.url.replace('/gu-api', process.env.APP_REST_API_GU)
-    // }
-
-    // if (config.url.match(/^\/nsi-api/)) {
-    //   config.url = config.url.replace('/nsi-api', process.env.APP_REST_API_NSI)
-    // }
-    // console.info('Making request to', config.url)
   })
 
-  $axios.onResponse((response) => {
-    // console.info('Getting response from', response.config.url)
-  })
-
-  $axios.onResponseError((error) => {
+  $axios.onError((error) => {
     const code = parseInt(error.response && error.response.status)
     const errorMsg = error.response ? error.response.data.error : ''
 
@@ -38,34 +22,42 @@ export default function({ $axios, $auth, redirect, base, route }) {
       throw error
     }
 
+    let originalRequest = error.config
+
     if (code === 400 || code === 401) {
-      console.log('400 or 401')
-      // throw error
-      if (errorMsg === 'invalid_token') {
-        refreshToken({ authModule: $auth, axiosModule: $axios })
+      originalRequest.__isRetryRequest = true
+      return new Promise((resolve, reject) => {
+        let req = refreshToken({ authModule: $auth, axiosModule: $axios })
           .then(() => {
-            console.log('token has refreshed')
-            // $axios.request(error.config)
+            if (originalRequest.params && originalRequest.params.token) originalRequest.params.token = $auth.getToken('oauth2').split(' ')[1]
+            originalRequest.headers['Authorization'] = $auth.getToken('oauth2')
+            resolve()
           })
-          .catch(() => {
-            console.log('logout if session expired')
+          .catch((error) => {
             logout({
               authModule: $auth,
               axiosModule: $axios,
               baseRoute: base,
               currentRoute: route.path,
               redirectFunction: redirect
+            })
+            reject()
           })
       })
-
-      }
+      .then(() => {
+        return $axios.request(originalRequest)
+      })
+      .catch(() => {
+        logout({
+          authModule: $auth,
+          axiosModule: $axios,
+          baseRoute: base,
+          currentRoute: route.path,
+          redirectFunction: redirect
+        })
+      })
     }
-    // if (code === 401) {
-      // notify({ message: error.message, type: 'error' })
-      // return
-    // }
   })
-
 }
 
 
