@@ -316,7 +316,13 @@ export default {
 
       if (this.searchForm.licenseeName.length)
         search.push(
-          `licenseeFullname==*${this.searchForm.licenseeName}* or licenseeShortname==*${this.searchForm.licenseeName}*`
+          `licenseeFullname=='*${this.searchForm.licenseeName.replace(
+            `'`,
+            `"`
+          )}*' or licenseeShortname=='*${this.searchForm.licenseeName.replace(
+            `'`,
+            `"`
+          )}*'`
         )
 
       if (this.searchForm.requestDate.start)

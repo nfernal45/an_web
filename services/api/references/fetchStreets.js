@@ -3,7 +3,6 @@ import { restApiNsi } from '@/services/api/endpoints'
 export default async function({ axiosModule, admDisctrict, district, query }) {
   try {
     const params = {
-      limit: 1000,
       page: 1
     }
 

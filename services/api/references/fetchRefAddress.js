@@ -11,7 +11,6 @@ export default async function({
 }) {
   try {
     const params = {
-      limit: 1000,
       start: 0
     }
 
