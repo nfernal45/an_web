@@ -56,7 +56,7 @@
                           false-label='N'
                           border)
             el-form-item
-              el-checkbox(label='Нарушения устранены в полном объёме'
+              el-checkbox(label='Переход к осмотру после приостановки'
                           v-model='violationFixed'
                           true-label='Y'
                           false-label='N'
