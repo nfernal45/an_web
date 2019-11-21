@@ -126,7 +126,7 @@
                           clearable
                           filterable
                           multiple
-                          style='width: 320px'
+                          style='width: 350px'
                           )
                   el-option(v-for="item in computedRefRequestTypes"
                             :key='item.typeId'
@@ -137,7 +137,7 @@
                           clearable
                           filterable
                           multiple
-                          style='width: 320px'
+                          style='width: 350px'
                           )
                   el-option(v-for='item in refRequestStatusesOptions'
                             :key='item.statusId'
