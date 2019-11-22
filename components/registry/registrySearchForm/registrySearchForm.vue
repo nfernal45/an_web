@@ -467,7 +467,7 @@ export default {
       this.requestsCount--
     },
     async fetchRefDisctricts(query) {
-      if (!query || query.length < 2) return false
+      if (!query || query.length < 3) return false
 
       this.isDistrictSelectLoading = true
       this.requestsCount++
@@ -480,7 +480,7 @@ export default {
       this.isDistrictSelectLoading = false
     },
     async fetchStreets(query) {
-      if (!query || query.length < 2) return false
+      if (!query || query.length < 3) return false
 
       this.isStreetsSelectLoading = true
       this.requestsCount++
