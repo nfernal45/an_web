@@ -3,22 +3,37 @@
     template(slot='content')
       el-form(size='small' label-position='top')
         el-row.mb-20(:gutter='20')
-          el-col
+          el-col.mb-10
             el-col(:span='6')
               el-radio(v-model='decisionType' label='D') О внесении изменений
             el-col(:span='6')
               el-radio(v-model='decisionType' label='R') Отказ
+          el-col
+            el-col(:span='16')
+              el-form-item(label='Примечание')
+                el-input(type='textarea' v-model='decisionComments')
         
         el-row(:gutter='20')
           el-col(v-show='decisionType === "D"')
-            div {{ getTheRightReason }}
+            el-col
+              h5.mb-10 {{ getTheRightReason }}
+              el-form-item(label='Фактическая дата внесения изменений в реестр')
+                el-date-picker(:picker-options='{ firstDayOfWeek: 1 }'
+                                v-model='registryUpdateDate'
+                                placeholder='Выберите дату'
+                                type='date'
+                                format="dd.MM.yyyy"
+                                value-format="dd.MM.yyyy"
+                              )
+          
           
           el-col(v-show='decisionType === "R"')
-            el-checkbox-group(v-model='gfRefusalReasonRequestId')
-              el-checkbox(v-for='item in refRefusalReasons'
-                        :key='item.reasonId'
-                        :label='item.reasonId'
-                        style='margin-bottom: 3px') {{ item.reasonName }}
+            el-col
+              el-checkbox-group(v-model='gfRefusalReasonRequestId')
+                el-checkbox(v-for='item in refRefusalReasons'
+                          :key='item.reasonId'
+                          :label='item.reasonId'
+                          style='margin-bottom: 3px') {{ item.reasonName }}
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
@@ -65,12 +80,28 @@ export default {
         return item && item.reasonName
       } else return ''
     },
+    decisionComments: {
+      get() {
+        return this.request && this.request.decisionComments
+      },
+      set(value) {
+        this.set({ propName: 'decisionComments', propValue: value })
+      }
+    },
     decisionType: {
       get() {
         return this.request && this.request.decisionType
       },
       set(value) {
         this.set({ propName: 'decisionType', propValue: value })
+      }
+    },
+    registryUpdateDate: {
+      get() {
+        return this.request && this.request.registryUpdateDate
+      },
+      set(value) {
+        this.set({ propName: 'registryUpdateDate', propValue: value })
       }
     },
     gfRefusalReasonRequestId: {
