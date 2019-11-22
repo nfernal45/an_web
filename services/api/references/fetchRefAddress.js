@@ -11,7 +11,8 @@ export default async function({
 }) {
   try {
     const params = {
-      start: 0
+      start: 0,
+      limit: 100
     }
 
     if (admDistrictId) params.adm_district = admDistrictId
