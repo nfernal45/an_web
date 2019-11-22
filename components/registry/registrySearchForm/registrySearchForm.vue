@@ -15,7 +15,7 @@
         el-button(type="primary" 
                   @click="onSearch" 
                   :loading="isSearchLoading"
-                  :disabled='requestsCount || errorAddressMessage.length'
+                  :disabled='!!requestsCount || !!errorAddressMessage.length'
                   icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
         el-button(type="warning" 
                   @click="clearSearchFilter"
@@ -467,7 +467,7 @@ export default {
       this.requestsCount--
     },
     async fetchRefDisctricts(query) {
-      if (query.length < 2) return false
+      if (!query || query.length < 2) return false
 
       this.isDistrictSelectLoading = true
       this.requestsCount++
@@ -480,7 +480,7 @@ export default {
       this.isDistrictSelectLoading = false
     },
     async fetchStreets(query) {
-      if (query.length < 2) return false
+      if (!query || query.length < 2) return false
 
       this.isStreetsSelectLoading = true
       this.requestsCount++
