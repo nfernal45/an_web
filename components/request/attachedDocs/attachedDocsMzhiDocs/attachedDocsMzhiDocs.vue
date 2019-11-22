@@ -34,9 +34,12 @@
                     span {{ doc.docFileName }}
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import ChedForm from '@/components/request/attachedDocs/chedForm'
-import { mutationTypes as requestMutationTypes } from '@/store/types/request'
+import {
+  mutationTypes as requestMutationTypes,
+  actionTypes as requestActionTypes
+} from '@/store/types/request'
 const moduleName = 'request'
 export default {
   name: 'AttachedDocsMzhiDocs',
@@ -75,6 +78,9 @@ export default {
       setMzhiAttachedDocs: requestMutationTypes.SET_MZHI_ATTAHCHED_DOCS,
       setArrayObjectProp: requestMutationTypes.SET_ARRAY_OBJECT_PROP
     }),
+    ...mapActions(moduleName, {
+      saveRequest: requestActionTypes.SAVE_REQUEST
+    }),
 
     addDocument(file) {
       const array = [...this.mzhiAttachedDocs]
@@ -96,6 +102,7 @@ export default {
       )
 
       this.setMzhiAttachedDocs(array)
+      this.saveRequest()
     }
   }
 }
