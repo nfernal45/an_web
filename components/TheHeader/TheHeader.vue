@@ -5,6 +5,19 @@
         img(src="@/assets/img/logo.png" :class="styles.logo")
         h3(:class="styles.title") {{ title }}
         div(:class="styles.buttons")
+          el-popover(
+            placement="top"
+          )
+            font-awesome-icon(
+              slot="reference"
+              icon="link"
+              transform="shrink-3"
+              size="2x"
+              title="Переключение между модулями"
+            )
+            ul(:class='styles["links-list"]')
+              li(v-for='(link, index) in links' :key='index')
+                a(:href='link.href') {{ link.title }}
           font-awesome-icon(icon="user" transform="shrink-3" size="2x" title="Мои настройки" @click="userSettings()")
           font-awesome-icon(icon="sign-out-alt" size="2x" title="Выйти из системы" @click="logout()")
 </template>
@@ -16,9 +29,15 @@ export default {
   name: 'TheHeader',
   data() {
     return {
-      // TODO: взять значение из глобального head.title
-      title: `Подсистема "Реестр сведений о лицензиатах"
-        ЕИС МЖИ. Внесение изменений в реестр.`
+      title:
+        'Подсистема "Реестр сведений о лицензиатах" ЕИС МЖИ. Внесение изменений в Реестр лицензий',
+      links: [
+        {
+          title:
+            'Модуль «Регистрации и обработки заявлений на выдачу лицензии / Лицензионных дел»',
+          href: process.env.APP_HOST
+        }
+      ]
     }
   },
   computed: {
