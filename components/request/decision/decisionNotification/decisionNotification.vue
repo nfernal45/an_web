@@ -128,8 +128,6 @@ export default {
   async mounted() {
     this.refAcceptReasons = await this.fetchAcceptReasons()
     this.refRefusalReasons = await this.fetchRefusalReasons()
-
-    console.log(this.request)
   },
   methods: {
     ...mapMutations(moduleName, {
