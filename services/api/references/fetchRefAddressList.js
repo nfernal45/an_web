@@ -3,7 +3,6 @@ import { restApiNsi } from '@/services/api/endpoints'
 export default async function({ axiosModule, search }) {
   try {
     const params = {
-      limit: 1000,
       start: 0,
       search
     }

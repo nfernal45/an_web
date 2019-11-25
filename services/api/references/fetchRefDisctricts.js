@@ -1,14 +1,13 @@
 import { restApiNsi } from '@/services/api/endpoints'
 
-export default async function({ axiosModule, admDisctrict, queryString }) {
+export default async function({ axiosModule, admDisctrict, query }) {
   try {
     const params = {
-      limit: 1000,
       page: 1
     }
 
     if (admDisctrict) params.adm_district = admDisctrict
-    if (queryString) params.text = queryString
+    if (query) params.text = query
 
     const url = restApiNsi.nsiDistricts.list
 
