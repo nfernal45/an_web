@@ -135,7 +135,9 @@ export default {
       )
     },
     computedRerDocTypes() {
-      return this.refDocTypes.filter((item) => item.interdepRequest === 'Y')
+      return this.refDocTypes.filter(
+        (item) => item.interdepRequest === 'Y' && item.isGf
+      )
     },
     isUpdateRequiredParamsButtonDisabled() {
       return !this.requiredInterParamsData.every((item) => {
