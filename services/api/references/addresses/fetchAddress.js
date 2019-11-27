@@ -13,7 +13,7 @@ export default async function({ axiosModule, query }) {
     params = { search: search.join(';') }
   } else {
     query.limit = 100
-    query.start = 1
+    query.start = 0
   }
 
   try {
