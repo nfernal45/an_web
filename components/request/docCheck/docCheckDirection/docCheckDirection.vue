@@ -1,28 +1,18 @@
 <template lang="pug">
-  form-block.mb-10(title='Направление документов на проверку в ЖН по АО')
+  form-block.mb-10(title='Соответствие заявления и документов требованиям Порядка')
     template(slot='content')
       el-form(label-position='top' size='small')
         el-row(:gutter='20')
-          el-col(:span='6')
-            el-form-item(label='Окружная инспекция')
-              el-select(v-model='deptId')
-                el-option(v-for='(item, index) in refDept'
-                          :key='index'
-                          :label='item.deptNameSht'
-                          :value='item.deptId') 
-          el-col(:span='6')
-            el-form-item(label='Дата направления документов')
-              el-date-picker(v-model='sendDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy"
-                             :picker-options='{ firstDayOfWeek: 1 }')
-
-          el-col(:span='6')
-            el-form-item(label='Плановый срок исполнения')
-              el-date-picker(v-model='planExecDate'
-                             format="dd.MM.yyyy"
-                             value-format="dd.MM.yyyy"
-                             :picker-options='{ firstDayOfWeek: 1 }')
+          //- el-col(:span='6')
+          //-   el-form-item(label='Окружная инспекция')
+          //-     el-select(v-model='deptId')
+          //-       el-option(v-for='(item, index) in refDept'
+          //-                 :key='index'
+          //-                 :label='item.deptNameSht'
+          //-                 :value='item.deptId') 
+          el-col(:span='10')
+            employee-picker(label='Ответственный исполнитель' v-model='performerId')
+          
         
         //- el-row.mb-10(style='font-size: 12px')
         //-   strong Сведения о действующей лицензии по данным МЖИ: 
@@ -42,7 +32,8 @@ export default {
   name: 'DocCheckDirectionComponent',
   data() {
     return {
-      refDept: []
+      refDept: [],
+      employeeExecutor: ''
     }
   },
   computed: {
@@ -60,20 +51,12 @@ export default {
         this.setPropDocCheck({ propName: 'deptId', propValue: value })
       }
     },
-    sendDate: {
+    performerId: {
       get() {
-        return this.docCheck && this.docCheck.sendDate
+        return this.docCheck && this.docCheck.performerId
       },
       set(value) {
-        this.setPropDocCheck({ propName: 'sendDate', propValue: value })
-      }
-    },
-    planExecDate: {
-      get() {
-        return this.docCheck && this.docCheck.planExecDate
-      },
-      set(value) {
-        this.setPropDocCheck({ propName: 'planExecDate', propValue: value })
+        this.setPropDocCheck({ propName: 'performerId', propValue: value })
       }
     }
   },

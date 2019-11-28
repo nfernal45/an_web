@@ -1,22 +1,34 @@
 <template lang="pug">
-  form-block.mb-10(title='Распоряжение на проведение проверки')
+  form-block.mb-10(title='Дополнительная проверка')
     template(slot='content')
       el-form(label-position='top' size='small')
         el-row(:gutter='20')
           el-col(:span='6')
-            el-form-item(label='Номер')
-              el-input(v-model='instructionNo')
-          el-col(:span='6')
-            el-form-item(label='Дата:')
-              el-date-picker(v-model='instructionDate'
+            el-form-item(label='Дата направления документов')
+              el-date-picker(v-model='sendDate'
                              format="dd.MM.yyyy"
                              value-format="dd.MM.yyyy"
                              :picker-options='{ firstDayOfWeek: 1 }')
 
-          el-col(:span='10')
-            employee-picker(label='Руководитель' v-model='employeeSigner')
-          el-col(:span='10' :offset='12')
-            employee-picker(label='Исполнитель' v-model='employeeExecutor')
+          el-col(:span='6')
+            el-form-item(label='Плановый срок исполнения')
+              el-date-picker(v-model='planExecDate'
+                             format="dd.MM.yyyy"
+                             value-format="dd.MM.yyyy"
+                             :picker-options='{ firstDayOfWeek: 1 }')
+          //- el-col(:span='6')
+          //-   el-form-item(label='Номер')
+          //-     el-input(v-model='instructionNo')
+          //- el-col(:span='6')
+          //-   el-form-item(label='Дата:')
+          //-     el-date-picker(v-model='instructionDate'
+          //-                    format="dd.MM.yyyy"
+          //-                    value-format="dd.MM.yyyy"
+          //-                    :picker-options='{ firstDayOfWeek: 1 }')
+
+          //- el-col(:span='10')
+          //-   employee-picker(label='Руководитель' v-model='employeeSigner')
+          
 
 </template>
 <script>
@@ -28,8 +40,7 @@ export default {
   name: 'DocCheckOrder',
   data() {
     return {
-      employeeSigner: '',
-      employeeExecutor: ''
+      employeeSigner: ''
     }
   },
   computed: {
@@ -50,6 +61,22 @@ export default {
       },
       set(value) {
         this.setPropDocCheck({ propName: 'instructionDate', propValue: value })
+      }
+    },
+    sendDate: {
+      get() {
+        return this.docCheck && this.docCheck.sendDate
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'sendDate', propValue: value })
+      }
+    },
+    planExecDate: {
+      get() {
+        return this.docCheck && this.docCheck.planExecDate
+      },
+      set(value) {
+        this.setPropDocCheck({ propName: 'planExecDate', propValue: value })
       }
     }
   },
