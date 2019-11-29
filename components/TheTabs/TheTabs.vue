@@ -11,7 +11,7 @@
 
       div
         strong Статус:
-        span {{ requestStatusName }} {{ request.requestStatusId }}
+        span {{ requestStatusName }}
 
     el-button-group(:class="styles.tabs")
       nuxt-link.el-button(
