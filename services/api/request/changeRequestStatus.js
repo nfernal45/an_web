@@ -22,9 +22,17 @@ export default async function({
       message: `Текущий статус изменён на "${data.statusName}".`
     })
   } catch (error) {
-    Vue.prototype.$notify.error({
-      title: 'Ошибка смены статуса',
-      message: error.message
-    })
+    if (error.status === 400) {
+      Vue.prototype.$notify({
+        type: 'warning',
+        title: 'Внимание',
+        message: error.message
+      })
+    } else {
+      Vue.prototype.$notify.error({
+        title: 'Ошибка смены статуса',
+        message: error.message
+      })
+    }
   }
 }
