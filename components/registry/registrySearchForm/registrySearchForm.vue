@@ -402,8 +402,7 @@ export default {
     // },
     searchAddress: {
       handler(value) {
-        this.fetchRefAddress()
-
+        this.errorAddressMessage = ''
         // sessionStorage.setItem('searchFormFilter', JSON.stringify(value))
       },
       deep: true
@@ -432,8 +431,11 @@ export default {
     createRequest() {
       this.$router.push({ name: 'request-id-main', params: { id: 'create' } })
     },
-    onSearch(empty = false) {
-      this.$emit('changeSearchFilters', this.searchParams)
+    async onSearch(empty = false) {
+      await this.fetchRefAddress()
+
+      if (this.errorAddressMessage.length) return false
+      else this.$emit('changeSearchFilters', this.searchParams)
     },
     clearSearchFilter() {
       this.searchForm = Object.assign({}, { ...this.cleanSearchForm })
