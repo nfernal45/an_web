@@ -22,10 +22,10 @@
                           :label='item.decisionIssueMethodName'
                           :value='item.decisionIssueMethodId')
             el-row
-              el-form-item(label='Плановый срок оказания ГУ')
+              el-form-item(label='Плановый срок оказания ГФ')
                 el-date-picker(
                   v-model='planConsidDate'
-                  placeholder='Укажите плановый срок оказания ГУ'
+                  placeholder='Укажите плановый срок оказания ГФ'
                   format='dd.MM.yyyy'
                   value-format='dd.MM.yyyy'
                   :picker-options='{ firstDayOfWeek: 1 }'

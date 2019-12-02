@@ -97,7 +97,7 @@
 
               el-row
                 el-col(:span='11')
-                  el-form-item(label='Плановый срок оказания ГУ')
+                  el-form-item(label='Плановый срок оказания ГФ')
                     span(style='margin-right: 10px') с
                     el-date-picker(
                       :picker-options='{ firstDayOfWeek: 1 }'
