@@ -376,7 +376,7 @@ export default {
       if (
         !this.searchAddress.admDisctrict &&
         !this.searchAddress.district &&
-        !this.searchAddressconstr &&
+        !this.searchAddress.constr &&
         !this.searchAddress.corp &&
         !this.searchAddress.house &&
         !this.searchAddress.street
