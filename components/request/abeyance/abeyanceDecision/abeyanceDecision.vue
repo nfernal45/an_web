@@ -1,5 +1,5 @@
 <template lang="pug">
-  form-block(title='Приостановление решения заявления')
+  form-block(title='Приостановление рассмотрения заявления')
     template(slot='content')
       el-form(size='small' label-position='top')
         el-row(:gutter='20')
