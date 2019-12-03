@@ -17,20 +17,32 @@ export default async function(axios, request) {
 
     return data
   } catch (error) {
-    let message = error.response.data.message.split(',')
-    message = message.map((subMessage) => subMessage.split(':')[1])
-    message = message.join('</br></br>')
-
     const code = parseInt(error.response && error.response.status)
-    const type = code === 400 ? 'warning' : 'error'
 
-    Vue.prototype.$notify({
-      type,
-      title: 'Не удалось сохранить заявление',
-      dangerouslyUseHTMLString: true,
-      duration: 10000,
-      message
-    })
+    if (code === 409) {
+      Vue.prototype.$notify({
+        type: 'warning',
+        title: 'Не удалось сохранить заявление',
+        dangerouslyUseHTMLString: true,
+        duration: 10000,
+        message:
+          'Данные были изменены или удалены другим пользователем. Пожалуйста, обновите страницу.'
+      })
+    } else {
+      let message = error.response.data.message.split(',')
+      message = message.map((subMessage) => subMessage.split(':')[1])
+      message = message.join('</br></br>')
+
+      const type = code === 400 ? 'warning' : 'error'
+
+      Vue.prototype.$notify({
+        type,
+        title: 'Не удалось сохранить заявление',
+        dangerouslyUseHTMLString: true,
+        duration: 10000,
+        message
+      })
+    }
 
     throw error
   }
