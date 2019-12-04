@@ -46,7 +46,7 @@
                       value-format="dd.MM.yyyy"
                       placeholder='Выберите дату'
                     )
-                el-col(:span='6')
+                el-col(:span='7')
                   el-form-item(label='Дата ответа')
                     el-date-picker(
                       :picker-options='{ firstDayOfWeek: 1 }'
@@ -56,6 +56,11 @@
                       value-format="dd.MM.yyyy"
                       placeholder='Выберите дату'
                     )
+                el-col(:span='6')
+                  el-form-item(label=' ')
+                      a.file-link(:href='doc.refAttachedDoc && doc.refAttachedDoc.fileLink')
+                        i.el-icon-document 
+                        span {{ doc.refAttachedDoc && doc.refAttachedDoc.docFileName }}
               el-row
                 el-col(:span='14')
                   el-form-item(label='Примечание')
@@ -103,6 +108,7 @@ import fetchDocTypes from '@/services/api/references/fetchDocTypes'
 import fetchRequiredInterParams from '@/services/api/request/fetchRequiredInterParams'
 import updateRequiredInterParams from '@/services/api/request/updateRequiredInterParams'
 import sendToEtp from '@/services/api/request/sendToEtp'
+import fetchSettings from '@/services/api/settings/fetchSettings'
 
 const moduleName = 'request'
 export default {
@@ -114,15 +120,18 @@ export default {
       additionalDocumentTypeId: null,
       isRequiredInterParamsDialogVisible: false,
       isRequiredInterParamsLoading: false,
-      requiredInterParamsData: []
+      requiredInterParamsData: [],
+      chedSettings: {},
+      chedSettingsLoaded: false
     }
   },
   computed: {
     ...mapState(moduleName, {
-      request: (state) => state.request
+      request: (state) => state.request,
+      licenseeAttachedDocs: (state) => state.licenseeAttachedDocs
     }),
     computedQueriedDocs() {
-      return (
+      const queriedDocs =
         this.request &&
         this.request.gfQueriedDocsByRequestId &&
         this.request.gfQueriedDocsByRequestId.map((doc) => {
@@ -132,7 +141,22 @@ export default {
               .typeName
           return Object.assign({}, doc, { docTypeName })
         })
-      )
+
+      const computedQueriedDocs =
+        queriedDocs &&
+        queriedDocs.map((doc) => {
+          const attachedDoc = this.computedLicenseeAttachedDocs.find(
+            (item) =>
+              item.gfQueriedDocByQueryId &&
+              item.gfQueriedDocByQueryId.queryId === doc.queryId
+          )
+
+          if (attachedDoc) doc.refAttachedDoc = attachedDoc
+
+          return doc
+        })
+
+      return computedQueriedDocs
     },
     computedRerDocTypes() {
       return this.refDocTypes.filter(
@@ -144,10 +168,31 @@ export default {
         if (item.isRequired === 'Y') return !!item.stringValue
         else return true
       })
+    },
+    computedLicenseeAttachedDocs() {
+      return this.licenseeAttachedDocs.map((doc) => {
+        const documentId = doc.warehouseLink
+        const groupId =
+          doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId
+        const interdepRequest = doc.refDocTypeByDocTypeId.interdepRequest
+
+        let fileLink
+
+        if (groupId === 1 && !interdepRequest) {
+          fileLink = `https://${this.chedSettings.RL_CHED_FORM_DOMAIN}/uform3.0/service/getcontent?os=${this.chedSettings.RL_CHED_MZHI_OS}&id=${documentId}`
+        } else if (groupId === 1 && interdepRequest) {
+          fileLink = `https://${this.chedSettings.RL_CHED_FORM_DOMAIN_BR}/uform3.0/service/getcontent?os=${this.chedSettings.RL_CHED_OS}&id=${documentId}`
+        } else if (groupId === 2 && !interdepRequest) {
+          fileLink = `https://${this.chedSettings.RL_CHED_FORM_DOMAIN}/uform3.0/service/getcontent?os=${this.chedSettings.RL_CHED_MZHI_OS}&id=${documentId}`
+        }
+
+        return Object.assign(doc, { fileLink })
+      })
     }
   },
   mounted() {
     this.fetchDocTypes()
+    this.fetchChedSettings()
   },
   methods: {
     ...mapActions(moduleName, {
@@ -222,6 +267,31 @@ export default {
       this.additionalDocumentTypeId = null
 
       this.saveRequest()
+    },
+    async fetchChedSettings() {
+      const chedDettingList = [
+        'RL_CHED_FORM_CHANNEL',
+        'RL_CHED_FORM_SERVICE',
+        'RL_CHED_FORM_URL',
+        'RL_CHED_GET_URL',
+        'RL_CHED_SCRIPT_URL',
+        'RL_CHED_FORM_DOMAIN',
+        'RL_CHED_MZHI_OS',
+        'RL_CHED_FORM_DOMAIN_BR',
+        'RL_CHED_OS'
+      ]
+
+      const chedSettings = await fetchSettings({
+        axiosModule: this.$axios,
+        query: chedDettingList
+      })
+
+      this.chedSettings = chedSettings.reduce((result, item, index, array) => {
+        result[item.settingId] = item.settingValString
+        return result
+      }, {})
+
+      this.chedSettingsLoaded = true
     }
   }
 }
