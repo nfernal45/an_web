@@ -1,0 +1,229 @@
+<template lang="pug">
+  form-block(title='Запрос документов в базовом регистре для проверки предоставленных сведений')
+    template(slot='content')
+      el-form(size='small' label-position='top')
+        el-row.mb-10
+          el-col
+            el-popover(placement='top'
+                       width='430'
+                       v-model='isAddDocumentPopoverVisible')
+              el-form-item(label='Тип документа')
+                el-select(v-model='additionalDocumentTypeId' 
+                          size='small'
+                          filterable
+                          style='width: 400px')
+                  el-option(v-for='item in computedRerDocTypes'
+                            :key='item.typeId'
+                            :value='item.typeId'
+                            :label='item.typeName')
+              div
+                el-button(size='mini' 
+                          type='primary' 
+                           @click='addDocument(additionalDocumentTypeId)' 
+                           :disabled='!additionalDocumentTypeId') Добавить
+                el-button(size='mini' 
+                          type='text'
+                          @click='isAddDocumentPopoverVisible = false') Отмена
+              el-button(slot='reference'
+                        type='primary') Добавить документ
+
+        el-row
+          el-col
+            el-card.mb-20(v-for='(doc, index) in computedQueriedDocs'
+                    :key='doc.queryId'
+                    shadow='hover')
+              el-row.mb-10
+                el-col
+                  h4 {{ doc.docTypeName }}
+              el-row(:gutter='20')
+                el-col(:span='7')
+                  el-form-item(label='Дата запроса')
+                    el-date-picker(
+                      :picker-options='{ firstDayOfWeek: 1 }'
+                      v-model='doc.queryDate'
+                      type='date'
+                      format="dd.MM.yyyy"
+                      value-format="dd.MM.yyyy"
+                      placeholder='Выберите дату'
+                    )
+                el-col(:span='6')
+                  el-form-item(label='Дата ответа')
+                    el-date-picker(
+                      :picker-options='{ firstDayOfWeek: 1 }'
+                      v-model='doc.receiveDate'
+                      type='date'
+                      format="dd.MM.yyyy"
+                      value-format="dd.MM.yyyy"
+                      placeholder='Выберите дату'
+                    )
+              el-row
+                el-col(:span='14')
+                  el-form-item(label='Примечание')
+                    el-input(v-model='doc.comments')
+              el-row
+                el-col
+                  el-button(type='primary'
+                            :ref='`etp${doc.queryId}`'
+                            v-show='!doc.queryDate'
+                            @click='sendToEtp(doc.queryId, index)') Запросить документ в БР
+
+        el-dialog(:visible.sync='isRequiredInterParamsDialogVisible'
+                  :close-on-click-modal='false'
+                  :append-to-body='true'
+                  title="Дополнительные параметры")
+          el-row
+            el-col
+              h6.mb-10 Укажите параметры запроса:
+          el-row
+            el-col(:span='16')
+                el-form-item(v-for='item in requiredInterParamsData'
+                            :key='item && item.paramId'
+                            :label='item && item.paramCaption')
+                  el-input.mb-10(v-model='item.stringValue'
+                                 style='border-color: yellow !important')
+                  transition(name='fade')
+                    div(v-show='item.isRequired === "Y" && !item.stringValue'
+                        style='position: absolute; color: tomato; font-size: 11px; transform: translateY(-15px)') Обязательное поле должно быть заполнено
+                transition(name='fade')
+                  el-button(@click='updateRequiredInterParams'
+                            :loading='isRequiredInterParamsLoading'
+                            :disabled='isUpdateRequiredParamsButtonDisabled'
+                            type='primary') Отправить запрос
+     
+
+        
+          
+
+</template>
+<script>
+import { Loading } from 'element-ui'
+import { mapState, mapActions, mapMutations } from 'vuex'
+import { mutationTypes, actionTypes } from '@/store/types/request'
+import fetchDocTypes from '@/services/api/references/fetchDocTypes'
+import fetchRequiredInterParams from '@/services/api/request/fetchRequiredInterParams'
+import updateRequiredInterParams from '@/services/api/request/updateRequiredInterParams'
+import sendToEtp from '@/services/api/request/sendToEtp'
+
+const moduleName = 'request'
+export default {
+  name: 'QueriedDocsInderdeptRequest',
+  data() {
+    return {
+      refDocTypes: [],
+      isAddDocumentPopoverVisible: false,
+      additionalDocumentTypeId: null,
+      isRequiredInterParamsDialogVisible: false,
+      isRequiredInterParamsLoading: false,
+      requiredInterParamsData: []
+    }
+  },
+  computed: {
+    ...mapState(moduleName, {
+      request: (state) => state.request
+    }),
+    computedQueriedDocs() {
+      return (
+        this.request &&
+        this.request.gfQueriedDocsByRequestId &&
+        this.request.gfQueriedDocsByRequestId.map((doc) => {
+          const docTypeName =
+            this.refDocTypes.length &&
+            this.refDocTypes.find((item) => item.typeId === doc.docTypeId)
+              .typeName
+          return Object.assign({}, doc, { docTypeName })
+        })
+      )
+    },
+    computedRerDocTypes() {
+      return this.refDocTypes.filter(
+        (item) => item.interdepRequest === 'Y' && item.isGf
+      )
+    },
+    isUpdateRequiredParamsButtonDisabled() {
+      return !this.requiredInterParamsData.every((item) => {
+        if (item.isRequired === 'Y') return !!item.stringValue
+        else return true
+      })
+    }
+  },
+  mounted() {
+    this.fetchDocTypes()
+  },
+  methods: {
+    ...mapActions(moduleName, {
+      fetchRequest: actionTypes.FETCH_REQUEST,
+      saveRequest: actionTypes.SAVE_REQUEST
+    }),
+    ...mapMutations(moduleName, {
+      setProp: mutationTypes.SET_PROP
+    }),
+    async sendToEtp(documentQueryId, index) {
+      const el = this.$refs[`etp${documentQueryId}`][0].$el
+
+      const loading = Loading.service({
+        target: el
+      })
+
+      // TODO: fetchRequiredInterParam return respones with data. If data is not empty, need display this for user.
+      const requiredInterParamsResponse = await fetchRequiredInterParams({
+        axiosModule: this.$axios,
+        documentQueryId
+      })
+
+      if (!requiredInterParamsResponse.length) {
+        await sendToEtp({
+          axiosModule: this.$axios,
+          documentQueryId
+        })
+
+        await this.fetchRequest(this.request.requestId)
+
+        loading.close()
+      } else {
+        this.requiredInterParamsData = requiredInterParamsResponse
+        this.isRequiredInterParamsDialogVisible = true
+
+        loading.close()
+      }
+    },
+    async updateRequiredInterParams() {
+      const array = this.requiredInterParamsData
+      const documentQueryId = array[0].queryId
+
+      this.isRequiredInterParamsLoading = true
+
+      await updateRequiredInterParams({
+        axiosModule: this.$axios,
+        entityArray: array
+      })
+
+      await sendToEtp({
+        axiosModule: this.$axios,
+        documentQueryId
+      })
+
+      await this.fetchRequest(this.request.requestId)
+
+      this.isRequiredInterParamsDialogVisible = false
+      this.isRequiredInterParamsLoading = false
+    },
+    async fetchDocTypes() {
+      this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
+    },
+    addDocument(docTypeId) {
+      const array = [...this.request.gfQueriedDocsByRequestId]
+      const item = { docTypeId }
+
+      array.push(item)
+
+      this.setProp({ propName: 'gfQueriedDocsByRequestId', propValue: array })
+
+      this.isAddDocumentPopoverVisible = false
+      this.additionalDocumentTypeId = null
+
+      this.saveRequest()
+    }
+  }
+}
+</script>
+<style lang="sass"></style>

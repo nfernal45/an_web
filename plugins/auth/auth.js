@@ -1,0 +1,51 @@
+import checkToken from '@/services/api/auth/checkToken'
+import checkUser from '@/services/api/auth/checkUser'
+import resetPassword from '@/services/api/auth/resetPassword'
+import logout from '@/services/auth'
+
+export default function({ $axios, $auth, base, redirect, route }) {
+  if (process.client) {
+    // console.group('Auth plugin')
+    if ($auth.loggedIn) {
+      // console.log('Token', $auth.getToken('oauth2'))
+
+      // eslint-disable-next-line prettier/prettier
+      (async function() {
+        // eslint-disable-next-line camelcase
+        const { user_name } = await checkToken({
+          axiosModule: $axios,
+          accessToken: localStorage.getItem('auth._token.oauth2').split(' ')[1]
+        })
+
+        const { isResetPassword } = await checkUser({
+          axiosModule: $axios,
+          login: user_name
+        })
+
+        if (isResetPassword === 'Y') {
+          logout({
+            authModule: $auth,
+            axiosModule: $axios,
+            baseRoute: base,
+            currentRoute: route.path,
+            redirectFunction: redirect
+          })
+
+          resetPassword({ redirect, base })
+        }
+      })()
+    }
+    // console.log('is loggen in', $auth.loggedIn)
+    // console.groupEnd()
+  }
+
+  $auth.onRedirect((to, from) => {
+    if (to === '/login') {
+      $auth.$storage.setCookie('redirect', `${base.slice(0, -1)}${from}`, false)
+    }
+  })
+
+  $auth.onError((name, endpoint) => {
+    redirect('/login')
+  })
+}

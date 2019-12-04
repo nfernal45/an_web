@@ -1,0 +1,2 @@
+import queriedDocsInderdeptRequest from './queriedDocsInderdeptRequest'
+export default queriedDocsInderdeptRequest

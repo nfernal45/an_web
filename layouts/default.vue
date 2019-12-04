@@ -1,12 +1,53 @@
-<template>
-  <div>
-    <nuxt/>
-  </div>
+<template lang="pug">
+  div.flex.justify-center.flex-wrap(v-show="isReady" class='layout')
+    the-header.header.sticky(style="flex: 1 0 0; position: sticky; top: 0;")
+    el-container.flex-wrap(style="position: relative;")
+      the-tabs(style="flex-basis: 100%;")
+      div.flex.width-100
+        the-aside.sticky(style="flex-basis: 200px; position: sticky; top: 100px; align-self: flex-start;")
+        el-main(style="flex: 1 0 0;")
+          nuxt
+        
 </template>
+
+<script>
+import TheHeader from '@/components/TheHeader'
+import TheAside from '@/components/TheAside'
+import TheTabs from '@/components/TheTabs'
+
+export default {
+  components: {
+    TheHeader,
+    TheAside,
+    TheTabs
+  },
+  data() {
+    return {
+      isReady: false
+    }
+  },
+  mounted() {
+    this.setStickyPolyfill()
+    this.$nextTick(() => {
+      this.isReady = true
+    })
+  },
+  methods: {
+    setStickyPolyfill() {
+      if (process.client) {
+        const Stickyfill = require('stickyfilljs')
+        const stickyElements = document.querySelectorAll('.sticky')
+        Stickyfill.add(stickyElements)
+      }
+    }
+  }
+}
+</script>
 
 <style>
 html {
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -14,9 +55,12 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  overflow-y: scroll;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: border-box;
   margin: 0;
 }
@@ -49,5 +93,20 @@ html {
   color: #fff;
   background-color: #35495e;
 }
-</style>
 
+.sticky-sidebar {
+  will-change: min-height;
+}
+
+.sidebar__inner {
+  transform: translate(0, 0); /* For browsers don't support translate3d. */
+  transform: translate3d(0, 0, 0);
+  will-change: position, transform;
+}
+</style>
+<style lang="sass">
+@import '@/assets/scss/element-variables.scss';
+
+.layout
+  background: $--color-secondary-light-9
+</style>

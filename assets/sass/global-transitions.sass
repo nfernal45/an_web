@@ -1,0 +1,52 @@
+// Простое исчезновение-появление
+.fade-enter-active
+  transition: opacity .1s
+  
+.fade-leave-active 
+  transition: opacity .1s
+
+.fade-enter, .fade-leave-to 
+  opacity: 0
+
+// Движение по оси Y
+.slide-fade-enter-active
+  transition: all .3s ease
+
+.slide-fade-leave-active
+  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+
+.slide-fade-enter, .slide-fade-leave-to
+  transform: translateY(-10px)
+  opacity: 0
+
+// Collapse (разворачивание элемента)
+.collapse-enter-active, .collapse-leave-active
+  transition: all 0.22s ease-in-out
+  
+
+.collapse-enter
+  height: 0
+  overflow: hidden
+  opacity: 0
+
+.collapse-leave-to
+  height: 0
+  overflow: hidden
+  opacity: 0
+
+    
+
+
+
+.flip-list-enter, .flip-list-leave-to
+  opacity: 0
+  tansform: translateY(30px)
+
+.flip-list-leave-active 
+  position: absolute
+
+.flip-list-move 
+  transition: transform 1s
+
+
+  
