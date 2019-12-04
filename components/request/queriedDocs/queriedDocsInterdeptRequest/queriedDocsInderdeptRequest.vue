@@ -56,7 +56,7 @@
                       value-format="dd.MM.yyyy"
                       placeholder='Выберите дату'
                     )
-                el-col(:span='6')
+                el-col(:span='6' v-show='doc.refAttachedDoc && doc.refAttachedDoc.docFileName')
                   el-form-item(label=' ')
                       a.file-link(:href='doc.refAttachedDoc && doc.refAttachedDoc.fileLink')
                         i.el-icon-document 
