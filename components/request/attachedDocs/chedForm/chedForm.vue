@@ -60,7 +60,7 @@ export default {
     },
 
     onUpload(data) {
-      this.closeUform()
+      // this.closeUform()
       this.$notify.success({
         title: 'Загружено',
         message: 'Файл загружен'
