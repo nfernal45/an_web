@@ -11,6 +11,7 @@ export default function() {
     conclusion: '',
     signerId: null,
     executors: null,
-    requestId: null
+    requestId: null,
+    performerId: null
   }
 }
