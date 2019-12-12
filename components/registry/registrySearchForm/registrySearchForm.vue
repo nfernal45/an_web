@@ -300,16 +300,16 @@ export default {
       let search = []
 
       if (this.searchForm.eno.length)
-        search.push(`eno==*${this.searchForm.eno}*`)
+        search.push(`eno=='*${this.searchForm.eno}*'`)
 
       if (this.searchForm.regnum.length)
-        search.push(`regnum==${this.searchForm.regnum}`)
+        search.push(`regnum=='*${this.searchForm.regnum}*'`)
 
       if (this.searchForm.outerRegnum.length)
-        search.push(`outerRegnum==${this.searchForm.outerRegnum}`)
+        search.push(`outerRegnum=='*${this.searchForm.outerRegnum}*'`)
 
       if (this.searchForm.licenseeInn.length)
-        search.push(`licenseeInn=='${this.searchForm.licenseeInn}'`)
+        search.push(`licenseeInn=='*${this.searchForm.licenseeInn}*'`)
 
       if (this.searchForm.regPlaceId.length)
         search.push(`regPlaceId=in=(${this.searchForm.regPlaceId.join(',')})`)
