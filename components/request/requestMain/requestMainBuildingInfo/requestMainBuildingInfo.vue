@@ -17,8 +17,8 @@
                 ) {{ item.numTypeName }}
 
           el-col(:span='8')
-            el-form-item(label='Индекс')
-              el-input
+            el-form-item(label='Код БТИ')
+              el-input(:value='unom')
             el-form-item(label='Код ФИАС')
               el-input(v-model="fiasHouseguid")
             el-form-item(v-if="numType === 1" label='Кадастровый номер')
@@ -66,6 +66,15 @@ export default {
       },
       set(value) {
         this.set({ propName: 'numType', propValue: value })
+      }
+    },
+
+    unom: {
+      get() {
+        return this.request.unom
+      },
+      set(value) {
+        this.set({ propName: 'unom', propValue: value })
       }
     },
 
