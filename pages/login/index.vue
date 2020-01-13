@@ -38,6 +38,13 @@ export default {
   },
   methods: {
     login() {
+      this.$auth.$storage.setCookie('redirect',
+        `${
+          this.$router.options.base.slice(0, -1)
+        }${
+          this.$router.options.routes.find(route => route.name === 'registry').path 
+        }`, false
+      )
       try {
         this.$auth.loginWith('oauth2').then(() => {
           setLastTokenDate()
