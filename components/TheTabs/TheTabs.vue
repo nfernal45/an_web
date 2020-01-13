@@ -2,7 +2,7 @@
   div
     div(:class="styles.title")
       div
-        strong Заявление Рег. №: 
+        strong Заявление Рег. №:
         span {{ regnum }}
 
       div
@@ -21,16 +21,18 @@
         no-prefetch) {{ tab.title }}
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import styles from './TheTabs.module.sass?module'
-import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
-const moduleName = 'request'
+import { getterTypes as referencesGetterTypes } from '@/store/types/references'
+import { getterTypes as requestGettersTypes } from '@/store/types/request'
+
+const requestModuleName = 'request'
+const referencesModuleName = 'references'
+
 export default {
   name: 'TheTabs',
   data() {
     return {
-      requestStatusesOptions: [],
-      requestStatusesConstants: [],
       tabs: [],
       initialTabs: [
         {
@@ -61,8 +63,22 @@ export default {
     }
   },
   computed: {
-    ...mapState(moduleName, {
+    ...mapState(requestModuleName, {
       request: (state) => state.request
+    }),
+
+    ...mapGetters(requestModuleName, {
+      requestPagesActiveStatuses:
+        requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
+    }),
+
+    ...mapState(referencesModuleName, {
+      requestStatusesOptions: (state) => state.requestStatusesOptions
+    }),
+
+    ...mapGetters(referencesModuleName, {
+      requestStatusesConstants:
+        referencesGetterTypes.GET_REQUEST_STATUSES_OPTIONS_CONSTANTS
     }),
 
     regnum() {
@@ -95,81 +111,9 @@ export default {
     tabsComputed() {
       const activeTabs = this.initialTabs.map((tab) => {
         function setActiveStatuses(tab, activeStatusesArray) {
-          tab.activeStatuses = activeStatusesArray
+          if (activeStatusesArray) tab.activeStatuses = activeStatusesArray
         }
-
-        switch (tab.link) {
-          case 'queried-docs':
-            setActiveStatuses(tab, [
-              this.requestStatusesConstants.REGISTERED,
-              this.requestStatusesConstants.DOCSQUERIED,
-              this.requestStatusesConstants.INFORMATIONRECEIVED,
-              this.requestStatusesConstants.REVIEW,
-              this.requestStatusesConstants.DECISIONPREPARING,
-              this.requestStatusesConstants.DECISIONMADE,
-              this.requestStatusesConstants.NOTICEPREPARING,
-              this.requestStatusesConstants.VIOLATIONELIMINATION,
-              this.requestStatusesConstants.RESUMED,
-              this.requestStatusesConstants.DOCSQUERIED2,
-              this.requestStatusesConstants.INFORMATIONRECEIVED2
-            ])
-            break
-
-          case 'abeyance':
-            if (
-              this.request.gfAbeyancesByRequestId &&
-              this.request.gfAbeyancesByRequestId.length
-            ) {
-              setActiveStatuses(tab, [
-                this.requestStatusesConstants.REVIEW,
-                this.requestStatusesConstants.DECISIONPREPARING,
-                this.requestStatusesConstants.DECISIONMADE,
-                this.requestStatusesConstants.NOTICEPREPARING,
-                this.requestStatusesConstants.VIOLATIONELIMINATION,
-                this.requestStatusesConstants.RESUMED,
-                this.requestStatusesConstants.DOCSQUERIED2,
-                this.requestStatusesConstants.INFORMATIONRECEIVED2
-              ])
-            } else {
-              setActiveStatuses(tab, [
-                this.requestStatusesConstants.NOTICEPREPARING
-              ])
-            }
-
-            break
-
-          case 'doc-check':
-            setActiveStatuses(tab, [
-              this.requestStatusesConstants.REGISTERED,
-              this.requestStatusesConstants.DOCSQUERIED,
-              this.requestStatusesConstants.INFORMATIONRECEIVED,
-              this.requestStatusesConstants.REVIEW,
-              this.requestStatusesConstants.DECISIONPREPARING,
-              this.requestStatusesConstants.DECISIONMADE,
-              this.requestStatusesConstants.NOTICEPREPARING,
-              this.requestStatusesConstants.VIOLATIONELIMINATION,
-              this.requestStatusesConstants.RESUMED,
-              this.requestStatusesConstants.DOCSQUERIED2,
-              this.requestStatusesConstants.INFORMATIONRECEIVED2
-            ])
-
-            break
-
-          case 'decision':
-            setActiveStatuses(tab, [
-              this.requestStatusesConstants.REVIEW,
-              this.requestStatusesConstants.DECISIONPREPARING,
-              this.requestStatusesConstants.DECISIONMADE,
-              this.requestStatusesConstants.NOTICEPREPARING,
-              this.requestStatusesConstants.VIOLATIONELIMINATION,
-              this.requestStatusesConstants.RESUMED,
-              this.requestStatusesConstants.DOCSQUERIED2,
-              this.requestStatusesConstants.INFORMATIONRECEIVED2
-            ])
-
-            break
-        }
-
+        setActiveStatuses(tab, this.requestPagesActiveStatuses[tab.link])
         return tab
       })
 
@@ -186,9 +130,6 @@ export default {
         }))
     }
   },
-  async mounted() {
-    await this.fetchRequestStatusesOptions()
-  },
   methods: {
     tabLinkClass(link) {
       return {
@@ -202,19 +143,6 @@ export default {
       } else {
         return false
       }
-    },
-    async fetchRequestStatusesOptions() {
-      this.requestStatusesOptions = await fetchRequestStatusesOptions({
-        axiosModule: this.$axios
-      })
-
-      this.requestStatusesConstants = this.requestStatusesOptions.reduce(
-        (result, item, index, array) => {
-          result[item.statusShortName] = item.statusId
-          return result
-        },
-        {}
-      )
     }
   }
 }
