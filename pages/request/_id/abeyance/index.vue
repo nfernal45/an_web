@@ -6,12 +6,9 @@
     
 </template>
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import abeyanceDecision from '@/components/request/abeyance/abeyanceDecision'
-import {
-  actionTypes as requestActionTypes,
-  getterTypes as requestGettersTypes
-} from '@/store/types/request'
+import { getterTypes as requestGettersTypes } from '@/store/types/request'
 const requestModuleName = 'request'
 
 export default {
@@ -38,18 +35,6 @@ export default {
     ...mapGetters(requestModuleName, {
       requestPagesActiveStatuses:
         requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
-    }),
-
-    isAbeaynceExist() {
-      return (
-        this.request.gfAbeyancesByRequestId &&
-        !!this.request.gfAbeyancesByRequestId.length
-      )
-    }
-  },
-  methods: {
-    ...mapActions(requestModuleName, {
-      createAbeyance: requestActionTypes.CREATE_ABEYANCE
     })
   }
 }

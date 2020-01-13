@@ -2,7 +2,6 @@ import { actionTypes, mutationTypes } from '@/store/types/request'
 import fetchRequestRecord from '@/services/api/request/fetchRequestRecord'
 import saveRequestRecord from '~/services/api/request/saveRequestRecord'
 import fetchNextRequestStatuses from '~/services/api/request/fetchNextRequestStatuses'
-// import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
 import fetchDocCheckByRequestId from '@/services/api/request/fetchDocCheckByRequestId'
 import saveDocCheck from '@/services/api/request/saveDocCheck'
 import defaultDocCheck from '@/constants/defaultDocCheck'
@@ -73,7 +72,6 @@ export default {
   [actionTypes.SET_REQUEST]({ commit }, request) {
     if (!request.requestId) {
       const defaultArraysNames = [
-        'gfAbeyancesByRequestId',
         'gfAttachedDocsByRequestId',
         'gfQueriedDocsByRequestId',
         'gfRefusalReasonRequestId'
@@ -111,7 +109,6 @@ export default {
 
   async [actionTypes.FETCH_DEFAULT_OBJECTS]({ state, commit }) {
     const defaultObjectsNames = [
-      'gfAbeyancesByRequestId',
       'gfAttachedDocsByRequestId',
       'gfQueriedDocsByRequestId',
       'gfRefusalReasonRequestId'
@@ -137,17 +134,6 @@ export default {
         })
       })
     }
-  },
-
-  async [actionTypes.CREATE_ABEYANCE]({ state, commit, dispatch }) {
-    await dispatch(actionTypes.FETCH_DEFAULT_OBJECTS)
-
-    if (!state.gfAbeyancesByRequestIdDefault) return
-
-    await commit(mutationTypes.SET_ARRAY, {
-      arrayName: 'gfAbeyancesByRequestId',
-      arrayValue: state.gfAbeyancesByRequestIdDefault()
-    })
   },
 
   async [actionTypes.FETCH_DOC_CHECK]({ state, commit }) {
