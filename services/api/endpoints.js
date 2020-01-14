@@ -67,7 +67,7 @@ const restApiGfActiviti = {
 
 const restApiGfRabbitmq = {
   sendingToEtp: {
-    send: '/sending-to-etp/doc-query/send'
+    send: '/sending-to-rabbitmq/to-etp/doc-query/send'
   }
 }
 
