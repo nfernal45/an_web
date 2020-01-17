@@ -1,9 +1,8 @@
 <template lang="pug">
   div
     el-row(:gutter='20')
-      el-col(:span='10')
+      el-col(v-if='getDocTypeForChed' :span='10')
         el-button(
-          v-if='getDocTypeForChed'
           :loading='isChedFormLoading'
           type='primary'
           @click='openUform'
@@ -56,6 +55,9 @@ export default {
       const requestStatusId = this.request.requestStatusId
       const statusConstants = this.requestStatusesConstants
 
+      console.log('Request status id', requestStatusId)
+      console.log('Status constants', statusConstants)
+
       switch (requestStatusId) {
         case statusConstants.VIOLATIONELIMINATION:
           docType = 'ExtractOrReceiptOnRegistrationOfApplication'
@@ -79,6 +81,8 @@ export default {
           docType = null
           break
       }
+
+      console.log('Doc Type', docType)
 
       return docType
     }
