@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     el-row(:gutter='20')
-      el-col(:span='10')
+      el-col(v-if='getDocTypeForChed' :span='10')
         el-button(
           :loading='isChedFormLoading'
           type='primary'
@@ -20,6 +20,11 @@
    
 </template>
 <script>
+import { mapState, mapGetters } from 'vuex'
+import { getterTypes as referencesGetterTypes } from '@/store/types/references'
+const requestModuleName = 'request'
+const referencesModuleName = 'references'
+
 export default {
   name: 'ChedForm',
   props: {
@@ -33,6 +38,53 @@ export default {
       isChedFormLoading: false,
       isChedFormVisible: false,
       uFormInstance: null
+    }
+  },
+  computed: {
+    ...mapState(requestModuleName, {
+      request: (state) => state.request
+    }),
+
+    ...mapGetters(referencesModuleName, {
+      requestStatusesConstants:
+        referencesGetterTypes.GET_REQUEST_STATUSES_OPTIONS_CONSTANTS
+    }),
+
+    getDocTypeForChed() {
+      let docType
+      const requestStatusId = this.request.requestStatusId
+      const statusConstants = this.requestStatusesConstants
+
+      console.log('Request status id', requestStatusId)
+      console.log('Status constants', statusConstants)
+
+      switch (requestStatusId) {
+        case statusConstants.VIOLATIONELIMINATION:
+          docType = 'ExtractOrReceiptOnRegistrationOfApplication'
+          break
+
+        case statusConstants.DECISIONPREPARING:
+          if (this.request.decisionType === 'D') {
+            docType = 'NotificationOfProvisionOfServices'
+          }
+
+          if (this.request.decisionType === 'R') {
+            docType = 'ProvideServicesRefuseDecision'
+          }
+          break
+
+        case statusConstants.NOTICEPREPARING:
+          docType = 'DecisionOnSuspensionOfProvidingTheStateService'
+          break
+
+        default:
+          docType = null
+          break
+      }
+
+      console.log('Doc Type', docType)
+
+      return docType
     }
   },
   async mounted() {
@@ -83,7 +135,7 @@ export default {
     },
 
     createUform() {
-      // const docType = this.getDocTypeForChed()
+      const docType = this.getDocTypeForChed
       const config = {
         domain: this.chedSettings.RL_CHED_FORM_URL,
         domContainerId: 'uform-container',
@@ -97,10 +149,10 @@ export default {
           onError: (error) => {
             this.onFormError(error)
           }
+        },
+        bindings: {
+          [docType]: () => {}
         }
-        // bindings: {
-        // [docType]: () => {}
-        // }
       }
       // eslint-disable-next-line no-undef
       this.uFormInstance = createUForm(config)

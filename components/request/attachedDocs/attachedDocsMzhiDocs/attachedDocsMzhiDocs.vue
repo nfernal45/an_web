@@ -1,5 +1,14 @@
 <template lang="pug">
-  form-block(title='Документы МЖИ')
+  form-block(title='Документы МЖИ' tooltip='')
+    template(slot='tooltip')
+      el-tooltip(effect='light' placement="top-start")
+        div(slot='content')
+          span Приложить документ МЖИ можно в соответствующих статусах:
+          ul(style='margin-top:5px;')
+            li Оформляется решение (должно быть указано решение по заявлению)
+            li Приостановлено
+            li Оформление приостановления
+        i.el-icon-warning-outline
     template(slot='content')
       ched-form(@upload='addDocument' :chedSettings='chedSettings' v-if='chedSettingsLoaded')
       el-form.mt-20(size='small' label-position='top')
