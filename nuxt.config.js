@@ -1,3 +1,5 @@
+// require('appmetrics-dash').attach()
+require('appmetrics-dash').monitor()
 require('dotenv').config()
 // eslint-disable-next-line nuxt/no-cjs-in-config
 const authStrategies = require('./plugins/auth/strategies.js')
