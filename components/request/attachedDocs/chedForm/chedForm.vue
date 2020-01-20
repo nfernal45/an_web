@@ -55,9 +55,6 @@ export default {
       const requestStatusId = this.request.requestStatusId
       const statusConstants = this.requestStatusesConstants
 
-      console.log('Request status id', requestStatusId)
-      console.log('Status constants', statusConstants)
-
       switch (requestStatusId) {
         case statusConstants.VIOLATIONELIMINATION:
           docType = 'ExtractOrReceiptOnRegistrationOfApplication'
@@ -81,8 +78,6 @@ export default {
           docType = null
           break
       }
-
-      console.log('Doc Type', docType)
 
       return docType
     }
