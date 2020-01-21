@@ -222,6 +222,8 @@
           
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex'
+import { mutationTypes } from '@/store/types/references'
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
 import fetchRefAdmDisctricts from '@/services/api/references/fetchRefAdmDisctricts'
 import fetchRefDisctricts from '@/services/api/references/fetchRefDisctricts'
@@ -230,16 +232,14 @@ import fetchRefAddress from '@/services/api/references/fetchRefAddress'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
 
+const referencesModuleName = 'references'
+
 export default {
   name: 'RegistrySearchForm',
   props: {
     isSearchLoading: {
       type: Boolean,
       default: () => false
-    },
-    globalSearchFilters: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -277,8 +277,8 @@ export default {
         constr: '', // Строение
         house: '' // Номер дома
       },
-      cleanSearchAddress: {},
       cleanSearchForm: {},
+      cleanSearchAddress: {},
       errorAddressMessage: '',
       regPlaceOptions: [],
       refAdmDisctricts: [],
@@ -296,6 +296,12 @@ export default {
     }
   },
   computed: {
+    ...mapState(referencesModuleName, {
+      globalSearchFilters: (state) => state.globalSearchFilters,
+      globalSearchFiltersSettings: (state) => state.globalSearchFiltersSettings,
+      globalSearchAddressFiltersSettings: (state) =>
+        state.globalSearchAddressFiltersSettings
+    }),
     searchParams() {
       let search = []
 
@@ -396,15 +402,19 @@ export default {
     }
   },
   watch: {
-    // searchForm: {
-    //   handler(value) {
-    //     sessionStorage.setItem('searchAddressFilter', JSON.stringify(value))
-    //   },
-    //   deep: true
-    // },
+    searchForm: {
+      handler(value) {
+        const copy = Object.assign({}, { ...value })
+        this.setGlobalSearchFiltersSettings(copy)
+        // sessionStorage.setItem('searchAddressFilter', JSON.stringify(value))
+      },
+      deep: true
+    },
     searchAddress: {
       handler(value) {
         this.errorAddressMessage = ''
+        const copy = Object.assign({}, { ...value })
+        this.setGlobalSearchAddressFiltersSettings(copy)
         // sessionStorage.setItem('searchFormFilter', JSON.stringify(value))
       },
       deep: true
@@ -420,6 +430,17 @@ export default {
     this.cleanSearchForm = Object.assign({}, { ...this.searchForm })
     this.cleanSearchAddress = Object.assign({}, { ...this.searchAddress })
 
+    if (this.globalSearchFilters.length) {
+      this.searchForm = Object.assign(
+        {},
+        { ...this.globalSearchFiltersSettings }
+      )
+      this.searchAddress = Object.assign(
+        {},
+        { ...this.globalSearchAddressFiltersSettings }
+      )
+    }
+
     // const searchFormFilter = sessionStorage.getItem('searchFormFilter')
     // const searchAddressFilter = sessionStorage.getItem('searchAddressFilter')
 
@@ -430,6 +451,12 @@ export default {
     // else this.onSearch()
   },
   methods: {
+    ...mapMutations(referencesModuleName, {
+      setGlobalSearchFiltersSettings:
+        mutationTypes.SET_GLOBAL_SEARCH_FILTERS_SETTINGS,
+      setGlobalSearchAddressFiltersSettings:
+        mutationTypes.SET_GLOBAL_SEARCH_ADDRESS_FILTERS_SETTINGS
+    }),
     createRequest() {
       this.$router.push({ name: 'request-id-main', params: { id: 'create' } })
     },

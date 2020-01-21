@@ -131,8 +131,6 @@ export default {
         return
       }
 
-
-      // eslint-disable-next-line no-unreachable
       const loading = this.$loading({
         target: '#status-buttons',
         lock: true,
