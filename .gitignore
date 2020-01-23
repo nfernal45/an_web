@@ -92,3 +92,6 @@ sw.*
 
 # Appmetrics Dashboard
 *.heapsnapshot
+
+# Docker
+Dockerfile
