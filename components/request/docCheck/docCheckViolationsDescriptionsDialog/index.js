@@ -1,0 +1,2 @@
+import docCheckViolationsDescriptionsDialog from './docCheckViolationsDescriptionsDialog'
+export default docCheckViolationsDescriptionsDialog
