@@ -55,6 +55,9 @@ const restApiGfRef = {
   },
   gfRefReorgationzationForms: {
     list: '/ref-reorganization-forms/list'
+  },
+  guRefViolationsDescriptions: {
+    list: '/ref-violations/list'
   }
 }
 
@@ -88,6 +91,9 @@ const restApiGuRef = {
   },
   guRefRefusalReasons: {
     list: '/ref-refusal-reasons/list'
+  },
+  guRefInspectionsResults: {
+    list: '/ref-inspection-results/list'
   }
 }
 

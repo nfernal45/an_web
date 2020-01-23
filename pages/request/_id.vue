@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    nuxt-child
+    nuxt-child(v-if='isRequestReady')
 </template>
 
 <script>
@@ -16,6 +16,11 @@ export default {
   beforeRouteLeave(to, from, next) {
     this.resetRequest()
     next()
+  },
+  data() {
+    return {
+      isRequestReady: false
+    }
   },
   computed: {
     ...mapState({
@@ -44,7 +49,12 @@ export default {
       if (this.request.requestId) {
         this.fetchRequestStatuses()
       } else {
-        await this.fetchRequestById(this.$route.params.id)
+        try {
+          await this.fetchRequestById(this.$route.params.id)
+          this.isRequestReady = true
+        } catch {
+          this.isRequestReady = true
+        }
       }
     }
   }
