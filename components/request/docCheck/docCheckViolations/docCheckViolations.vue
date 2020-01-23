@@ -114,7 +114,6 @@
                 )
             el-col(:span='12')
               employee-picker(label='Ответственный исполнитель' v-model='addCheckExecId')
-
     doc-check-violations-descriptions-dialog(
       title='Справочник нарушений'
       :isVisible.sync='violationDescriptionDialog.isVisible'
