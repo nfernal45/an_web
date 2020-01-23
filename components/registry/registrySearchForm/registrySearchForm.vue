@@ -219,6 +219,13 @@
             el-col(:span='11')
               el-form-item(label='Наименование')
                   el-input(v-model='searchForm.licenseeName')
+            
+          el-row(:gutter='20')
+            el-col(:span='5')
+              el-form-item(label='UNOM')
+                  el-input(v-model='searchForm.unom')
+            el-col(:span='11')
+                employee-picker(label='Ответственный исполнитель' v-model='searchForm.performerId')
           
 </template>
 <script>
@@ -231,6 +238,7 @@ import fetchStreets from '@/services/api/references/fetchStreets'
 import fetchRefAddress from '@/services/api/references/fetchRefAddress'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
+import fetchDocChecksList from '@/services/api/request/fetchDocChecksList'
 
 const referencesModuleName = 'references'
 
@@ -251,6 +259,8 @@ export default {
         licenseeType: [],
         requestStatusesId: [],
         licenseeName: '', // Если тип заявителя ЮЛ, то записывать данные в licenseeFullname, если ИП то в licenseeShortname
+        unom: '',
+        performerId: null,
 
         eno: '',
         licenseeInn: '',
@@ -287,6 +297,7 @@ export default {
       refRequestTypes: [],
       refRequestStatusesOptions: [],
       applicantOptions: [],
+      docChecksList: [],
 
       isDrawerVisible: false,
       isDistrictSelectLoading: false,
@@ -313,6 +324,9 @@ export default {
 
       if (this.searchForm.outerRegnum.length)
         search.push(`outerRegnum=='*${this.searchForm.outerRegnum}*'`)
+
+      if (this.searchForm.unom.length)
+        search.push(`unom==${this.searchForm.unom}`)
 
       if (this.searchForm.licenseeInn.length)
         search.push(
@@ -375,6 +389,11 @@ export default {
       if (this.searchForm.licenseeType.length)
         search.push(`licenseeType=in=(${this.searchForm.licenseeType})`)
 
+      if (this.requestsIdFromDocChecksList.length)
+        search.push(
+          `requestId=in=(${this.requestsIdFromDocChecksList.join(',')})`
+        )
+
       if (search.length) search = search.join(';')
       else search = ''
 
@@ -399,6 +418,9 @@ export default {
           return item.isGf === 'Y'
         })
       )
+    },
+    requestsIdFromDocChecksList() {
+      return this.docChecksList.map((item) => item.requestId)
     }
   },
   watch: {
@@ -462,6 +484,7 @@ export default {
     },
     async onSearch(empty = false) {
       await this.fetchRefAddress()
+      await this.fetchDocChecksList()
 
       if (this.errorAddressMessage.length) return false
       else this.$emit('changeSearchFilters', this.searchParams)
@@ -484,6 +507,16 @@ export default {
       })
 
       this.$emit('changeSearchFilters', '')
+    },
+    async fetchDocChecksList() {
+      const { data } = await fetchDocChecksList({
+        axiosModule: this.$axios,
+        searchString: `performerId==${this.searchForm.performerId}`
+      })
+
+      this.docChecksList = data
+
+      return data
     },
     async fetchRegPlaceOptions() {
       this.regPlaceOptions = await fetchRegPlaceOptions({
