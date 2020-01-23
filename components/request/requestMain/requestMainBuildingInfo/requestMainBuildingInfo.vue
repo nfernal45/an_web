@@ -18,7 +18,7 @@
 
           el-col(:span='8')
             el-form-item(label='Код БТИ')
-              el-input(:value='unom')
+              el-input(v-model='unom')
             el-form-item(label='Код ФИАС')
               el-input(v-model="fiasHouseguid")
             el-form-item(v-if="numType === 1" label='Кадастровый номер')
@@ -109,9 +109,10 @@ export default {
     ...mapMutations(moduleName, {
       set: mutationTypes.SET_PROP
     }),
-    selectAddress({ addressId, fiasHouseGuid }) {
+    selectAddress({ addressId, fiasHouseGuid, btiAddrId }) {
       this.addressId = addressId
       if (fiasHouseGuid) this.fiasHouseguid = fiasHouseGuid
+      if (btiAddrId) this.unom = btiAddrId
     }
   }
 }
