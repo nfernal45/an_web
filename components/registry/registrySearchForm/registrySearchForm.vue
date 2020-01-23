@@ -202,13 +202,6 @@
                 el-input(v-model='searchAddress.constr' clearable)
 
           el-row(:gutter='20')
-            el-col(:span='5')
-              el-form-item(label='UNOM')
-                  el-input(v-model='searchForm.unom')
-            el-col(:span='11')
-                employee-picker(label='Ответственный исполнитель' v-model='searchForm.performerId')
-
-          el-row(:gutter='20')
             el-row
                 el-col(:span='18')
                   el-divider(content-position="left") Заявитель
@@ -226,6 +219,13 @@
             el-col(:span='11')
               el-form-item(label='Наименование')
                   el-input(v-model='searchForm.licenseeName')
+            
+          el-row(:gutter='20')
+            el-col(:span='5')
+              el-form-item(label='UNOM')
+                  el-input(v-model='searchForm.unom')
+            el-col(:span='11')
+                employee-picker(label='Ответственный исполнитель' v-model='searchForm.performerId')
           
 </template>
 <script>
