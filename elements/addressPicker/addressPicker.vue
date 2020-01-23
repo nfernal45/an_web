@@ -14,6 +14,7 @@
     el-dialog(
       title='Поиск адреса'
       :visible.sync='idAddressSearchModalVisible'
+      :close-on-click-modal='false'
       width='30%'
       destroy-on-close
       @closed='clearAddressSearchForm'
@@ -181,6 +182,7 @@ export default {
   data() {
     return {
       selectedAddressId: null,
+      selectedBtiAddrId: null,
       addressName: '',
       addressesOptions: [],
       idAddressSearchModalVisible: false,
@@ -397,7 +399,7 @@ export default {
       this.clearAdressesOptions()
     },
 
-    selectAddress(index, { addressId, fiasHouseGuid }) {
+    selectAddress(index, { addressId, fiasHouseGuid, btiAddrId }) {
       this.addressesOptions.forEach((address) => {
         if (address.selected) this.$set(address, 'selected', false)
       })
@@ -405,13 +407,15 @@ export default {
       this.$set(option, 'selected', true)
       this.selectedAddressId = addressId
       this.selectedFiasHouseGuid = fiasHouseGuid
+      this.selectedBtiAddrId = btiAddrId
     },
 
     confirmSelect() {
       this.addressId = this.selectedAddressId
       this.$emit('selectAddress', {
         addressId: this.selectedAddressId,
-        fiasHouseGuid: this.selectedFiasHouseGuid
+        fiasHouseGuid: this.selectedFiasHouseGuid,
+        btiAddrId: this.selectedBtiAddrId
       })
       this.addressName = this.addressesOptions.find((option) => {
         return option.addressId === this.selectedAddressId

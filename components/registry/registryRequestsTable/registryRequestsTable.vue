@@ -133,7 +133,8 @@ export default {
       const searchParams = Object.assign({}, this.paginationParams)
       delete searchParams.total
 
-      if (this.searchString.length) searchParams.search = this.searchString
+      if (this.globalSearchFilters.length)
+        searchParams.search = this.globalSearchFilters
 
       const { data, total } = await fetchRequestsList({
         axiosModule: this.$axios,
