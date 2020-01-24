@@ -509,6 +509,8 @@ export default {
       this.$emit('changeSearchFilters', '')
     },
     async fetchDocChecksList() {
+      if (!this.searchForm.performerId) return false
+
       const { data } = await fetchDocChecksList({
         axiosModule: this.$axios,
         searchString: `performerId==${this.searchForm.performerId}`
