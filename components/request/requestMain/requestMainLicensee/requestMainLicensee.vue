@@ -33,9 +33,12 @@
 
           el-col(:span='8')
             el-form-item(label='ИНН')
-              el-input(v-model='licenseeInn')
+              el-input(
+                v-model='licenseeInn' 
+                :maxlength='licenseeType === "L" ? 10 : 12'
+                :rules="[{ type: 'number', message: 'age must be a number'}]")
             el-form-item(label='ОГРН')
-              el-input(v-model='licenseeOgrn')
+              el-input(v-model='licenseeOgrn' :maxlength='licenseeType === "L" ? 13 : 15')
             el-form-item(label='Телефон')
               el-input(v-model='licenseePhone')
             el-form-item(label='Электронная почта')
@@ -59,7 +62,8 @@ export default {
           licenseeTypeName: 'ИП',
           licenseeTypeId: 'I'
         }
-      ]
+      ],
+      onlyNumbers: /^[-+]?[0-9]+$/
     }
   },
   computed: {
@@ -99,7 +103,11 @@ export default {
         return this.request.licenseeInn
       },
       set(value) {
-        this.set({ propName: 'licenseeInn', propValue: value })
+        if (value.match(this.onlyNumbers) || !value.length)
+          this.set({
+            propName: 'licenseeInn',
+            propValue: value.length ? Number(value) : value
+          })
       }
     },
 
@@ -108,7 +116,11 @@ export default {
         return this.request.licenseeOgrn
       },
       set(value) {
-        this.set({ propName: 'licenseeOgrn', propValue: value })
+        if (value.match(this.onlyNumbers) || !value.length)
+          this.set({
+            propName: 'licenseeOgrn',
+            propValue: value.length ? Number(value) : value
+          })
       }
     },
 

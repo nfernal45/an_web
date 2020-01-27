@@ -25,6 +25,7 @@
                   el-form-item(label='Номер')
                     el-input(
                       :value='doc.docNum'
+                      :maxlength='50'
                       @input='setArrayObjectProp({ arrayName: "mzhiAttachedDocs", propName: "docNum", propValue: $event, propIndex: index })'
                     )
                 el-col(:span='7')

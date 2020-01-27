@@ -64,15 +64,62 @@ export default {
         })
       }
     },
-    async onSave() {
-      this.isRequestSaving = true
-      try {
-        await this.saveRequestRelated()
-        this.openNewCreatedRequestPage()
-        this.isRequestSaving = false
-      } catch (error) {
-        this.isRequestSaving = false
+    validation() {
+      if (this.request.licenseeType === 'L') {
+        if (String(this.request.licenseeInn).length < 10) {
+          this.$notify.warning({
+            title: 'Внимание',
+            message:
+              'Для данного типа заявителя/представителя заявителя допустимая длина поля "ИНН": 10 символов.'
+          })
+
+          return false
+        } else if (String(this.request.licenseeOgrn).length < 13) {
+          this.$notify.warning({
+            title: 'Внимание',
+            message:
+              'Для данного типа заявителя/представителя заявителя допустимая длина поля "ОГРН": 13 символов.'
+          })
+
+          return false
+        }
+      } else if (this.request.licenseeType === 'I') {
+        if (String(this.request.licenseeInn).length < 12) {
+          this.$notify.warning({
+            title: 'Внимание',
+            message:
+              'Для данного типа заявителя/представителя заявителя допустимая длина поля "ИНН": 12 символов.'
+          })
+
+          return false
+        } else if (String(this.request.licenseeOgrn).length < 15) {
+          this.$notify.warning({
+            title: 'Внимание',
+            message:
+              'Для данного типа заявителя/представителя заявителя допустимая длина поля "ИНН": 15 символов.'
+          })
+
+          return false
+        }
       }
+
+      return true
+    },
+    async onSave() {
+      const canSave = this.validation()
+
+      if (canSave) {
+        this.isRequestSaving = true
+        try {
+          await this.saveRequestRelated()
+          this.openNewCreatedRequestPage()
+          this.isRequestSaving = false
+        } catch (error) {
+          this.isRequestSaving = false
+        }
+      }
+
+      return false
     },
     print() {
       this.isDialogVisible = true
