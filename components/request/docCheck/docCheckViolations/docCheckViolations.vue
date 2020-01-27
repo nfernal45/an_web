@@ -108,7 +108,6 @@
                   :picker-options='{ firstDayOfWeek: 1 }'
                   v-model='planExecDate'
                   disabled
-                  placeholder='Выберите дату'
                   type='date'
                   format="dd.MM.yyyy"
                   value-format="dd.MM.yyyy"
