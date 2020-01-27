@@ -5,6 +5,7 @@ export default () => ({
   docCheck: {},
   licenseeAttachedDocs: [],
   mzhiAttachedDocs: [],
+  internalAttachedDocs: [],
   requestStatuses: [],
   gfAttachedDocsByRequestIdDefault: null,
   gfQueriedDocsByRequestIdDefault: null,

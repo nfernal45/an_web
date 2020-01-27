@@ -48,7 +48,8 @@ export default {
         ...state.request,
         gfAttachedDocsByRequestId: [
           ...state.licenseeAttachedDocs,
-          ...state.mzhiAttachedDocs
+          ...state.mzhiAttachedDocs,
+          ...state.internalAttachedDocs
         ]
       }
       const data = await saveRequestRecord(this.$axios, request)
@@ -99,8 +100,18 @@ export default {
         })
         .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
 
+      const internalAttachedDocs = request.gfAttachedDocsByRequestId
+        .filter((attachedDoc) => {
+          return (
+            attachedDoc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId
+              .groupId === 3
+          )
+        })
+        .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
+
       commit(mutationTypes.SET_LICENSEE_ATTAHCHED_DOCS, licenseeAttachedDocs)
       commit(mutationTypes.SET_MZHI_ATTAHCHED_DOCS, mzhiAttachedDocs)
+      commit(mutationTypes.SET_INTERNAL_ATTACHED_DOCS, internalAttachedDocs)
       request.gfAttachedDocsByRequestId = null
     }
 

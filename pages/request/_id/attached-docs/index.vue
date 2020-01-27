@@ -10,17 +10,23 @@
                               :chedSettings='chedSettings'
                               :chedSettingsLoaded='chedSettingsLoaded')
 
+      attached-docs-internal(:refDocTypes='refDocTypes'
+                              :chedSettings='chedSettings'
+                              :chedSettingsLoaded='chedSettingsLoaded')
+
 </template>
 <script>
 import fetchDocTypes from '@/services/api/references/fetchDocTypes'
 import attachedDocsLicenseeDocs from '@/components/request/attachedDocs/attachedDocsLicenseeDocs'
 import attachedDocsMzhiDocs from '@/components/request/attachedDocs/attachedDocsMzhiDocs'
+import attachedDocsInternal from '@/components/request/attachedDocs/attachedDocsInternal'
 import fetchSettings from '@/services/api/settings/fetchSettings'
 export default {
   name: 'RequestAttachedDocsPage',
   components: {
     attachedDocsLicenseeDocs,
-    attachedDocsMzhiDocs
+    attachedDocsMzhiDocs,
+    attachedDocsInternal
   },
   data() {
     return {
