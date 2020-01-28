@@ -6,13 +6,14 @@
     title='Справочник нарушений'
     @closed='closeDialog'
   )
-    el-checkbox-group.justify-start.align-start.violations-checkbox-group(v-model='selectedViolations')
+    p(v-if='!computedRefViolationsDescriptions.length' style="font-size: 20px") Для проверки данных пунктов Порядка справочник нарушений не предусмотрен
+    el-checkbox-group.justify-start.align-start.violations-checkbox-group(v-else v-model='selectedViolations')
       el-checkbox(
         v-for="violation in computedRefViolationsDescriptions"
         :key='violation.id'
         :label='violation.name') {{ violation.name }}
     div(slot='footer' class='dialog-footer')
-      el-button(@click='confirmSelection' type='primary') Выбрать
+      el-button(@click='confirmSelection' type='primary' v-if='computedRefViolationsDescriptions.length') Выбрать
       el-button(@click='isDialogOpen = false') Закрыть
 
 </template>
@@ -80,4 +81,6 @@ export default {
   padding: 10px
   overflow-x: hidden
   scroll-x: auto
+  .el-checkbox__label
+    word-break: normal
 </style>

@@ -36,9 +36,10 @@
                 })`) Добавить описание из справочника нарушений
           el-row
             el-form-item(label='Описание нарушений по первичному осмотру')
+              //- v-model='testValue'
               el-input(
-                class='doc-check-description-input'
                 :value='violationGroup.primaryInspDescr'
+                class='doc-check-description-input'
                 type='textarea'
                 :autosize='{ minRows: 3 }'
                 @input=`changeInspectionDescriptions({
@@ -48,7 +49,7 @@
                 })`
               )
 
-          p Вторичный осмотр
+          p Осмотр после приостановки
           el-row
             el-form-item(label='Результат проверки')
               el-select(
@@ -123,7 +124,6 @@
     
 </template>
 <script>
-import { debounce } from 'lodash'
 import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import docCheckViolationsDescriptionsDialog from '@/components/request/docCheck/docCheckViolationsDescriptionsDialog'
@@ -239,18 +239,13 @@ export default {
     changeAbeyanceInspectionResult({ value, violationGroupId }) {
       this.setAbeyanceInspectionResult({ value, violationGroupId })
     },
-    changeInspectionDescriptions: debounce(function({
-      value,
-      violationGroupId,
-      inspectionType
-    }) {
+    changeInspectionDescriptions({ value, violationGroupId, inspectionType }) {
       this.setInspectionDescriptions({
         value,
         violationGroupId,
         inspectionType
       })
     },
-    50),
     openViolationDescriptionDialog({
       currentViolationsDescription,
       violationGroupId,
@@ -272,10 +267,10 @@ export default {
     selectViolationsDescriptions(violationsArray) {
       const initialValue = this.violationDescriptionDialog
         .currentViolationsDescription
-        ? `${this.violationDescriptionDialog.currentViolationsDescription}\n\n`
+        ? `${this.violationDescriptionDialog.currentViolationsDescription}\n`
         : ''
       this.changeInspectionDescriptions({
-        value: `${initialValue}${violationsArray.join('\n\n')}\n\n`,
+        value: `${initialValue}${violationsArray.join('\n\n')}\n`,
         violationGroupId: this.violationDescriptionDialog.violationGroupId,
         inspectionType: this.violationDescriptionDialog.inspectionType
       })
@@ -288,5 +283,6 @@ export default {
   font-weigth: normal
 
 .doc-check-description-input
-  max-height: 400px
+  textarea
+    max-height: 400px
 </style>
