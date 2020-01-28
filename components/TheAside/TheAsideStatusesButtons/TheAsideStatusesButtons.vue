@@ -48,8 +48,8 @@ export default {
     }),
 
     checkRequestDecision(nextStatusId) {
-      return nextStatusId > this.requestStatusesConstants.REVIEW
-        ? this.request.decisionType
+      return this.request.requestStatusId === 6
+        ? !!this.request.decisionType
         : true
     },
 
