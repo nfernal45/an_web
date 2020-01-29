@@ -19,6 +19,7 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 import styles from './TheAsideStatusesButtons.module.sass?module'
 import { getterTypes as referencesGetterTypes } from '@/store/types/references'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
+import { validation } from '@/services/requestValidation'
 
 const requestModuleName = 'request'
 const referencesModuleName = 'references'
@@ -130,6 +131,10 @@ export default {
         })
         return
       }
+
+      const canChangeStatus = validation(this.request)
+
+      if (!canChangeStatus) return false
 
       // eslint-disable-next-line no-unreachable
       const loading = this.$loading({
