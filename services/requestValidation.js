@@ -1,74 +1,75 @@
 import Vue from 'vue'
 
 export const validation = function(request) {
-  // if (request.reprFullname.length || request.reprShortname.length)
+  const errors = []
+
+  if (!request.typeId) errors.push('Укажите цель обращения.')
+  if (!request.regPlaceId) errors.push('Укажите место подачи документов.')
 
   if (request.licenseeType === 'L') {
-    if (String(request.licenseeInn).length !== 10) {
-      showWarning(
+    if (String(request.licenseeInn).length !== 10)
+      errors.push(
         'Для данного типа заявителя допустимая длина поля "ИНН": 10 символов.'
       )
-      return false
-    } else if (String(request.licenseeOgrn).length !== 13) {
-      showWarning(
+
+    if (String(request.licenseeOgrn).length !== 13)
+      errors.push(
         'Для данного типа заявителя допустимая длина поля "ОГРН": 13 символов.'
       )
-      return false
-    }
   } else if (request.licenseeType === 'I') {
-    if (String(request.licenseeInn).length !== 12) {
-      showWarning(
+    if (String(request.licenseeInn).length !== 12)
+      errors.push(
         'Для данного типа заявителя допустимая длина поля "ИНН": 12 символов.'
       )
-      return false
-    } else if (String(request.licenseeOgrn).length !== 15) {
-      showWarning(
+
+    if (String(request.licenseeOgrn).length !== 15)
+      errors.push(
         'Для данного типа заявителя допустимая длина поля "ОГРНИП": 15 символов.'
       )
-      return false
-    }
   } else {
-    showWarning('Необходимо выбрать тип заявителя.')
-    return false
+    errors.push('Необходимо выбрать тип заявителя.')
   }
 
   if (request.reprFullname || request.reprShortname) {
     if (request.reprType === 'L') {
-      if (String(request.reprInn).length !== 10) {
-        showWarning(
+      if (String(request.reprInn).length !== 10)
+        errors.push(
           'Для данного типа представителя заявителя допустимая длина поля "ИНН": 10 символов.'
         )
-        return false
-      } else if (String(request.reprOgrn).length !== 13) {
-        showWarning(
+      if (String(request.reprOgrn).length !== 13)
+        errors.push(
           'Для данного типа представителя заявителя допустимая длина поля "ОГРН": 13 символов.'
         )
-        return false
-      }
     } else if (request.reprType === 'I') {
-      if (String(request.reprInn).length !== 12) {
-        showWarning(
+      if (String(request.reprInn).length !== 12)
+        errors.push(
           'Для данного типа представителя заявителя допустимая длина поля "ИНН": 12 символов.'
         )
-        return false
-      } else if (String(request.reprOgrn).length !== 15) {
-        showWarning(
+      if (String(request.reprOgrn).length !== 15)
+        errors.push(
           'Для данного типа представителя заявителя допустимая длина поля "ОГРНИП": 15 символов.'
         )
-        return false
-      }
     } else {
-      showWarning('Необходимо выбрать тип представителя заявителя.')
-      return false
+      errors.push('Необходимо выбрать тип представителя заявителя.')
     }
   }
 
-  return true
-}
+  if (errors.length) {
+    let errorMessage = ''
+    for (const error of errors) {
+      errorMessage += `<div> - ${error}</div>`
+    }
 
-const showWarning = function(message = '') {
-  Vue.prototype.$notify.warning({
-    title: 'Внимание',
-    message
-  })
+    console.log(errorMessage)
+
+    Vue.prototype.$notify.warning({
+      title: 'Внимание',
+      message: errorMessage,
+      dangerouslyUseHTMLString: true
+    })
+
+    return false
+  } else {
+    return true
+  }
 }
