@@ -28,6 +28,7 @@ import styles from './TheAside.module.sass?module'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
 import printFormDialog from '@/components/printFormDialog/printFormDialog'
+import { validation } from '@/services/requestValidation'
 
 const moduleName = 'request'
 export default {
@@ -64,49 +65,9 @@ export default {
         })
       }
     },
-    validation() {
-      if (this.request.licenseeType === 'L') {
-        if (String(this.request.licenseeInn).length < 10) {
-          this.$notify.warning({
-            title: 'Внимание',
-            message:
-              'Для данного типа заявителя/представителя заявителя допустимая длина поля "ИНН": 10 символов.'
-          })
-
-          return false
-        } else if (String(this.request.licenseeOgrn).length < 13) {
-          this.$notify.warning({
-            title: 'Внимание',
-            message:
-              'Для данного типа заявителя/представителя заявителя допустимая длина поля "ОГРН": 13 символов.'
-          })
-
-          return false
-        }
-      } else if (this.request.licenseeType === 'I') {
-        if (String(this.request.licenseeInn).length < 12) {
-          this.$notify.warning({
-            title: 'Внимание',
-            message:
-              'Для данного типа заявителя/представителя заявителя допустимая длина поля "ИНН": 12 символов.'
-          })
-
-          return false
-        } else if (String(this.request.licenseeOgrn).length < 15) {
-          this.$notify.warning({
-            title: 'Внимание',
-            message:
-              'Для данного типа заявителя/представителя заявителя допустимая длина поля "ИНН": 15 символов.'
-          })
-
-          return false
-        }
-      }
-
-      return true
-    },
     async onSave() {
-      const canSave = this.validation()
+      const canSave = validation(this.request)
+      console.log(canSave)
 
       if (canSave) {
         this.isRequestSaving = true
