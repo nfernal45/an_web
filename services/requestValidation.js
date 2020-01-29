@@ -45,7 +45,6 @@ export const validation = function(request) {
         )
         return false
       }
-      return false
     } else if (request.reprType === 'I') {
       if (String(request.reprInn).length !== 12) {
         showWarning(
