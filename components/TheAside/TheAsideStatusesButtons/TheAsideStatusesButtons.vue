@@ -119,18 +119,19 @@ export default {
         return
       }
 
-      const documentName = this.getRequredMzhiDocName(nextStatusId)
+      // DEV
+      // const documentName = this.getRequredMzhiDocName(nextStatusId)
 
-      if (documentName) {
-        this.$notify({
-          title: 'Внимание',
-          message: `Необходимо приложить документ <strong>"${documentName}"</strong>`,
-          duration: 3000,
-          type: 'warning',
-          dangerouslyUseHTMLString: true
-        })
-        return
-      }
+      // if (documentName) {
+      //   this.$notify({
+      //     title: 'Внимание',
+      //     message: `Необходимо приложить документ <strong>"${documentName}"</strong>`,
+      //     duration: 3000,
+      //     type: 'warning',
+      //     dangerouslyUseHTMLString: true
+      //   })
+      //   return
+      // }
 
       const canChangeStatus = validation(this.request)
 
