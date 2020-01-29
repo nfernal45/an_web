@@ -30,7 +30,12 @@ export const validation = function(request) {
     errors.push('Необходимо выбрать тип заявителя.')
   }
 
-  if (request.reprFullname || request.reprShortname) {
+  if (
+    request.reprFullname ||
+    request.reprShortname ||
+    request.reprInn ||
+    request.reprOgrn
+  ) {
     if (request.reprType === 'L') {
       if (String(request.reprInn).length !== 10)
         errors.push(
