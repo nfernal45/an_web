@@ -1,27 +1,38 @@
 <template lang="pug">
   div
-    el-button.mb-20(type="success"
-                    icon='el-icon-document-add' 
-                    @click="createRequest") Создать новое заявление
-    el-button(@click='isDrawerVisible = true'
-              icon="el-icon-s-operation") Показать фильтр
+    el-button.mb-20(
+      type="success"
+      icon='el-icon-document-add' 
+      @click="createRequest") Создать новое заявление
+    el-button(
+      v-show='can("RL_GF_READONLY")'
+      @click='isDrawerVisible = true'
+      icon="el-icon-s-operation") Показать фильтр
 
-    el-drawer(title='Фильтр поиска'
-              :visible.sync='isDrawerVisible'
-              :wrapperClosable='false'
-              direction='rtl'
-              size='55%')
+    el-drawer(
+      title='Фильтр поиска'
+      :visible.sync='isDrawerVisible'
+      :wrapperClosable='false'
+      direction='rtl'
+      size='55%')
       div(style='padding: 0px 20px 20px 20px')
-        el-button(type="primary" 
-                  @click="onSearch" 
-                  :loading="isSearchLoading"
-                  :disabled='!!requestsCount || !!errorAddressMessage.length'
-                  icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
-        el-button(type="warning" 
-                  @click="clearSearchFilter"
-                  icon='el-icon-circle-close') Очистить поиск
+        el-button(
+          v-show='can("RL_GF_READONLY")' 
+          type="primary"
+          @click="onSearch" 
+          :loading="isSearchLoading"
+          :disabled='!!requestsCount || !!errorAddressMessage.length'
+          icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
+        el-button(
+          v-show='can("RL_GF_READONLY")'
+          type="warning" 
+          @click="clearSearchFilter"
+          icon='el-icon-circle-close') Очистить поиск
         
-        el-form.mt-20(size='mini' label-position='top')
+        el-form.mt-20(
+          size='mini' 
+          label-position='top'
+          :disabled='!can("RL_GF_READONLY")')
           el-row
             el-row
                   el-col(:span='18')
@@ -229,7 +240,7 @@
           
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import { mutationTypes } from '@/store/types/references'
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
 import fetchRefAdmDisctricts from '@/services/api/references/fetchRefAdmDisctricts'
@@ -313,6 +324,7 @@ export default {
       globalSearchAddressFiltersSettings: (state) =>
         state.globalSearchAddressFiltersSettings
     }),
+    ...mapGetters(['can', 'canAny']),
     searchParams() {
       let search = []
 

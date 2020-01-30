@@ -7,10 +7,12 @@
         the-aside.sticky(style="flex-basis: 200px; position: sticky; top: 100px; align-self: flex-start;")
         el-main(style="flex: 1 0 0;")
           nuxt
+    develop-permissions
         
 </template>
 
 <script>
+import developPermissions from '@/components/developPermissions'
 import TheHeader from '@/components/TheHeader'
 import TheAside from '@/components/TheAside'
 import TheTabs from '@/components/TheTabs'
@@ -19,7 +21,8 @@ export default {
   components: {
     TheHeader,
     TheAside,
-    TheTabs
+    TheTabs,
+    developPermissions
   },
   data() {
     return {

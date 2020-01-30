@@ -4,7 +4,7 @@ export const state = () => ({
   // For test and develop
   permissionDisplayIsVisible: false,
   permissionControls: [
-    'RL_GF_READONLY ',
+    'RL_GF_READONLY',
     'RL_GF_REQUEST_CREATE',
     'RL_GF_REQUEST_SAVE',
     'RL_GF_CANCELLATION',
@@ -23,15 +23,7 @@ export const state = () => ({
 })
 
 export const getters = {
-  can: (state) => {
-    return (perm) => {
-      const accessToken = localStorage
-        .getItem('auth._token.oauth2')
-        .split(' ')[1]
-
-      !!accessToken && state.permissions.includes(perm)
-    }
-  },
+  can: (state) => (perm) => state.permissions.includes(perm),
   canAny: (state, getters) => {
     return (perms = []) => perms.some((x) => getters.can(x))
   }

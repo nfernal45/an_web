@@ -37,15 +37,18 @@ export default {
       initialTabs: [
         {
           title: 'Заявление',
-          link: 'main'
+          link: 'main',
+          permsissions: ['RL_GF_READONLY']
         },
         {
           title: 'Документы заявления',
-          link: 'attached-docs'
+          link: 'attached-docs',
+          permsissions: ['RL_GF_READONLY']
         },
         {
           title: 'МВ запросы',
-          link: 'queried-docs'
+          link: 'queried-docs',
+          permsissions: ['RL_GF_READONLY']
         },
         {
           title: 'Приостановление',
@@ -53,16 +56,19 @@ export default {
         },
         {
           title: 'Ход рассмотрения',
-          link: 'doc-check'
+          link: 'doc-check',
+          permsissions: ['RL_GF_READONLY']
         },
         {
           title: 'Решение по заявлению',
-          link: 'decision'
+          link: 'decision',
+          permsissions: ['RL_GF_READONLY']
         }
       ]
     }
   },
   computed: {
+    ...mapGetters(['can', 'canAny']),
     ...mapState(requestModuleName, {
       request: (state) => state.request
     }),
@@ -117,7 +123,11 @@ export default {
         return tab
       })
 
-      return activeTabs
+      const permittedTabs = activeTabs.filter((tab) => {
+        return this.canAny(tab.permsissions)
+      })
+
+      return permittedTabs
         .filter((tab) => {
           return (
             !tab.activeStatuses ||

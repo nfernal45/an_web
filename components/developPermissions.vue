@@ -49,6 +49,7 @@ export default {
   background-color: rgba(47, 47, 47, 1)
   font-size: 10px
   letter-spacing: 1px
+  z-index: 9999
 
   .item
     padding: 5px 7px

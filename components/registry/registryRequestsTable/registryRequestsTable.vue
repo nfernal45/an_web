@@ -34,6 +34,7 @@
         el-table-column(fixed="right" label="" width="60")
           template(slot-scope="scope")
             el-button.d-flex.justify-center.align-center(
+              v-show='can("RL_GF_READONLY")'
               type="primary"
               size="small"
               style="width:40px;height:40px;padding:0;"
@@ -42,6 +43,7 @@
               font-awesome-icon(icon="pen" style="margin:0;")
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import fetchRequestsList from '@/services/api/request/fetchRequestsList'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
@@ -77,6 +79,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['can', 'canAny']),
     computedRequestsList() {
       return this.requestsList.map((request) => {
         return {
