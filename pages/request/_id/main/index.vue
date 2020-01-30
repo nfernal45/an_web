@@ -2,7 +2,7 @@
   div.request-main
       // Основные сведения
       el-row
-        request-main-general-info
+        request-main-general-info(:disabled-editing='disableEditing')
 
       // Заявитель
       el-row
@@ -22,11 +22,14 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
 import requestMainGeneralInfo from '@/components/request/requestMain/requestMainGeneralInfo'
 import requestMainLicensee from '@/components/request/requestMain/requestMainLicensee'
 import requestMainLicenseeRepresentative from '@/components/request/requestMain/requestMainLicenseeRepresentative'
 import requestMainBuildingInfo from '@/components/request/requestMain/requestMainBuildingInfo'
 import requestMainExtraInfo from '@/components/request/requestMain/requestMainExtraInfo'
+
+const requestModuleName = 'request'
 
 export default {
   name: 'RequestMainPage',
@@ -41,8 +44,24 @@ export default {
     return {}
   },
   computed: {
+    ...mapGetters(['can', 'canAny']),
+    ...mapState(requestModuleName, {
+      request: (state) => state.request
+    }),
     requestId() {
       return this.$route.params.id
+    },
+    // false - will not disable, true - will be disable
+    disableEditing() {
+      const currentStatusId = this.request.requestStatusId
+
+      if (
+        (!currentStatusId || currentStatusId === 1) &&
+        this.can('RL_GF_REQUEST_CREATE')
+      )
+        return false
+
+      return true
     }
   },
   methods: {

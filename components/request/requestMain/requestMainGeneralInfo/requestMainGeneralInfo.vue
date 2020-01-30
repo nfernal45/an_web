@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block.mb-10(title='Основные сведения')
     template(slot='content')
-      el-form(size='small' label-position='top')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row.mb-20(:gutter='20')
           el-col(:span='10')
             h4.form-title.mb-10 Цель обращения
@@ -102,6 +106,12 @@ import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions
 const moduleName = 'request'
 export default {
   name: 'RequestMainGeneralInfo',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       requestTypesOptions: [],

@@ -1,6 +1,7 @@
 <template lang="pug">
   div
     el-button.mb-20(
+      v-show='can("RL_GF_REQUEST_CREATE")'
       type="success"
       icon='el-icon-document-add' 
       @click="createRequest") Создать новое заявление

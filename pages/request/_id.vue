@@ -48,6 +48,7 @@ export default {
     async fetchRequestHandler() {
       if (this.request.requestId) {
         this.fetchRequestStatuses()
+        this.isRequestReady = true
       } else {
         try {
           await this.fetchRequestById(this.$route.params.id)
