@@ -32,9 +32,9 @@
 
           el-col(:span='8')
             el-form-item(label='ИНН')
-              el-input(v-model='reprInn')
+              el-input(v-model='reprInn' :maxlength='reprType === "L" ? 10 : 12')
             el-form-item(label='ОГРН')
-              el-input(v-model='reprOgrn')
+              el-input(v-model='reprOgrn' :maxlength='reprType === "L" ? 13 : 15')
             el-form-item(label='Телефон')
               el-input(v-model='reprPhone')
             el-form-item(label='Электронная почта')
@@ -58,7 +58,8 @@ export default {
           reprTypeName: 'ИП',
           reprTypeId: 'I'
         }
-      ]
+      ],
+      onlyNumbers: /^[-+]?[0-9]+$/
     }
   },
   computed: {
@@ -98,7 +99,11 @@ export default {
         return this.request.reprInn
       },
       set(value) {
-        this.set({ propName: 'reprInn', propValue: value })
+        if (value.match(this.onlyNumbers) || !value.length)
+          this.set({
+            propName: 'reprInn',
+            propValue: value.length ? Number(value) : value
+          })
       }
     },
 
@@ -107,7 +112,11 @@ export default {
         return this.request.reprOgrn
       },
       set(value) {
-        this.set({ propName: 'reprOgrn', propValue: value })
+        if (value.match(this.onlyNumbers) || !value.length)
+          this.set({
+            propName: 'reprOgrn',
+            propValue: value.length ? Number(value) : value
+          })
       }
     },
 
