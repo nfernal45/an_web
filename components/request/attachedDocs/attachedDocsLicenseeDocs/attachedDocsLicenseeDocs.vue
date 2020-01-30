@@ -6,9 +6,11 @@
           el-col(:span='10')
             el-popover(placement='top'
                        width='430'
-                       v-model='isAddDocumentPopoverVisible')
+                       v-model='isAddDocumentPopoverVisible'
+                       @after-leave='additionalDocumentTypeId = null')
               el-form-item(label='Тип документа')
                 el-select(v-model='additionalDocumentTypeId' 
+                          filterable
                           size='small'
                           style='width: 400px')
                   el-option(v-for='item in licenseeDocTypesOptions'
@@ -22,7 +24,7 @@
                            :disabled='!additionalDocumentTypeId') Добавить
                 el-button(size='mini' 
                           type='text'
-                          @click='isAddDocumentPopoverVisible = false') Отмена
+                          @click='isAddDocumentPopoverVisible = false; additionalDocumentTypeId = null') Отмена
               el-button(slot='reference'
                         type='primary') Добавить документ
 
@@ -40,6 +42,7 @@
                   el-form-item(label='Номер')
                     el-input(
                       :value='doc.docNum'
+                      :maxlength='50'
                       @input='setArrayObjectProp({ arrayName: "licenseeAttachedDocs", propName: "docNum", propValue: $event, propIndex: index })'
                     )
                 el-col(:span='7')

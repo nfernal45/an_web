@@ -55,6 +55,9 @@ const restApiGfRef = {
   },
   gfRefReorgationzationForms: {
     list: '/ref-reorganization-forms/list'
+  },
+  guRefViolationsDescriptions: {
+    list: '/ref-violations/list'
   }
 }
 
@@ -67,7 +70,7 @@ const restApiGfActiviti = {
 
 const restApiGfRabbitmq = {
   sendingToEtp: {
-    send: '/sending-to-etp/doc-query/send'
+    send: '/sending-to-rabbitmq/to-etp/doc-query/send'
   }
 }
 
@@ -88,6 +91,9 @@ const restApiGuRef = {
   },
   guRefRefusalReasons: {
     list: '/ref-refusal-reasons/list'
+  },
+  guRefInspectionsResults: {
+    list: '/ref-inspection-results/list'
   }
 }
 

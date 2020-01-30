@@ -92,6 +92,8 @@ h1, h2, h3, h4, h5, h6
 .mb-30
   margin-bottom: 30px
 
+.mr-10
+  margin-right: 10px
 
 @mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) 
   ::-webkit-scrollbar 
@@ -115,15 +117,15 @@ h1, h2, h3, h4, h5, h6
 
 
 //checkboxes
-.el-checkbox
+label.el-checkbox
   display: flex
   justify-content: flex-start
   margin-bottom: 10px
 
-.el-checkbox__label
+span.el-checkbox__label
   white-space: normal
 
-.el-checkbox__input
+span.el-checkbox__input
   margin-top: 4px
 
 

@@ -17,8 +17,8 @@
                 ) {{ item.numTypeName }}
 
           el-col(:span='8')
-            el-form-item(label='Индекс')
-              el-input
+            el-form-item(label='Код БТИ')
+              el-input(v-model='unom')
             el-form-item(label='Код ФИАС')
               el-input(v-model="fiasHouseguid")
             el-form-item(v-if="numType === 1" label='Кадастровый номер')
@@ -69,6 +69,15 @@ export default {
       }
     },
 
+    unom: {
+      get() {
+        return this.request.unom
+      },
+      set(value) {
+        this.set({ propName: 'unom', propValue: value })
+      }
+    },
+
     cadNum: {
       get() {
         return this.request.cadNum
@@ -100,9 +109,10 @@ export default {
     ...mapMutations(moduleName, {
       set: mutationTypes.SET_PROP
     }),
-    selectAddress({ addressId, fiasHouseGuid }) {
+    selectAddress({ addressId, fiasHouseGuid, btiAddrId }) {
       this.addressId = addressId
       if (fiasHouseGuid) this.fiasHouseguid = fiasHouseGuid
+      if (btiAddrId) this.unom = btiAddrId
     }
   }
 }

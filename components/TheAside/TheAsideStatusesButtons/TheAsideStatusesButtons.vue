@@ -15,29 +15,128 @@
 
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import styles from './TheAsideStatusesButtons.module.sass?module'
+import { getterTypes as referencesGetterTypes } from '@/store/types/references'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
+import { validation } from '@/services/requestValidation'
 
-const moduleName = 'request'
+const requestModuleName = 'request'
+const referencesModuleName = 'references'
 
 export default {
   name: 'TheAsideStatusesButtons',
   computed: {
     ...mapState({
       request: (state) => state.request.request,
-      requestStatuses: (state) => state.request.requestStatuses
+      requestStatuses: (state) => state.request.requestStatuses,
+      mzhiAttachedDocs: (state) => state.request.mzhiAttachedDocs,
+      docTypesConstants: (state) => state.request.docTypesConstants
     }),
+
+    ...mapGetters(referencesModuleName, {
+      requestStatusesConstants:
+        referencesGetterTypes.GET_REQUEST_STATUSES_OPTIONS_CONSTANTS
+    }),
+
     styles() {
       return styles
     }
   },
   methods: {
-    ...mapActions(moduleName, {
-      fetchRequestById: requestActionTypes.FETCH_REQUEST,
+    ...mapActions(requestModuleName, {
       changeRequestStatus: requestActionTypes.CHANGE_REQUEST_STATUS
     }),
+
+    checkRequestDecision(nextStatusId) {
+      return this.request.requestStatusId === 6
+        ? !!this.request.decisionType
+        : true
+    },
+
+    getRequredMzhiDocName(nextStatusId) {
+      let docName
+      const statusConstants = this.requestStatusesConstants
+      const mzhiAttachedDocs = this.mzhiAttachedDocs
+
+      const getRequiredDocWarehouseName = (docTypeName) => {
+        const isDocExist = mzhiAttachedDocs
+          .map((doc) => doc.refDocTypeByDocTypeId.typeId)
+          .includes(this.docTypesConstants[docTypeName].typeId)
+
+        return isDocExist
+          ? null
+          : this.docTypesConstants[docTypeName].warehouseName
+      }
+
+      switch (nextStatusId) {
+        case statusConstants.RESUMED:
+          docName = getRequiredDocWarehouseName(
+            'ExtractOrReceiptOnRegistrationOfApplication'
+          )
+          break
+
+        case statusConstants.DECISIONMADE:
+          if (this.request.decisionType === 'D') {
+            docName = getRequiredDocWarehouseName(
+              'NotificationOfProvisionOfServices'
+            )
+          }
+
+          if (this.request.decisionType === 'R') {
+            docName = getRequiredDocWarehouseName(
+              'ProvideServicesRefuseDecision'
+            )
+          }
+
+          break
+
+        case statusConstants.VIOLATIONELIMINATION:
+          docName = getRequiredDocWarehouseName(
+            'DecisionOnSuspensionOfProvidingTheStateService'
+          )
+          break
+
+        default:
+          docName = null
+          break
+      }
+
+      return docName
+    },
+
+    // onStatusChange(nextStatusId) {
     async onStatusChange(nextStatusId) {
+      const isDecisionCheckSuccessfull = this.checkRequestDecision(nextStatusId)
+
+      if (!isDecisionCheckSuccessfull) {
+        this.$notify({
+          title: 'Внимание',
+          message: `Необходимо указать тип решения по заявлению`,
+          duration: 3000,
+          type: 'warning'
+        })
+        return
+      }
+
+      const documentName = this.getRequredMzhiDocName(nextStatusId)
+
+      if (documentName) {
+        this.$notify({
+          title: 'Внимание',
+          message: `Необходимо приложить документ <strong>"${documentName}"</strong>`,
+          duration: 3000,
+          type: 'warning',
+          dangerouslyUseHTMLString: true
+        })
+        return
+      }
+
+      const canChangeStatus = validation(this.request)
+
+      if (!canChangeStatus) return false
+
+      // eslint-disable-next-line no-unreachable
       const loading = this.$loading({
         target: '#status-buttons',
         lock: true,

@@ -28,6 +28,7 @@ import styles from './TheAside.module.sass?module'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
 import printFormDialog from '@/components/printFormDialog/printFormDialog'
+import { validation } from '@/services/requestValidation'
 
 const moduleName = 'request'
 export default {
@@ -65,14 +66,21 @@ export default {
       }
     },
     async onSave() {
-      this.isRequestSaving = true
-      try {
-        await this.saveRequestRelated()
-        this.openNewCreatedRequestPage()
-        this.isRequestSaving = false
-      } catch (error) {
-        this.isRequestSaving = false
+      const canSave = validation(this.request)
+      console.log(canSave)
+
+      if (canSave) {
+        this.isRequestSaving = true
+        try {
+          await this.saveRequestRelated()
+          this.openNewCreatedRequestPage()
+          this.isRequestSaving = false
+        } catch (error) {
+          this.isRequestSaving = false
+        }
       }
+
+      return false
     },
     print() {
       this.isDialogVisible = true

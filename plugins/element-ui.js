@@ -27,6 +27,7 @@ import {
   RadioGroup,
   Table,
   TableColumn,
+  Tooltip,
   Dialog,
   Dropdown,
   DropdownItem,
@@ -66,6 +67,7 @@ Vue.use(DatePicker)
 Vue.use(RadioGroup)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Tooltip)
 Vue.use(Dialog)
 Vue.use(Dropdown)
 Vue.use(DropdownItem)

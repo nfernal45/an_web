@@ -25,7 +25,7 @@
               el-form-item(label='Плановый срок оказания ГФ')
                 el-date-picker(
                   v-model='planConsidDate'
-                  placeholder='Укажите плановый срок оказания ГФ'
+                  disabled
                   format='dd.MM.yyyy'
                   value-format='dd.MM.yyyy'
                   :picker-options='{ firstDayOfWeek: 1 }'

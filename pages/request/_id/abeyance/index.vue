@@ -6,31 +6,35 @@
     
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import abeyanceDecision from '@/components/request/abeyance/abeyanceDecision'
-import { actionTypes as requestActionTypes } from '@/store/types/request'
-const moduleName = 'request'
+import { getterTypes as requestGettersTypes } from '@/store/types/request'
+const requestModuleName = 'request'
+
 export default {
-  name: 'RequestabeyancePage',
+  name: 'RequestAbeyancePage',
   components: {
     abeyanceDecision
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (
+        !vm.requestPagesActiveStatuses.abeyance.includes(
+          vm.request.request.requestStatusId
+        )
+      ) {
+        next({ name: 'request-id-main', params: { id: to.params.id } })
+      }
+    })
+  },
   computed: {
     ...mapState({
-      gfAbeyancesByRequestId: (state) =>
-        state.request.request.gfAbeyancesByRequestId
+      request: (state) => state.request
     }),
 
-    isAbeaynceExist() {
-      return this.gfAbeyancesByRequestId && !!this.gfAbeyancesByRequestId.length
-    }
-  },
-  async mounted() {
-    if (!this.isAbeaynceExist) await this.createAbeyance()
-  },
-  methods: {
-    ...mapActions(moduleName, {
-      createAbeyance: requestActionTypes.CREATE_ABEYANCE
+    ...mapGetters(requestModuleName, {
+      requestPagesActiveStatuses:
+        requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
     })
   }
 }
