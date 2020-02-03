@@ -2,23 +2,23 @@
   div.request-main
       // Основные сведения
       el-row
-        request-main-general-info(:disabled-editing='disableEditing')
+        request-main-general-info(:disabledEditing='disabledEditing')
 
       // Заявитель
       el-row
-        request-main-licensee
+        request-main-licensee(:disabledEditing='disabledEditing')
 
       // Уполномоченная организация - представитель заявителя
       el-row
-        request-main-licensee-representative
+        request-main-licensee-representative(:disabledEditing='disabledEditing')
       
       // Сведения о многоквартирном доме
       el-row
-        request-main-building-info
+        request-main-building-info(:disabledEditing='disabledEditing')
 
       // Дополнительные сведения
       el-row
-        request-main-extra-info
+        request-main-extra-info(:disabledEditing='disabledEditing')
 </template>
 
 <script>
@@ -52,13 +52,8 @@ export default {
       return this.$route.params.id
     },
     // false - will not disable, true - will be disable
-    disableEditing() {
-      const currentStatusId = this.request.requestStatusId
-
-      if (
-        (!currentStatusId || currentStatusId === 1) &&
-        this.can('RL_GF_REQUEST_CREATE')
-      )
+    disabledEditing() {
+      if (this.canAny(['RL_GF_REQUEST_CREATE', 'RL_GF_REQUEST_REGISTER']))
         return false
 
       return true

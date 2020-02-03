@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block(title='Уведомление')
     template(slot='content')
-      el-form(size='small' label-position='top')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row.mb-20(:gutter='20')
           el-col.mb-10
             el-col(:span='6')
@@ -44,6 +48,12 @@ import fetchRefusalReasons from '@/services/api/references/fetchRefusalReasons'
 const moduleName = 'request'
 export default {
   name: 'DocumentsIssue',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       refAcceptReasons: [],

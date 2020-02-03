@@ -9,6 +9,7 @@
             placement="top"
           )
             font-awesome-icon(
+              v-if='can("RL_GF_ENTER_GU")'
               slot="reference"
               icon="link"
               transform="shrink-3"

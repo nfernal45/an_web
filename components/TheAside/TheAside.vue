@@ -10,7 +10,11 @@
             font-awesome-icon(icon="reply")
             span Назад к списку
       li(:class="styles['list-item']")
-        el-button(type="success" :class="styles['list-button']" @click="onSave()" :loading='isRequestSaving')
+        el-button(
+          v-show="can('RL_GF_REQUEST_SAVE')"
+          type="success" 
+          :class="styles['list-button']" 
+          @click="onSave()" :loading='isRequestSaving')
           font-awesome-icon(icon="save")
           span Сохранить
       li(:class="styles['list-item']")
@@ -71,7 +75,6 @@ export default {
     },
     async onSave() {
       const canSave = validation(this.request)
-      console.log(canSave)
 
       if (canSave) {
         this.isRequestSaving = true

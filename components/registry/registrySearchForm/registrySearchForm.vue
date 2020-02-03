@@ -14,6 +14,7 @@
       title='Фильтр поиска'
       :visible.sync='isDrawerVisible'
       :wrapperClosable='false'
+      :show-close='can("RL_GF_READONLY")'
       direction='rtl'
       size='55%')
       div(style='padding: 0px 20px 20px 20px')

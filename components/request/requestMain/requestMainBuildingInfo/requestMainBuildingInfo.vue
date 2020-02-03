@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block.mb-10(title='Сведения о многоквартирном доме')
     template(slot='content')
-      el-form(label-position='top' size='small')
+      el-form(
+        label-position='top' 
+        size='small'
+        :disabled='disabledEditing'
+      )
         el-row(:gutter='20')
           el-col(:span='16')
             address-picker(:addressId = 'addressId' @selectAddress='selectAddress')
@@ -32,6 +36,12 @@ import { mutationTypes } from '@/store/types/request'
 const moduleName = 'request'
 export default {
   name: 'RequestMainBuildingInfo',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       numTypeOptions: [

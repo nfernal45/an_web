@@ -2,12 +2,18 @@
   div
     form-block.mb-10(title='Отвественный исполнитель' class='doc-check-violation-block')
       template(slot='content')
-        el-form(label-position='top' size='small')
+        el-form(
+          label-position='top' 
+          size='small'
+          :disabled='disabledEditing')
           el-row(:gutter='20')
             el-col(:span='12')
               employee-picker(label='Ответственный исполнитель' v-model='performerId')
 
-    el-form(label-position='top' size='small')
+    el-form(
+      label-position='top' 
+      size='small'
+      :disabled='disabledEditing')
       form-block.mb-10(
         v-for='(violationGroup, index) in computedDocCheckViolations'
         :key='violationGroup.id'
@@ -85,7 +91,10 @@
     
     form-block(title='Дополнительная проверка')
       template(slot='content')
-        el-form(label-position='top' size='small')
+        el-form(
+          label-position='top' 
+          size='small'
+          :disabled='disabledEditing')
           el-row
             el-form-item(label='Создание распоряжения в ходе рассмотрения заявления')
               el-col(:span='4')
@@ -133,6 +142,12 @@ const moduleName = 'request'
 export default {
   name: 'DocCheckViolations',
   components: { docCheckViolationsDescriptionsDialog },
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       refInspectionResulst: [],

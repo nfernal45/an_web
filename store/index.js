@@ -1,6 +1,24 @@
 export const state = () => ({
-  permissions: [], // Список прав, при наличии которого допускается какое либо действие в системе.
-
+  // Список прав, при наличии которого допускается какое либо действие в системе.
+  // На время разработки в массиве есть все права
+  permissions: [
+    'RL_GF_READONLY',
+    'RL_GF_REQUEST_CREATE',
+    'RL_GF_REQUEST_SAVE',
+    'RL_GF_CANCELLATION',
+    'RL_GF_REQUEST_REGISTER',
+    'RL_GF_DOC_CHECK_EDIT',
+    'RL_GF_QUERY',
+    'RL_GF_ABEYANCE_PREPARING',
+    'RL_GF_ABEYANCE_APPROVAL',
+    'RL_GF_DOC_CHECK',
+    'RL_GF_DECISION_PREPARING',
+    'RL_GF_DECISION_APPROVAL',
+    'RL_GF_DOC_ISSUE',
+    'RL_GF_DOC_PRINT',
+    'RL_GF_DOC_MZHI',
+    'RL_GF_ENTER_GU'
+  ],
   // For test and develop
   permissionDisplayIsVisible: false,
   permissionControls: [
@@ -9,16 +27,17 @@ export const state = () => ({
     'RL_GF_REQUEST_SAVE',
     'RL_GF_CANCELLATION',
     'RL_GF_REQUEST_REGISTER',
+    'RL_GF_DOC_CHECK_EDIT',
     'RL_GF_QUERY',
     'RL_GF_ABEYANCE_PREPARING',
     'RL_GF_ABEYANCE_APPROVAL',
-    'RL_GF_ABEYANCE_RECOMMENCE',
     'RL_GF_DOC_CHECK',
     'RL_GF_DECISION_PREPARING',
     'RL_GF_DECISION_APPROVAL',
     'RL_GF_DOC_ISSUE',
     'RL_GF_DOC_PRINT',
-    'RL_GF_DOC_MZHI'
+    'RL_GF_DOC_MZHI',
+    'RL_GF_ENTER_GU'
   ]
 })
 

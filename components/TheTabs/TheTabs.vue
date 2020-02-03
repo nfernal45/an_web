@@ -38,7 +38,11 @@ export default {
         {
           title: 'Заявление',
           link: 'main',
-          permsissions: ['RL_GF_READONLY']
+          permsissions: [
+            'RL_GF_READONLY',
+            'RL_GF_REQUEST_CREATE',
+            'RL_GF_REQUEST_REGISTER'
+          ]
         },
         {
           title: 'Документы заявления',
@@ -48,21 +52,26 @@ export default {
         {
           title: 'МВ запросы',
           link: 'queried-docs',
-          permsissions: ['RL_GF_READONLY']
+          permsissions: ['RL_GF_READONLY', 'RL_GF_QUERY']
         },
         {
           title: 'Приостановление',
-          link: 'abeyance'
+          link: 'abeyance',
+          permsissions: ['RL_GF_ABEYANCE_PREPARING', 'RL_GF_ABEYANCE_APPROVAL']
         },
         {
           title: 'Ход рассмотрения',
           link: 'doc-check',
-          permsissions: ['RL_GF_READONLY']
+          permsissions: ['RL_GF_READONLY', 'RL_GF_DOC_CHECK_EDIT']
         },
         {
           title: 'Решение по заявлению',
           link: 'decision',
-          permsissions: ['RL_GF_READONLY']
+          permsissions: [
+            'RL_GF_READONLY',
+            'RL_GF_DECISION_PREPARING',
+            'RL_GF_DECISION_APPROVAL'
+          ]
         }
       ]
     }

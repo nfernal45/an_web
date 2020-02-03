@@ -2,15 +2,15 @@
   div.dicision
     el-row.mb-20
       // Решение по заявлению
-      decision-info
+      decision-info(:disabledEditing='disabledEditing')
 
     el-row.mb-20
       // Уведомление
-      decision-notification
+      decision-notification(:disabledEditing='disabledEditing')
 
     el-row.mb-20
       // Выдача документов
-      documents-issue
+      documents-issue(:disabledEditing='!can("RL_GF_DOC_ISSUE")')
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -44,6 +44,7 @@ export default {
       request: (state) => state.request
     }),
 
+    ...mapGetters(['can', 'canAny']),
     ...mapGetters(requestModuleName, {
       requestPagesActiveStatuses:
         requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
@@ -51,6 +52,12 @@ export default {
 
     requestId() {
       return this.$route.params.id
+    },
+    disabledEditing() {
+      if (this.canAny(['RL_GF_DECISION_PREPARING', 'RL_GF_DECISION_APPROVAL']))
+        return false
+
+      return true
     }
   }
 }
