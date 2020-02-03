@@ -58,7 +58,7 @@
                 @input='changeAbeyanceInspectionResult({ value: $event, violationGroupId: violationGroup.id })'
               ) 
                 el-option(
-                  v-for='item in refInspectionResulst'
+                  v-for='item in refInspectionResulstAbeyancs'
                   :key='item.id'
                   :label='item.name'
                   :value='item.id')
@@ -213,6 +213,12 @@ export default {
       set(value) {
         this.setPropDocCheck({ propName: 'addCheckExecId', propValue: value })
       }
+    },
+
+    refInspectionResulstAbeyancs() {
+      return this.refInspectionResulst.filter(
+        (result) => result.isAbeyance === 'Y'
+      )
     }
   },
   mounted() {
