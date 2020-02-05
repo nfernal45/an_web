@@ -6,7 +6,7 @@
                                   :chedSettings='chedSettings'
                                   :chedSettingsLoaded='chedSettingsLoaded')
 
-      attached-docs-mzhi-docs(:refDocTypes='refDocTypes'
+      attached-docs-mzhi-docs.mb-10(:refDocTypes='refDocTypes'
                               :chedSettings='chedSettings'
                               :chedSettingsLoaded='chedSettingsLoaded')
 
