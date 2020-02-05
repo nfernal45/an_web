@@ -39,6 +39,10 @@ export default {
     state.mzhiAttachedDocs = value
   },
 
+  [mutationTypes.SET_INTERNAL_ATTACHED_DOCS]: (state, value) => {
+    state.internalAttachedDocs = value
+  },
+
   // Doc check
   [mutationTypes.SET_DOC_CHECK]: (state, value) => {
     state.docCheck = value
