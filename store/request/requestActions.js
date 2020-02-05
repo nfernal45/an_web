@@ -67,6 +67,7 @@ export default {
 
   async [actionTypes.SAVE_INTERNAL_DOCS]({ state, commit }) {
     const array = [...state.internalAttachedDocs]
+
     for (const [index, doc] of array.entries()) {
       const file = doc.docFile
       let id = doc.docId
@@ -80,6 +81,13 @@ export default {
         })
 
         id = attachedDoc.docId
+
+        commit(mutationTypes.SET_ARRAY_OBJECT_PROP, {
+          arrayName: 'internalAttachedDocs',
+          propName: 'docId',
+          propValue: attachedDoc.docId,
+          propIndex: index
+        })
       }
 
       if (file) {
