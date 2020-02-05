@@ -5,14 +5,23 @@
       div.flex.width-100
         el-main(style="flex: 1 0 0;")
           nuxt
+
+    //DEV
+    develop-permissions
 </template>
 
 <script>
 import TheHeader from '@/components/TheHeader'
 
+// DEV
+import developPermissions from '@/components/developPermissions'
+
 export default {
   components: {
-    TheHeader
+    TheHeader,
+
+    // DEV
+    developPermissions
   },
   data() {
     return {

@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block(title='Приостановление рассмотрения заявления')
     template(slot='content')
-      el-form(size='small' label-position='top')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row(:gutter='20')
           el-col(:span='6')
             el-form-item(label='Номер')
@@ -85,6 +89,12 @@ const moduleName = 'request'
 
 export default {
   name: 'AbeyanceDecision',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       refAbeyanceReasonsOptions: []

@@ -9,6 +9,7 @@
             placement="top"
           )
             font-awesome-icon(
+              v-if='can("RL_GF_ENTER_GU")'
               slot="reference"
               icon="link"
               transform="shrink-3"
@@ -19,9 +20,15 @@
               li(v-for='(link, index) in links' :key='index')
                 a(:href='link.href') {{ link.title }}
           font-awesome-icon(icon="user" transform="shrink-3" size="2x" title="Мои настройки" @click="userSettings()")
-          font-awesome-icon(icon="sign-out-alt" size="2x" title="Выйти из системы" @click="logout()")
+          font-awesome-icon(
+            v-show='can("RL_GF_READONLY")'
+            icon="sign-out-alt" size="2x" 
+            title="Выйти из системы" 
+            @click="logout()"
+          )
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import styles from './TheHeader.module.sass?module'
 import logout from '@/services/auth'
 
@@ -41,6 +48,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['can', 'canAny']),
     styles() {
       return styles
     }

@@ -3,11 +3,18 @@
     ul(:class="styles['list']")
       li(:class="styles['list-item']")
         nuxt-link(to="/registry")
-          el-button(type="primary" :class="styles['list-button']")
+          el-button(
+            type="primary" 
+            :class="styles['list-button']"
+            v-show='can("RL_GF_READONLY")')
             font-awesome-icon(icon="reply")
             span Назад к списку
       li(:class="styles['list-item']")
-        el-button(type="success" :class="styles['list-button']" @click="onSave()" :loading='isRequestSaving')
+        el-button(
+          v-show="can('RL_GF_REQUEST_SAVE')"
+          type="success" 
+          :class="styles['list-button']" 
+          @click="onSave()" :loading='isRequestSaving')
           font-awesome-icon(icon="save")
           span Сохранить
       li(:class="styles['list-item']")
@@ -22,7 +29,7 @@
 
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
@@ -44,6 +51,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['can', 'canAny']),
     ...mapState(moduleName, {
       request: (state) => state.request,
       docCheck: (state) => state.docCheck
@@ -67,7 +75,6 @@ export default {
     },
     async onSave() {
       const canSave = validation(this.request)
-      console.log(canSave)
 
       if (canSave) {
         this.isRequestSaving = true

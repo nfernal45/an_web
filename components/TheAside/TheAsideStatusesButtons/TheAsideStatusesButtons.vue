@@ -7,6 +7,7 @@
     ul(:class='styles["list"]')
       li(v-for='(button, index) in requestStatuses' :key='index' :class='styles["list-item"]')
         el-button(
+          v-if='availableStatusButton(button.statusId)'
           type='warning' 
           plain 
           :class='styles["list-button", "status-button"]'
@@ -38,6 +39,66 @@ export default {
       requestStatusesConstants:
         referencesGetterTypes.GET_REQUEST_STATUSES_OPTIONS_CONSTANTS
     }),
+
+    ...mapGetters(['can', 'canAny']),
+
+    availableStatusButton() {
+      return (statusId) => {
+        // console.log(this.requestStatusesConstants)
+        const {
+          REGISTERED,
+          DOCSQUERIED,
+          INFORMATIONRECEIVED,
+          REVIEW,
+          DECISIONPREPARING,
+          DECISIONMADE,
+          NOTICEPREPARING,
+          // VIOLATIONELIMINATION,
+          RESUMED,
+          CANCELED,
+          DOCSQUERIED2,
+          INFORMATIONRECEIVED2
+        } = this.requestStatusesConstants
+
+        switch (statusId) {
+          case REGISTERED:
+            if (this.can('RL_GF_REQUEST_REGISTER')) return true
+            break
+          case CANCELED:
+            if (this.can('RL_GF_CANCELLATION')) return true
+            break
+          case DOCSQUERIED:
+            if (this.can('RL_GF_QUERY')) return true
+            break
+          case INFORMATIONRECEIVED:
+            if (this.can('RL_GF_QUERY')) return true
+            break
+          case DOCSQUERIED2:
+            if (this.can('RL_GF_QUERY')) return true
+            break
+          case INFORMATIONRECEIVED2:
+            if (this.can('RL_GF_QUERY')) return true
+            break
+          case NOTICEPREPARING:
+            if (this.can('RL_GF_ABEYANCE_PREPARING')) return true
+            break
+          case RESUMED:
+            if (this.can('RL_GF_ABEYANCE_APPROVAL')) return true
+            break
+          case REVIEW:
+            if (this.can('RL_GF_DOC_CHECK')) return true
+            break
+          case DECISIONPREPARING:
+            if (this.can('RL_GF_DECISION_PREPARING')) return true
+            break
+          case DECISIONMADE:
+            if (this.can('RL_GF_DECISION_APPROVAL')) return true
+            break
+        }
+
+        return false
+      }
+    },
 
     styles() {
       return styles

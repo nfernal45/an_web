@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block(title='Решение по заявлению')
     template(slot='content')
-      el-form(size='small' label-position='top')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row(:gutter='20')
           el-col(:span='6')
             el-form-item(label='Номер')
@@ -27,6 +31,12 @@ import { mutationTypes } from '@/store/types/request'
 const moduleName = 'request'
 export default {
   name: 'DecisionInfo',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     ...mapState(moduleName, {
       request: (state) => state.request

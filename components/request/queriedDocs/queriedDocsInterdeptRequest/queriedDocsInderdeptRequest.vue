@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block(title='Запрос документов в базовом регистре для проверки предоставленных сведений')
     template(slot='content')
-      el-form(size='small' label-position='top')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row.mb-10
           el-col
             el-popover(placement='top'
@@ -113,6 +117,12 @@ import fetchSettings from '@/services/api/settings/fetchSettings'
 const moduleName = 'request'
 export default {
   name: 'QueriedDocsInderdeptRequest',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       refDocTypes: [],

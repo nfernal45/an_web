@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block.mb-10(title='Дополнительные сведения')
     template(slot='content')
-      el-form(label-position='top' size='small')
+      el-form(
+        label-position='top' 
+        size='small'
+        :disabled='disabledEditing'
+      )
         el-row
           el-col(:span="14")
             el-form-item(label='Основания заключения, прекращения или расторжения договора')
@@ -72,6 +76,12 @@ import fetchReorganizationForms from '@/services/api/references/fetchReorganizat
 const moduleName = 'request'
 export default {
   name: 'RequestMainExtraInfo',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       agreementFoundationsOptions: [],
