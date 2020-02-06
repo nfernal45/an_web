@@ -55,7 +55,6 @@ export default function({ $axios, $auth, base, redirect, route }) {
               currentRoute: route.path,
               redirectFunction: redirect
             })
-
           })
       } else {
         // TODO: реализовать правильную обработку ошибки
