@@ -1,5 +1,4 @@
-// const sessionDuration = 1000 * 60 * 60 * 2 // 2 hour
-const sessionDuration = 1000 * 10 // 10 sec
+const sessionDuration = 1000 * 60 * 60 * 2 // 2 hour
 
 const setLastTokenDate = function() {
   localStorage.setItem('lastTokenDate', new Date())
