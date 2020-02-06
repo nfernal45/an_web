@@ -136,14 +136,16 @@ export default {
       if (this.globalSearchFilters.length)
         searchParams.search = this.globalSearchFilters
 
-      const { data, total } = await fetchRequestsList({
-        axiosModule: this.$axios,
-        searchParams
-      })
+      try {
+        const { data, total } = await fetchRequestsList({
+          axiosModule: this.$axios,
+          searchParams
+        })
 
-      this.requestsList = data
-      this.paginationParams.total = total
-      this.$emit('update:isSearchLoading', false)
+        this.requestsList = data
+        this.paginationParams.total = total
+        this.$emit('update:isSearchLoading', false)
+      } catch (error) {}
     },
     tablePageChange(currentPage) {
       this.paginationParams.currentPage = currentPage
