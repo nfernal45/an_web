@@ -10,7 +10,7 @@
             li Оформление приостановления
         i.el-icon-warning-outline
     template(slot='content')
-      ched-form(@upload='addDocument' :chedSettings='chedSettings' :disabled='disabledEditing' v-if='chedSettingsLoaded')
+      ched-form.mb-20(@upload='addDocument' :chedSettings='chedSettings' :disabled='disabledEditing' v-if='chedSettingsLoaded')
       el-form(
         size='small' 
         label-position='top'

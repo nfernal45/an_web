@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block.mb-10(title='Внутренние документы МЖИ')
     template(slot='content')
-      el-form(size='small' label-position='top')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row(:gutter='20')
           el-col(:span='10')
             el-popover(placement='top'
@@ -69,7 +73,7 @@
                         i.el-icon-document 
                         span {{ doc.docFileName }}
 
-                el-col(:span='7' v-if='doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3')
+                el-col(:span='7' v-if='(doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3) && can("RL_GF_DOC_MZHI")')
                   el-form-item(label=' ')
                     //- el-button(@click='initUploadingFile(index)') Прикрепить файл
                     label.upload-btn
@@ -77,19 +81,22 @@
                       span(style='margin-left: 3px') {{ (doc.docFileName || doc.docFile) ? 'Изменить файл' : 'Прикрепить файл' }}
                       input(type='file' ref='uploadInput' @change='uploadFile($event, index)' v-show='false')
                 transition(name='fade' mode='out-in')
-                  el-col(:span='7' v-if='doc.docFile && doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3')
+                  el-col(:span='7' v-if='doc.docFile && doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3 && can("RL_GF_READONLY")')
                     el-form-item(label=' ')
                       div.document-preview(@click='downloadLocalFile(doc.docFile)')
                         i.el-icon-document
                         span {{ doc.docFile.name }}
                         div.control-btn(@click.stop='deleteLocalFile(index)')
                           i.el-icon-close
-                  el-col(:span='7' v-else-if='doc.docFileName && doc.docFileName !== "DELETED" && !doc.docFile && doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3')
+                  el-col(:span='7' v-else-if='doc.docFileName && doc.docFileName !== "DELETED" && can("RL_GF_READONLY") && !doc.docFile && doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3')
                     el-form-item(label=' ')
                       div.document-preview(@click='downloadFile(doc, index)')
                         i.el-icon-document
                         span {{ doc.docFileName }}
-                        div.control-btn(@click.stop='deleteFile(index)')
+                        div.control-btn(
+                          v-if='can("RL_GF_DOC_MZHI")'
+                          @click.stop='deleteFile(index)'
+                        )
                           i.el-icon-close
                         
         el-row(v-else)
@@ -99,7 +106,7 @@
           
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 // import { saveAs } from 'file-saver'
 import { mutationTypes as requestMutationTypes } from '@/store/types/request'
 import downloadMzhiDocument from '@/services/api/request/downloadInternalMzhiDoc'
@@ -119,6 +126,10 @@ export default {
     chedSettingsLoaded: {
       type: Boolean,
       default: false
+    },
+    disabledEditing: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -131,6 +142,7 @@ export default {
     ...mapState(moduleName, {
       internalAttachedDocs: (state) => state.internalAttachedDocs
     }),
+    ...mapGetters(['can', 'canAny']),
     licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
         return item.refDocTypeGroupByGroupId.groupId === 3
