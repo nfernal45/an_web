@@ -14,7 +14,8 @@
 
       attached-docs-internal(:refDocTypes='refDocTypes'
                               :chedSettings='chedSettings'
-                              :chedSettingsLoaded='chedSettingsLoaded')
+                              :chedSettingsLoaded='chedSettingsLoaded'
+                              :disabledEditing='!can("RL_GF_DOC_MZHI")')
 
 </template>
 <script>
