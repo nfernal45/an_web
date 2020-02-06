@@ -84,8 +84,7 @@
                         span {{ doc.docFile.name }}
                         div.control-btn(@click.stop='deleteLocalFile(index)')
                           i.el-icon-close
-                transition(name='fade' mode='out-in')
-                  el-col(:span='7' v-if='doc.docFileName && doc.docFileName !== "DELETED" && !doc.docFile && doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3')
+                  el-col(:span='7' v-else-if='doc.docFileName && doc.docFileName !== "DELETED" && !doc.docFile && doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3')
                     el-form-item(label=' ')
                       div.document-preview(@click='downloadFile(doc, index)')
                         i.el-icon-document
@@ -248,16 +247,25 @@ export default {
 .document-preview
   display: flex
   align-items: center
-  justify-content: space-around
-  // width: 170px
+  justify-content: center
   color: #0e69af !important
   padding: 2px 7px
   color: rgba(50, 50, 50, .8)
   border-radius: 4px
   cursor: pointer
   transition: .2s
+
+  i
+    margin-right: 6px
+
+  span
+    text-decoration: underline
+    margin-right: 6px
+
   &:hover
     background-color: rgba(122, 211, 255, .2)
+    span
+      text-decoration: none
     .control-btn
       opacity: 1
       transform: translateY(0)

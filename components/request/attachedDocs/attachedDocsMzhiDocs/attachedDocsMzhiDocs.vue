@@ -1,5 +1,5 @@
 <template lang="pug">
-  form-block(title='Документы МЖИ' tooltip='')
+  form-block.mb-10(title='Документы МЖИ' tooltip='')
     template(slot='tooltip')
       el-tooltip(effect='light' placement="top-start")
         div(slot='content')
