@@ -4,7 +4,7 @@
       el-form(
         label-position='top' 
         size='small'
-        :disabled='disabledEditing'
+        :disabled='disabledEditing || request.regPlaceId === 2'
       )
         el-row(:gutter='20')
           el-col(:span='16')
