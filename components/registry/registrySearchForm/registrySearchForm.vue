@@ -483,6 +483,11 @@ export default {
     }
   },
   mounted() {
+    this.fetchRegPlaceOptions()
+    this.fetchRefAdmDisctricts()
+    this.fetchRequestTypesOptions()
+    this.fetchRequestStatusesOptions()
+
     this.cleanSearchForm = Object.assign({}, { ...this.searchForm })
     this.cleanSearchAddress = Object.assign({}, { ...this.searchAddress })
 
@@ -559,6 +564,7 @@ export default {
       this.requestsCount--
     },
     async fetchRefDisctricts(query) {
+      console.log('FETCH DISTRICTS', query)
       if (!query || query.length < 3) return false
 
       this.isDistrictSelectLoading = true
@@ -572,6 +578,7 @@ export default {
       this.isDistrictSelectLoading = false
     },
     async fetchStreets(query) {
+      console.log('FETCH STREETS')
       if (!query || query.length < 3) return false
 
       this.isStreetsSelectLoading = true
