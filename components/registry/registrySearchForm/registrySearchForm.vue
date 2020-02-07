@@ -30,7 +30,7 @@
           type="warning" 
           @click="clearSearchFilter"
           icon='el-icon-circle-close') Очистить поиск
-        
+
         el-form.mt-20(
           size='mini' 
           label-position='top'
@@ -300,6 +300,8 @@ export default {
         constr: '', // Строение
         house: '' // Номер дома
       },
+      streetQuery: '',
+      districtQuery: '',
       cleanSearchForm: {},
       cleanSearchAddress: {},
       errorAddressMessage: '',
@@ -451,18 +453,36 @@ export default {
         this.errorAddressMessage = ''
         const copy = Object.assign({}, { ...value })
         this.setGlobalSearchAddressFiltersSettings(copy)
+
+        if (value.street) {
+          const key = 'search/refStreets'
+          this.refStreets = JSON.parse(sessionStorage.getItem(key))
+          this.streetQuery = this.refStreets.find(
+            (item) => item.streetId === value.street
+          )
+        }
+
+        if (value.district) {
+          const key = 'search/refDistricts'
+          refDistricts = JSON.parse(sessionStorage.getItem(key))
+          this.districtQuery = localRefDistricts.find(
+            (item) => item.districtId === value.district
+          )
+        }
         // sessionStorage.setItem('searchFormFilter', JSON.stringify(value))
       },
       deep: true
+    },
+    refStreets(value) {
+      const key = 'search/refStreets'
+      sessionStorage.setItem(key, JSON.stringify(value))
+    },
+    refDistricts(value) {
+      const key = 'search/refDistricts'
+      sessionStorage.setItem(key, JSON.stringify(value))
     }
   },
   mounted() {
-    this.fetchRegPlaceOptions()
-    this.fetchRefAdmDisctricts()
-    this.fetchStreets()
-    this.fetchRequestTypesOptions()
-    this.fetchRequestStatusesOptions()
-
     this.cleanSearchForm = Object.assign({}, { ...this.searchForm })
     this.cleanSearchAddress = Object.assign({}, { ...this.searchAddress })
 
@@ -476,15 +496,6 @@ export default {
         { ...this.globalSearchAddressFiltersSettings }
       )
     }
-
-    // const searchFormFilter = sessionStorage.getItem('searchFormFilter')
-    // const searchAddressFilter = sessionStorage.getItem('searchAddressFilter')
-
-    // if (searchFormFilter) this.searchForm = JSON.parse(searchFormFilter)
-    // if (searchAddressFilter) this.searchAddress = JSON.parse(searchAddressFilter)
-
-    // if (searchFormFilter || searchAddressFilter) this.onSearch(true)
-    // else this.onSearch()
   },
   methods: {
     ...mapMutations(referencesModuleName, {
@@ -503,6 +514,7 @@ export default {
       if (this.errorAddressMessage.length) return false
       else this.$emit('changeSearchFilters', this.searchParams)
     },
+
     clearSearchFilter() {
       this.searchForm = Object.assign({}, { ...this.cleanSearchForm })
       this.searchAddress = Object.assign({}, { ...this.cleanSearchAddress })
