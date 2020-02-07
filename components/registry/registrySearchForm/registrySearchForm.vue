@@ -464,8 +464,8 @@ export default {
 
         if (value.district) {
           const key = 'search/refDistricts'
-          refDistricts = JSON.parse(sessionStorage.getItem(key))
-          this.districtQuery = localRefDistricts.find(
+          this.refDistricts = JSON.parse(sessionStorage.getItem(key))
+          this.districtQuery = this.refDistricts.find(
             (item) => item.districtId === value.district
           )
         }
