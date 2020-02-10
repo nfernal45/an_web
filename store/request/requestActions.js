@@ -48,7 +48,6 @@ export default {
 
   async [actionTypes.SAVE_REQUEST]({ state, commit, dispatch }) {
     try {
-      await dispatch(actionTypes.SAVE_INTERNAL_DOCS)
       const request = {
         ...state.request,
         gfAttachedDocsByRequestId: [
@@ -57,16 +56,20 @@ export default {
           ...state.internalAttachedDocs
         ]
       }
-      await saveRequestRecord(this.$axios, request)
-      await dispatch(actionTypes.FETCH_REQUEST, state.request.requestId)
-      // await dispatch(actionTypes.SET_REQUEST, data)
-      // dispatch(actionTypes.FETCH_DOC_CHECK)
+
+      await dispatch(actionTypes.SAVE_INTERNAL_DOCS)
+      const data = await saveRequestRecord(this.$axios, request)
+      await dispatch(actionTypes.SET_REQUEST, data)
+      await dispatch(actionTypes.FETCH_DOC_CHECK)
     } catch (error) {
+      console.log(new Error(error))
       throw error
     }
   },
 
   async [actionTypes.SAVE_INTERNAL_DOCS]({ state, commit }) {
+    if (!state.request.requestId) return false
+
     const array = [...state.internalAttachedDocs]
 
     for (const [index, doc] of array.entries()) {
