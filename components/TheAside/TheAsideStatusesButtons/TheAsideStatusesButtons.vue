@@ -53,7 +53,7 @@ export default {
           DECISIONPREPARING,
           DECISIONMADE,
           NOTICEPREPARING,
-          // VIOLATIONELIMINATION,
+          VIOLATIONELIMINATION,
           RESUMED,
           CANCELED,
           DOCSQUERIED2,
@@ -80,6 +80,9 @@ export default {
             if (this.can('RL_GF_QUERY')) return true
             break
           case NOTICEPREPARING:
+            if (this.can('RL_GF_ABEYANCE_PREPARING')) return true
+            break
+          case VIOLATIONELIMINATION:
             if (this.can('RL_GF_ABEYANCE_PREPARING')) return true
             break
           case RESUMED:
