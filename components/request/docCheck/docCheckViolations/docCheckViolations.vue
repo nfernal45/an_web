@@ -173,7 +173,7 @@ export default {
     }),
 
     violationIsFixed() {
-      return this.abeyance.violationFixed === 'Y'
+      return this.abeyance && this.abeyance.violationFixed === 'Y'
     },
 
     computedDocCheckViolations() {
