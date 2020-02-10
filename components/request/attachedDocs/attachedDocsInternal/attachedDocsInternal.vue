@@ -85,14 +85,14 @@
                     el-form-item(label=' ')
                       div.document-preview(@click='downloadLocalFile(doc.docFile)')
                         i.el-icon-document
-                        span {{ doc.docFile.name }}
+                        span {{ doc.docFile.name.length > 14 ? doc.docFile.name.substr(0, 13) + '...' : doc.docFile.name }}
                         div.control-btn(@click.stop='deleteLocalFile(index)')
                           i.el-icon-close
                   el-col(:span='7' v-else-if='doc.docFileName && doc.docFileName !== "DELETED" && can("RL_GF_READONLY") && !doc.docFile && doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3')
                     el-form-item(label=' ')
                       div.document-preview(@click='downloadFile(doc, index)')
                         i.el-icon-document
-                        span {{ doc.docFileName }}
+                        span {{ doc.docFileName.length > 14 ? doc.docFileName.substr(0, 13) + '...' : doc.docFileName }}
                         div.control-btn(
                           v-if='can("RL_GF_DOC_MZHI")'
                           @click.stop='deleteFile(index)'
@@ -140,7 +140,8 @@ export default {
   },
   computed: {
     ...mapState(moduleName, {
-      internalAttachedDocs: (state) => state.internalAttachedDocs
+      internalAttachedDocs: (state) => state.internalAttachedDocs,
+      requestId: (state) => state.request.requestId
     }),
     ...mapGetters(['can', 'canAny']),
     licenseeDocTypesOptions() {
@@ -191,6 +192,17 @@ export default {
       this.$refs.uploadInput[index].click()
     },
     uploadFile(event, index) {
+      console.log(this.requestId)
+      if (!this.requestId) {
+        this.$notify.warning({
+          title: 'Внимание',
+          message:
+            'Для добавления файлов документов необходимо сохранить заявление.'
+        })
+
+        return false
+      }
+
       const file = event.srcElement.files[0]
       this.setArrayObjectProp({
         arrayName: 'internalAttachedDocs',
