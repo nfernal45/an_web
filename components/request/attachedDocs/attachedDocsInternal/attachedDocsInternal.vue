@@ -46,6 +46,7 @@
                   el-form-item(label='Номер')
                     el-input(
                       :value='doc.docNum'
+                      :maxlength='50'
                       @input='setArrayObjectProp({ arrayName: "internalAttachedDocs", propName: "docNum", propValue: $event, propIndex: index })'
                     )
                 el-col(:span='7')
@@ -63,6 +64,7 @@
                   el-form-item(label='Примечание')
                     el-input(
                       :value='doc.docComment'
+                      :maxlength='300'
                       @input='setArrayObjectProp({ arrayName: "internalAttachedDocs", propName: "docComment", propValue: $event, propIndex: index })'
                     )
                 
@@ -193,6 +195,9 @@ export default {
     },
     uploadFile(event, index) {
       console.log(this.requestId)
+      const file = event.srcElement.files[0]
+      const maxLengthFileName = 120
+
       if (!this.requestId) {
         this.$notify.warning({
           title: 'Внимание',
@@ -201,9 +206,15 @@ export default {
         })
 
         return false
+      } else if (file.name.length > maxLengthFileName) {
+        this.$notify.warning({
+          title: 'Внимание',
+          message: `Слишком длинное название файла. Максимально допустимое значение ${maxLengthFileName}.`
+        })
+
+        return false
       }
 
-      const file = event.srcElement.files[0]
       this.setArrayObjectProp({
         arrayName: 'internalAttachedDocs',
         propName: 'docFile',
