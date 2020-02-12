@@ -20,6 +20,8 @@ export default function({ $axios, $auth, base, redirect, route }) {
     const originalRequest = error.config
 
     if (code === 400 || code === 401) {
+      if (originalRequest.url.includes('exit')) throw error
+
       if (errorMsg === 'invalid_token') {
         return new Promise((resolve, reject) => {
           refreshToken({ authModule: $auth, axiosModule: $axios })

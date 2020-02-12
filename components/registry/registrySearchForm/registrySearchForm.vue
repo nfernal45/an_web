@@ -1,27 +1,40 @@
 <template lang="pug">
   div
-    el-button.mb-20(type="success"
-                    icon='el-icon-document-add' 
-                    @click="createRequest") Создать новое заявление
-    el-button(@click='isDrawerVisible = true'
-              icon="el-icon-s-operation") Показать фильтр
+    el-button.mb-20(
+      v-show='can("RL_GF_REQUEST_CREATE")'
+      type="success"
+      icon='el-icon-document-add' 
+      @click="createRequest") Создать новое заявление
+    el-button(
+      v-show='can("RL_GF_READONLY")'
+      @click='isDrawerVisible = true'
+      icon="el-icon-s-operation") Показать фильтр
 
-    el-drawer(title='Фильтр поиска'
-              :visible.sync='isDrawerVisible'
-              :wrapperClosable='false'
-              direction='rtl'
-              size='55%')
+    el-drawer(
+      title='Фильтр поиска'
+      :visible.sync='isDrawerVisible'
+      :wrapperClosable='false'
+      :show-close='can("RL_GF_READONLY")'
+      direction='rtl'
+      size='55%')
       div(style='padding: 0px 20px 20px 20px')
-        el-button(type="primary" 
-                  @click="onSearch" 
-                  :loading="isSearchLoading"
-                  :disabled='!!requestsCount || !!errorAddressMessage.length'
-                  icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
-        el-button(type="warning" 
-                  @click="clearSearchFilter"
-                  icon='el-icon-circle-close') Очистить поиск
-        
-        el-form.mt-20(size='mini' label-position='top')
+        el-button(
+          v-show='can("RL_GF_READONLY")' 
+          type="primary"
+          @click="onSearch" 
+          :loading="isSearchLoading"
+          :disabled='!!requestsCount || !!errorAddressMessage.length'
+          icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
+        el-button(
+          v-show='can("RL_GF_READONLY")'
+          type="warning" 
+          @click="clearSearchFilter"
+          icon='el-icon-circle-close') Очистить поиск
+
+        el-form.mt-20(
+          size='mini' 
+          label-position='top'
+          :disabled='!can("RL_GF_READONLY")')
           el-row
             el-row
                   el-col(:span='18')
@@ -229,7 +242,7 @@
           
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import { mutationTypes } from '@/store/types/references'
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
 import fetchRefAdmDisctricts from '@/services/api/references/fetchRefAdmDisctricts'
@@ -287,6 +300,8 @@ export default {
         constr: '', // Строение
         house: '' // Номер дома
       },
+      streetQuery: '',
+      districtQuery: '',
       cleanSearchForm: {},
       cleanSearchAddress: {},
       errorAddressMessage: '',
@@ -313,6 +328,7 @@ export default {
       globalSearchAddressFiltersSettings: (state) =>
         state.globalSearchAddressFiltersSettings
     }),
+    ...mapGetters(['can', 'canAny']),
     searchParams() {
       let search = []
 
@@ -338,13 +354,13 @@ export default {
 
       if (this.searchForm.licenseeName.length)
         search.push(
-          `licenseeFullname=='*${this.searchForm.licenseeName.replace(
+          `(licenseeFullname=='*${this.searchForm.licenseeName.replace(
             `'`,
             `"`
-          )}*' or licenseeShortname=='*${this.searchForm.licenseeName.replace(
+          )}*', licenseeShortname=='*${this.searchForm.licenseeName.replace(
             `'`,
             `"`
-          )}*'`
+          )}*')`
         )
 
       if (this.searchForm.requestDate.start)
@@ -437,15 +453,38 @@ export default {
         this.errorAddressMessage = ''
         const copy = Object.assign({}, { ...value })
         this.setGlobalSearchAddressFiltersSettings(copy)
+
+        if (value.street) {
+          const key = 'search/refStreets'
+          this.refStreets = JSON.parse(sessionStorage.getItem(key))
+          this.streetQuery = this.refStreets.find(
+            (item) => item.streetId === value.street
+          )
+        }
+
+        if (value.district) {
+          const key = 'search/refDistricts'
+          this.refDistricts = JSON.parse(sessionStorage.getItem(key))
+          this.districtQuery = this.refDistricts.find(
+            (item) => item.districtId === value.district
+          )
+        }
         // sessionStorage.setItem('searchFormFilter', JSON.stringify(value))
       },
       deep: true
+    },
+    refStreets(value) {
+      const key = 'search/refStreets'
+      sessionStorage.setItem(key, JSON.stringify(value))
+    },
+    refDistricts(value) {
+      const key = 'search/refDistricts'
+      sessionStorage.setItem(key, JSON.stringify(value))
     }
   },
   mounted() {
     this.fetchRegPlaceOptions()
     this.fetchRefAdmDisctricts()
-    this.fetchStreets()
     this.fetchRequestTypesOptions()
     this.fetchRequestStatusesOptions()
 
@@ -462,15 +501,6 @@ export default {
         { ...this.globalSearchAddressFiltersSettings }
       )
     }
-
-    // const searchFormFilter = sessionStorage.getItem('searchFormFilter')
-    // const searchAddressFilter = sessionStorage.getItem('searchAddressFilter')
-
-    // if (searchFormFilter) this.searchForm = JSON.parse(searchFormFilter)
-    // if (searchAddressFilter) this.searchAddress = JSON.parse(searchAddressFilter)
-
-    // if (searchFormFilter || searchAddressFilter) this.onSearch(true)
-    // else this.onSearch()
   },
   methods: {
     ...mapMutations(referencesModuleName, {
@@ -489,6 +519,7 @@ export default {
       if (this.errorAddressMessage.length) return false
       else this.$emit('changeSearchFilters', this.searchParams)
     },
+
     clearSearchFilter() {
       this.searchForm = Object.assign({}, { ...this.cleanSearchForm })
       this.searchAddress = Object.assign({}, { ...this.cleanSearchAddress })
@@ -533,6 +564,7 @@ export default {
       this.requestsCount--
     },
     async fetchRefDisctricts(query) {
+      console.log('FETCH DISTRICTS', query)
       if (!query || query.length < 3) return false
 
       this.isDistrictSelectLoading = true
@@ -546,6 +578,7 @@ export default {
       this.isDistrictSelectLoading = false
     },
     async fetchStreets(query) {
+      console.log('FETCH STREETS')
       if (!query || query.length < 3) return false
 
       this.isStreetsSelectLoading = true

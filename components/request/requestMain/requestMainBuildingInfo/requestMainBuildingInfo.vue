@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block.mb-10(title='Сведения о многоквартирном доме')
     template(slot='content')
-      el-form(label-position='top' size='small')
+      el-form(
+        label-position='top' 
+        size='small'
+        :disabled='disabledEditing'
+      )
         el-row(:gutter='20')
           el-col(:span='16')
             address-picker(:addressId = 'addressId' @selectAddress='selectAddress')
@@ -18,9 +22,9 @@
 
           el-col(:span='8')
             el-form-item(label='Код БТИ')
-              el-input(v-model='unom')
+              el-input(v-model='unom' :disabled='request.regPlaceId')
             el-form-item(label='Код ФИАС')
-              el-input(v-model="fiasHouseguid")
+              el-input(v-model="fiasHouseguid" :disabled='request.regPlaceId')
             el-form-item(v-if="numType === 1" label='Кадастровый номер')
               el-input(v-model="cadNum")
             el-form-item(v-else label='Условный номер')
@@ -32,6 +36,12 @@ import { mutationTypes } from '@/store/types/request'
 const moduleName = 'request'
 export default {
   name: 'RequestMainBuildingInfo',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       numTypeOptions: [

@@ -1,5 +1,5 @@
 <template lang="pug">
-  form-block(title='Документы МЖИ' tooltip='')
+  form-block.mb-10(title='Документы МЖИ' tooltip='')
     template(slot='tooltip')
       el-tooltip(effect='light' placement="top-start")
         div(slot='content')
@@ -10,8 +10,12 @@
             li Оформление приостановления
         i.el-icon-warning-outline
     template(slot='content')
-      ched-form(@upload='addDocument' :chedSettings='chedSettings' v-if='chedSettingsLoaded')
-      el-form.mt-20(size='small' label-position='top')
+      ched-form.mb-20(@upload='addDocument' :chedSettings='chedSettings' :disabled='disabledEditing' v-if='chedSettingsLoaded')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row(:gutter='20')
           el-col
             el-card.mb-20(
@@ -66,6 +70,10 @@ export default {
       default: () => {}
     },
     chedSettingsLoaded: {
+      type: Boolean,
+      default: false
+    },
+    disabledEditing: {
       type: Boolean,
       default: false
     }

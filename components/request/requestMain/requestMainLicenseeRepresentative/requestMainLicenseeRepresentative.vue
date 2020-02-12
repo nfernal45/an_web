@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block.mb-10(title='Уполномоченная организация - представитель заявителя')
     template(slot='content')
-      el-form(label-position='top' size='small')
+      el-form(
+        label-position='top' 
+        size='small'
+        :disabled='disabledEditing || request.regPlaceId === 2'
+      )
         el-row(:gutter='20')
           el-col(:span='16')
             el-row
@@ -47,6 +51,12 @@ import { mutationTypes } from '@/store/types/request'
 const moduleName = 'request'
 export default {
   name: 'RequestMainLicenseeRepresentative',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       reprTypeOptions: [

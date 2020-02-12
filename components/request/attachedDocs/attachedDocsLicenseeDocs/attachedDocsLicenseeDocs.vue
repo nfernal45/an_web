@@ -1,7 +1,11 @@
 <template lang="pug">
   form-block.mb-10(title='Документы заявителя')
     template(slot='content')
-      el-form(size='small' label-position='top')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row(:gutter='20')
           el-col(:span='10')
             el-popover(placement='top'
@@ -83,6 +87,10 @@ export default {
       default: () => {}
     },
     chedSettingsLoaded: {
+      type: Boolean,
+      default: false
+    },
+    disabledEditing: {
       type: Boolean,
       default: false
     }

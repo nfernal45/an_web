@@ -5,6 +5,7 @@
         el-button(
           :loading='isChedFormLoading'
           type='primary'
+          :disabled='disabled'
           @click='openUform'
         ) Добавить документ
 
@@ -31,6 +32,10 @@ export default {
     chedSettings: {
       type: Object,
       default: () => {}
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

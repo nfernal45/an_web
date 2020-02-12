@@ -17,7 +17,7 @@ export default function({ authModule, axiosModule }) {
       notify({ message: 'Ваша сессия истекла', type: 'info' })
     }
     isUserSessionChecked = true
-    return Promise.reject(new Error('userSessionExpired'))
+    throw new Error('userSessionExpired')
   }
 
   const url = process.env.APP_AUTH_ACCESS_TOKEN_ENDPOINT

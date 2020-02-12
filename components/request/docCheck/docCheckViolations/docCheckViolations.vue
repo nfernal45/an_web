@@ -2,12 +2,18 @@
   div
     form-block.mb-10(title='Отвественный исполнитель' class='doc-check-violation-block')
       template(slot='content')
-        el-form(label-position='top' size='small')
+        el-form(
+          label-position='top' 
+          size='small'
+          :disabled='disabledEditing')
           el-row(:gutter='20')
             el-col(:span='12')
               employee-picker(label='Ответственный исполнитель' v-model='performerId')
 
-    el-form(label-position='top' size='small')
+    el-form(
+      label-position='top' 
+      size='small'
+      :disabled='disabledEditing')
       form-block.mb-10(
         v-for='(violationGroup, index) in computedDocCheckViolations'
         :key='violationGroup.id'
@@ -18,6 +24,7 @@
             el-form-item(label='Результат проверки')
               el-select(
                 class='mr-10'
+                :disabled='violationIsFixed'
                 :value='violationGroup.primaryInspResultId'
                 @input='changePrimaryInspectionResult({ value: $event, violationGroupId: violationGroup.id })'
               )
@@ -28,6 +35,7 @@
                   :value='item.id')
               el-button(
                 type='primary'
+                :disabled='violationIsFixed'
                 @click=`openViolationDescriptionDialog({
                   currentViolationsDescription: violationGroup.primaryInspDescr,
                   violationGroupId: violationGroup.id,
@@ -39,6 +47,7 @@
               //- v-model='testValue'
               el-input(
                 :value='violationGroup.primaryInspDescr'
+                :disabled='violationIsFixed'
                 class='doc-check-description-input'
                 type='textarea'
                 :autosize='{ minRows: 3 }'
@@ -85,15 +94,18 @@
     
     form-block(title='Дополнительная проверка')
       template(slot='content')
-        el-form(label-position='top' size='small')
+        el-form(
+          label-position='top' 
+          size='small'
+          :disabled='disabledEditing')
           el-row
             el-form-item(label='Создание распоряжения в ходе рассмотрения заявления')
               el-col(:span='4')
                 el-radio(v-model='isInstructionRequired' label='Y') Требуется
               el-col(:span='4')
                 el-radio(v-model='isInstructionRequired' label='N') Не требуется
-          el-row
-            el-col(:span='6')
+          el-row(:gutter='20')
+            el-col(:span='7')
               el-form-item(label='Дата направления документов')
                 el-date-picker(
                   :picker-options='{ firstDayOfWeek: 1 }'
@@ -103,7 +115,7 @@
                   format="dd.MM.yyyy"
                   value-format="dd.MM.yyyy"
                 )
-            el-col(:span='6')
+            el-col(:span='7')
               el-form-item(label='Плановый срок исполнения')
                 el-date-picker(
                   :picker-options='{ firstDayOfWeek: 1 }'
@@ -113,7 +125,8 @@
                   format="dd.MM.yyyy"
                   value-format="dd.MM.yyyy"
                 )
-            el-col(:span='12')
+          el-row
+            el-col(:span='14')
               employee-picker(label='Ответственный исполнитель' v-model='addCheckExecId')
     doc-check-violations-descriptions-dialog(
       title='Справочник нарушений'
@@ -133,6 +146,12 @@ const moduleName = 'request'
 export default {
   name: 'DocCheckViolations',
   components: { docCheckViolationsDescriptionsDialog },
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       refInspectionResulst: [],
@@ -146,8 +165,16 @@ export default {
   },
   computed: {
     ...mapState(moduleName, {
-      docCheck: (state) => state.docCheck
+      docCheck: (state) => state.docCheck,
+      abeyance: (state) => {
+        if (state.request.gfAbeyancesByRequestId)
+          return state.request.gfAbeyancesByRequestId[0]
+      }
     }),
+
+    violationIsFixed() {
+      return this.abeyance && this.abeyance.violationFixed === 'Y'
+    },
 
     computedDocCheckViolations() {
       return (
@@ -223,6 +250,7 @@ export default {
   },
   mounted() {
     this.fetchInspectionResults()
+    console.log(this.request)
   },
   methods: {
     ...mapMutations(moduleName, {

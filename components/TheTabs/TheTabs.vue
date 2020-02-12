@@ -37,32 +37,47 @@ export default {
       initialTabs: [
         {
           title: 'Заявление',
-          link: 'main'
+          link: 'main',
+          permsissions: [
+            'RL_GF_READONLY',
+            'RL_GF_REQUEST_CREATE',
+            'RL_GF_REQUEST_REGISTER'
+          ]
         },
         {
           title: 'Документы заявления',
-          link: 'attached-docs'
+          link: 'attached-docs',
+          permsissions: ['RL_GF_READONLY']
         },
         {
           title: 'МВ запросы',
-          link: 'queried-docs'
+          link: 'queried-docs',
+          permsissions: ['RL_GF_READONLY', 'RL_GF_QUERY']
         },
         {
           title: 'Приостановление',
-          link: 'abeyance'
+          link: 'abeyance',
+          permsissions: ['RL_GF_ABEYANCE_PREPARING', 'RL_GF_ABEYANCE_APPROVAL']
         },
         {
           title: 'Ход рассмотрения',
-          link: 'doc-check'
+          link: 'doc-check',
+          permsissions: ['RL_GF_READONLY', 'RL_GF_DOC_CHECK_EDIT']
         },
         {
           title: 'Решение по заявлению',
-          link: 'decision'
+          link: 'decision',
+          permsissions: [
+            'RL_GF_READONLY',
+            'RL_GF_DECISION_PREPARING',
+            'RL_GF_DECISION_APPROVAL'
+          ]
         }
       ]
     }
   },
   computed: {
+    ...mapGetters(['can', 'canAny']),
     ...mapState(requestModuleName, {
       request: (state) => state.request
     }),
@@ -117,7 +132,11 @@ export default {
         return tab
       })
 
-      return activeTabs
+      const permittedTabs = activeTabs.filter((tab) => {
+        return this.canAny(tab.permsissions)
+      })
+
+      return permittedTabs
         .filter((tab) => {
           return (
             !tab.activeStatuses ||
