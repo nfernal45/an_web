@@ -48,6 +48,8 @@ export default {
 
   async [actionTypes.SAVE_REQUEST]({ state, commit, dispatch }) {
     try {
+      await dispatch(actionTypes.SAVE_INTERNAL_DOCS)
+
       const request = {
         ...state.request,
         gfAttachedDocsByRequestId: [
@@ -57,7 +59,6 @@ export default {
         ]
       }
 
-      await dispatch(actionTypes.SAVE_INTERNAL_DOCS)
       const data = await saveRequestRecord(this.$axios, request)
       await dispatch(actionTypes.SET_REQUEST, data)
       await dispatch(actionTypes.FETCH_DOC_CHECK)
@@ -71,8 +72,9 @@ export default {
     if (!state.request.requestId) return false
 
     const array = [...state.internalAttachedDocs]
+    const newArray = []
 
-    for (const [index, doc] of array.entries()) {
+    for (const doc of array) {
       const file = doc.docFile
       let id = doc.docId
       let attachedDoc = null
@@ -85,13 +87,6 @@ export default {
         })
 
         id = attachedDoc.docId
-
-        commit(mutationTypes.SET_ARRAY_OBJECT_PROP, {
-          arrayName: 'internalAttachedDocs',
-          propName: 'docId',
-          propValue: attachedDoc.docId,
-          propIndex: index
-        })
       }
 
       if (file) {
@@ -101,45 +96,21 @@ export default {
           file
         })
 
-        commit(mutationTypes.SET_ARRAY_OBJECT_PROP, {
-          arrayName: 'internalAttachedDocs',
-          propName: 'versionNumber',
-          propValue: updatedObject.versionNumber,
-          propIndex: index
-        })
-
-        commit(mutationTypes.SET_ARRAY_OBJECT_PROP, {
-          arrayName: 'internalAttachedDocs',
-          propName: 'docFileName',
-          propValue: updatedObject.docFileName,
-          propIndex: index
-        })
-
-        commit(mutationTypes.SET_ARRAY_OBJECT_PROP, {
-          arrayName: 'internalAttachedDocs',
-          propName: 'docFile',
-          propValue: null,
-          propIndex: index
-        })
+        attachedDoc = Object.assign({}, updatedObject)
       } else if (doc.docFileName === 'DELETED') {
         const { updatedObject } = await deleteInternalMzhiDocument({
           axiosModule: this.$axios,
           docId: id
         })
-        commit(mutationTypes.SET_ARRAY_OBJECT_PROP, {
-          arrayName: 'internalAttachedDocs',
-          propName: 'versionNumber',
-          propValue: updatedObject.versionNumber,
-          propIndex: index
-        })
-        commit(mutationTypes.SET_ARRAY_OBJECT_PROP, {
-          arrayName: 'internalAttachedDocs',
-          propName: 'docFileName',
-          propValue: updatedObject.docFileName,
-          propIndex: index
-        })
+
+        attachedDoc = Object.assign({}, updatedObject)
       }
+
+      if (attachedDoc) newArray.push(attachedDoc)
+      else newArray.push(doc)
     }
+
+    commit(mutationTypes.SET_INTERNAL_ATTACHED_DOCS, newArray)
 
     return Promise.resolve()
   },

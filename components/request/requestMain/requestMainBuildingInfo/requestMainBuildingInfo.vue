@@ -22,9 +22,9 @@
 
           el-col(:span='8')
             el-form-item(label='Код БТИ')
-              el-input(v-model='unom' :disabled='request.regPlaceId')
+              el-input(v-model='unom' :disabled='!!request.regPlaceId')
             el-form-item(label='Код ФИАС')
-              el-input(v-model="fiasHouseguid" :disabled='request.regPlaceId')
+              el-input(v-model="fiasHouseguid" :disabled='!!request.regPlaceId')
             el-form-item(v-if="numType === 1" label='Кадастровый номер')
               el-input(v-model="cadNum")
             el-form-item(v-else label='Условный номер')
