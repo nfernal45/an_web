@@ -15,7 +15,7 @@
           el-col
             el-col(:span='16')
               el-form-item(label='Примечание')
-                el-input(type='textarea' v-model='decisionComments')
+                el-input(type='textarea' v-model='decisionComments' :maxlength='2000')
         
         el-row(:gutter='20')
           el-col(v-show='decisionType === "D"')
