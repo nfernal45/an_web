@@ -34,6 +34,7 @@
         el-table-column(fixed="right" label="" width="60")
           template(slot-scope="scope")
             el-button.d-flex.justify-center.align-center(
+              v-show='can("RL_GF_READONLY")'
               type="primary"
               size="small"
               style="width:40px;height:40px;padding:0;"
@@ -42,6 +43,7 @@
               font-awesome-icon(icon="pen" style="margin:0;")
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import fetchRequestsList from '@/services/api/request/fetchRequestsList'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
@@ -77,6 +79,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['can', 'canAny']),
     computedRequestsList() {
       return this.requestsList.map((request) => {
         return {
@@ -133,16 +136,19 @@ export default {
       const searchParams = Object.assign({}, this.paginationParams)
       delete searchParams.total
 
-      if (this.searchString.length) searchParams.search = this.searchString
+      if (this.globalSearchFilters.length)
+        searchParams.search = this.globalSearchFilters
 
-      const { data, total } = await fetchRequestsList({
-        axiosModule: this.$axios,
-        searchParams
-      })
+      try {
+        const { data, total } = await fetchRequestsList({
+          axiosModule: this.$axios,
+          searchParams
+        })
 
-      this.requestsList = data
-      this.paginationParams.total = total
-      this.$emit('update:isSearchLoading', false)
+        this.requestsList = data
+        this.paginationParams.total = total
+        this.$emit('update:isSearchLoading', false)
+      } catch (error) {}
     },
     tablePageChange(currentPage) {
       this.paginationParams.currentPage = currentPage

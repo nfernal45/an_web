@@ -21,7 +21,9 @@ const restApiGf = {
   },
   gfAttachedDocs: {
     byId: '/gf-attached-docs/{id}',
-    list: '/gf-attached-docs/list'
+    list: '/gf-attached-docs/list',
+    file: '/gf-attached-docs/{id}/file',
+    post: '/gf-attached-docs/'
   },
   gfDocCheck: {
     byId: '/gf-doc-checks/{id}',
@@ -55,6 +57,9 @@ const restApiGfRef = {
   },
   gfRefReorgationzationForms: {
     list: '/ref-reorganization-forms/list'
+  },
+  guRefViolationsDescriptions: {
+    list: '/ref-violations/list'
   }
 }
 
@@ -67,7 +72,7 @@ const restApiGfActiviti = {
 
 const restApiGfRabbitmq = {
   sendingToEtp: {
-    send: '/sending-to-etp/doc-query/send'
+    send: '/sending-to-rabbitmq/to-etp/doc-query/send'
   }
 }
 
@@ -88,6 +93,9 @@ const restApiGuRef = {
   },
   guRefRefusalReasons: {
     list: '/ref-refusal-reasons/list'
+  },
+  guRefInspectionsResults: {
+    list: '/ref-inspection-results/list'
   }
 }
 
@@ -128,10 +136,10 @@ const restApiNsi = {
 
 const restApiAuth = {
   checkToken: '/as/oauth/check_token',
-  // checkUser: '/as/commons/users/{login}',
   checkUser: '/as/users/{login}',
   passwordReset: '/as/user/password-reset-page',
-  exit: '/as/exit'
+  exit: '/as/exit',
+  logout: '/as/logout'
 }
 
 function setApiPrefix({ prefix, links }) {

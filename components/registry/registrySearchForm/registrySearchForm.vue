@@ -1,27 +1,40 @@
 <template lang="pug">
   div
-    el-button.mb-20(type="success"
-                    icon='el-icon-document-add' 
-                    @click="createRequest") Создать новое заявление
-    el-button(@click='isDrawerVisible = true'
-              icon="el-icon-s-operation") Показать фильтр
+    el-button.mb-20(
+      v-show='can("RL_GF_REQUEST_CREATE")'
+      type="success"
+      icon='el-icon-document-add' 
+      @click="createRequest") Создать новое заявление
+    el-button(
+      v-show='can("RL_GF_READONLY")'
+      @click='isDrawerVisible = true'
+      icon="el-icon-s-operation") Показать фильтр
 
-    el-drawer(title='Фильтр поиска'
-              :visible.sync='isDrawerVisible'
-              :wrapperClosable='false'
-              direction='rtl'
-              size='55%')
+    el-drawer(
+      title='Фильтр поиска'
+      :visible.sync='isDrawerVisible'
+      :wrapperClosable='false'
+      :show-close='can("RL_GF_READONLY")'
+      direction='rtl'
+      size='55%')
       div(style='padding: 0px 20px 20px 20px')
-        el-button(type="primary" 
-                  @click="onSearch" 
-                  :loading="isSearchLoading"
-                  :disabled='!!requestsCount || !!errorAddressMessage.length'
-                  icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
-        el-button(type="warning" 
-                  @click="clearSearchFilter"
-                  icon='el-icon-circle-close') Очистить поиск
-        
-        el-form.mt-20(size='mini' label-position='top')
+        el-button(
+          v-show='can("RL_GF_READONLY")' 
+          type="primary"
+          @click="onSearch" 
+          :loading="isSearchLoading"
+          :disabled='!!requestsCount || !!errorAddressMessage.length'
+          icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
+        el-button(
+          v-show='can("RL_GF_READONLY")'
+          type="warning" 
+          @click="clearSearchFilter"
+          icon='el-icon-circle-close') Очистить поиск
+
+        el-form.mt-20(
+          size='mini' 
+          label-position='top'
+          :disabled='!can("RL_GF_READONLY")')
           el-row
             el-row
                   el-col(:span='18')
@@ -219,9 +232,18 @@
             el-col(:span='11')
               el-form-item(label='Наименование')
                   el-input(v-model='searchForm.licenseeName')
+            
+          el-row(:gutter='20')
+            el-col(:span='5')
+              el-form-item(label='UNOM')
+                  el-input(v-model='searchForm.unom')
+            el-col(:span='11')
+                employee-picker(label='Ответственный исполнитель' v-model='searchForm.performerId')
           
 </template>
 <script>
+import { mapState, mapMutations, mapGetters } from 'vuex'
+import { mutationTypes } from '@/store/types/references'
 import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions'
 import fetchRefAdmDisctricts from '@/services/api/references/fetchRefAdmDisctricts'
 import fetchRefDisctricts from '@/services/api/references/fetchRefDisctricts'
@@ -229,6 +251,9 @@ import fetchStreets from '@/services/api/references/fetchStreets'
 import fetchRefAddress from '@/services/api/references/fetchRefAddress'
 import fetchRequestTypesOptions from '@/services/api/references/fetchRequestTypesOptions'
 import fetchRequestStatusesOptions from '@/services/api/references/fetchRequestStatusesOptions'
+import fetchDocChecksList from '@/services/api/request/fetchDocChecksList'
+
+const referencesModuleName = 'references'
 
 export default {
   name: 'RegistrySearchForm',
@@ -236,10 +261,6 @@ export default {
     isSearchLoading: {
       type: Boolean,
       default: () => false
-    },
-    globalSearchFilters: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -251,6 +272,8 @@ export default {
         licenseeType: [],
         requestStatusesId: [],
         licenseeName: '', // Если тип заявителя ЮЛ, то записывать данные в licenseeFullname, если ИП то в licenseeShortname
+        unom: '',
+        performerId: null,
 
         eno: '',
         licenseeInn: '',
@@ -277,8 +300,10 @@ export default {
         constr: '', // Строение
         house: '' // Номер дома
       },
-      cleanSearchAddress: {},
+      streetQuery: '',
+      districtQuery: '',
       cleanSearchForm: {},
+      cleanSearchAddress: {},
       errorAddressMessage: '',
       regPlaceOptions: [],
       refAdmDisctricts: [],
@@ -287,6 +312,7 @@ export default {
       refRequestTypes: [],
       refRequestStatusesOptions: [],
       applicantOptions: [],
+      docChecksList: [],
 
       isDrawerVisible: false,
       isDistrictSelectLoading: false,
@@ -296,6 +322,13 @@ export default {
     }
   },
   computed: {
+    ...mapState(referencesModuleName, {
+      globalSearchFilters: (state) => state.globalSearchFilters,
+      globalSearchFiltersSettings: (state) => state.globalSearchFiltersSettings,
+      globalSearchAddressFiltersSettings: (state) =>
+        state.globalSearchAddressFiltersSettings
+    }),
+    ...mapGetters(['can', 'canAny']),
     searchParams() {
       let search = []
 
@@ -308,6 +341,9 @@ export default {
       if (this.searchForm.outerRegnum.length)
         search.push(`outerRegnum=='*${this.searchForm.outerRegnum}*'`)
 
+      if (this.searchForm.unom.length)
+        search.push(`unom==${this.searchForm.unom}`)
+
       if (this.searchForm.licenseeInn.length)
         search.push(
           `licenseeInn==${this.searchForm.licenseeInn.replace(/\s+/g, '')}`
@@ -318,13 +354,13 @@ export default {
 
       if (this.searchForm.licenseeName.length)
         search.push(
-          `licenseeFullname=='*${this.searchForm.licenseeName.replace(
+          `(licenseeFullname=='*${this.searchForm.licenseeName.replace(
             `'`,
             `"`
-          )}*' or licenseeShortname=='*${this.searchForm.licenseeName.replace(
+          )}*', licenseeShortname=='*${this.searchForm.licenseeName.replace(
             `'`,
             `"`
-          )}*'`
+          )}*')`
         )
 
       if (this.searchForm.requestDate.start)
@@ -369,6 +405,11 @@ export default {
       if (this.searchForm.licenseeType.length)
         search.push(`licenseeType=in=(${this.searchForm.licenseeType})`)
 
+      if (this.requestsIdFromDocChecksList.length)
+        search.push(
+          `requestId=in=(${this.requestsIdFromDocChecksList.join(',')})`
+        )
+
       if (search.length) search = search.join(';')
       else search = ''
 
@@ -393,52 +434,92 @@ export default {
           return item.isGf === 'Y'
         })
       )
+    },
+    requestsIdFromDocChecksList() {
+      return this.docChecksList.map((item) => item.requestId)
     }
   },
   watch: {
-    // searchForm: {
-    //   handler(value) {
-    //     sessionStorage.setItem('searchAddressFilter', JSON.stringify(value))
-    //   },
-    //   deep: true
-    // },
+    searchForm: {
+      handler(value) {
+        const copy = Object.assign({}, { ...value })
+        this.setGlobalSearchFiltersSettings(copy)
+        // sessionStorage.setItem('searchAddressFilter', JSON.stringify(value))
+      },
+      deep: true
+    },
     searchAddress: {
       handler(value) {
         this.errorAddressMessage = ''
+        const copy = Object.assign({}, { ...value })
+        this.setGlobalSearchAddressFiltersSettings(copy)
+
+        if (value.street) {
+          const key = 'search/refStreets'
+          this.refStreets = JSON.parse(sessionStorage.getItem(key))
+          this.streetQuery = this.refStreets.find(
+            (item) => item.streetId === value.street
+          )
+        }
+
+        if (value.district) {
+          const key = 'search/refDistricts'
+          this.refDistricts = JSON.parse(sessionStorage.getItem(key))
+          this.districtQuery = this.refDistricts.find(
+            (item) => item.districtId === value.district
+          )
+        }
         // sessionStorage.setItem('searchFormFilter', JSON.stringify(value))
       },
       deep: true
+    },
+    refStreets(value) {
+      const key = 'search/refStreets'
+      sessionStorage.setItem(key, JSON.stringify(value))
+    },
+    refDistricts(value) {
+      const key = 'search/refDistricts'
+      sessionStorage.setItem(key, JSON.stringify(value))
     }
   },
   mounted() {
     this.fetchRegPlaceOptions()
     this.fetchRefAdmDisctricts()
-    this.fetchStreets()
     this.fetchRequestTypesOptions()
     this.fetchRequestStatusesOptions()
 
     this.cleanSearchForm = Object.assign({}, { ...this.searchForm })
     this.cleanSearchAddress = Object.assign({}, { ...this.searchAddress })
 
-    // const searchFormFilter = sessionStorage.getItem('searchFormFilter')
-    // const searchAddressFilter = sessionStorage.getItem('searchAddressFilter')
-
-    // if (searchFormFilter) this.searchForm = JSON.parse(searchFormFilter)
-    // if (searchAddressFilter) this.searchAddress = JSON.parse(searchAddressFilter)
-
-    // if (searchFormFilter || searchAddressFilter) this.onSearch(true)
-    // else this.onSearch()
+    if (this.globalSearchFilters.length) {
+      this.searchForm = Object.assign(
+        {},
+        { ...this.globalSearchFiltersSettings }
+      )
+      this.searchAddress = Object.assign(
+        {},
+        { ...this.globalSearchAddressFiltersSettings }
+      )
+    }
   },
   methods: {
+    ...mapMutations(referencesModuleName, {
+      setGlobalSearchFiltersSettings:
+        mutationTypes.SET_GLOBAL_SEARCH_FILTERS_SETTINGS,
+      setGlobalSearchAddressFiltersSettings:
+        mutationTypes.SET_GLOBAL_SEARCH_ADDRESS_FILTERS_SETTINGS
+    }),
     createRequest() {
       this.$router.push({ name: 'request-id-main', params: { id: 'create' } })
     },
     async onSearch(empty = false) {
       await this.fetchRefAddress()
+      await this.fetchDocChecksList()
 
       if (this.errorAddressMessage.length) return false
       else this.$emit('changeSearchFilters', this.searchParams)
     },
+
     clearSearchFilter() {
       this.searchForm = Object.assign({}, { ...this.cleanSearchForm })
       this.searchAddress = Object.assign({}, { ...this.cleanSearchAddress })
@@ -458,6 +539,18 @@ export default {
 
       this.$emit('changeSearchFilters', '')
     },
+    async fetchDocChecksList() {
+      if (!this.searchForm.performerId) return false
+
+      const { data } = await fetchDocChecksList({
+        axiosModule: this.$axios,
+        searchString: `performerId==${this.searchForm.performerId}`
+      })
+
+      this.docChecksList = data
+
+      return data
+    },
     async fetchRegPlaceOptions() {
       this.regPlaceOptions = await fetchRegPlaceOptions({
         axiosModule: this.$axios
@@ -471,6 +564,7 @@ export default {
       this.requestsCount--
     },
     async fetchRefDisctricts(query) {
+      console.log('FETCH DISTRICTS', query)
       if (!query || query.length < 3) return false
 
       this.isDistrictSelectLoading = true
@@ -484,6 +578,7 @@ export default {
       this.isDistrictSelectLoading = false
     },
     async fetchStreets(query) {
+      console.log('FETCH STREETS')
       if (!query || query.length < 3) return false
 
       this.isStreetsSelectLoading = true

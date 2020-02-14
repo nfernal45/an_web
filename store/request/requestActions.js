@@ -2,11 +2,13 @@ import { actionTypes, mutationTypes } from '@/store/types/request'
 import fetchRequestRecord from '@/services/api/request/fetchRequestRecord'
 import saveRequestRecord from '~/services/api/request/saveRequestRecord'
 import fetchNextRequestStatuses from '~/services/api/request/fetchNextRequestStatuses'
-// import gfAbeyancesByRequestId from '@/constants/request/gfAbeyancesByRequestId'
 import fetchDocCheckByRequestId from '@/services/api/request/fetchDocCheckByRequestId'
 import saveDocCheck from '@/services/api/request/saveDocCheck'
 import defaultDocCheck from '@/constants/defaultDocCheck'
 import changeRequestStatus from '@/services/api/request/changeRequestStatus'
+import postAttachedDoc from '@/services/api/request/postAttachedDoc'
+import uploadInternalMzhiDocument from '@/services/api/request/uploadInternalMzhiDocument'
+import deleteInternalMzhiDocument from '@/services/api/request/deleteInternalMzhiDocument'
 
 export default {
   [actionTypes.FETCH_REQUEST_LIST]: async ({ commit }) => {
@@ -22,6 +24,7 @@ export default {
     commit(mutationTypes.SET_REQUEST, {})
     commit(mutationTypes.SET_LICENSEE_ATTAHCHED_DOCS, [])
     commit(mutationTypes.SET_MZHI_ATTAHCHED_DOCS, [])
+    commit(mutationTypes.SET_INTERNAL_ATTACHED_DOCS, [])
     commit(mutationTypes.SET_REQUEST_STATUSES, [])
   },
 
@@ -45,19 +48,71 @@ export default {
 
   async [actionTypes.SAVE_REQUEST]({ state, commit, dispatch }) {
     try {
+      await dispatch(actionTypes.SAVE_INTERNAL_DOCS)
+
       const request = {
         ...state.request,
         gfAttachedDocsByRequestId: [
           ...state.licenseeAttachedDocs,
-          ...state.mzhiAttachedDocs
+          ...state.mzhiAttachedDocs,
+          ...state.internalAttachedDocs
         ]
       }
+
       const data = await saveRequestRecord(this.$axios, request)
       await dispatch(actionTypes.SET_REQUEST, data)
-      dispatch(actionTypes.FETCH_DOC_CHECK)
+      await dispatch(actionTypes.FETCH_DOC_CHECK)
     } catch (error) {
+      console.log(new Error(error))
       throw error
     }
+  },
+
+  async [actionTypes.SAVE_INTERNAL_DOCS]({ state, commit }) {
+    if (!state.request.requestId) return false
+
+    const array = [...state.internalAttachedDocs]
+    const newArray = []
+
+    for (const doc of array) {
+      const file = doc.docFile
+      let id = doc.docId
+      let attachedDoc = null
+
+      if (!doc.docId) {
+        doc.requestId = state.request.requestId
+        attachedDoc = await postAttachedDoc({
+          axiosModule: this.$axios,
+          documentEntity: doc
+        })
+
+        id = attachedDoc.docId
+      }
+
+      if (file) {
+        const { updatedObject } = await uploadInternalMzhiDocument({
+          axiosModule: this.$axios,
+          documentId: id,
+          file
+        })
+
+        attachedDoc = Object.assign({}, updatedObject)
+      } else if (doc.docFileName === 'DELETED') {
+        const { updatedObject } = await deleteInternalMzhiDocument({
+          axiosModule: this.$axios,
+          docId: id
+        })
+
+        attachedDoc = Object.assign({}, updatedObject)
+      }
+
+      if (attachedDoc) newArray.push(attachedDoc)
+      else newArray.push(doc)
+    }
+
+    commit(mutationTypes.SET_INTERNAL_ATTACHED_DOCS, newArray)
+
+    return Promise.resolve()
   },
 
   async [actionTypes.FETCH_REQUEST_STATUSES]({ state, commit }) {
@@ -73,7 +128,6 @@ export default {
   [actionTypes.SET_REQUEST]({ commit }, request) {
     if (!request.requestId) {
       const defaultArraysNames = [
-        'gfAbeyancesByRequestId',
         'gfAttachedDocsByRequestId',
         'gfQueriedDocsByRequestId',
         'gfRefusalReasonRequestId'
@@ -101,8 +155,18 @@ export default {
         })
         .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
 
+      const internalAttachedDocs = request.gfAttachedDocsByRequestId
+        .filter((attachedDoc) => {
+          return (
+            attachedDoc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId
+              .groupId === 3
+          )
+        })
+        .sort((prevDoc, nextDoc) => prevDoc.docId - nextDoc.docId)
+
       commit(mutationTypes.SET_LICENSEE_ATTAHCHED_DOCS, licenseeAttachedDocs)
       commit(mutationTypes.SET_MZHI_ATTAHCHED_DOCS, mzhiAttachedDocs)
+      commit(mutationTypes.SET_INTERNAL_ATTACHED_DOCS, internalAttachedDocs)
       request.gfAttachedDocsByRequestId = null
     }
 
@@ -111,7 +175,6 @@ export default {
 
   async [actionTypes.FETCH_DEFAULT_OBJECTS]({ state, commit }) {
     const defaultObjectsNames = [
-      'gfAbeyancesByRequestId',
       'gfAttachedDocsByRequestId',
       'gfQueriedDocsByRequestId',
       'gfRefusalReasonRequestId'
@@ -137,17 +200,6 @@ export default {
         })
       })
     }
-  },
-
-  async [actionTypes.CREATE_ABEYANCE]({ state, commit, dispatch }) {
-    await dispatch(actionTypes.FETCH_DEFAULT_OBJECTS)
-
-    if (!state.gfAbeyancesByRequestIdDefault) return
-
-    await commit(mutationTypes.SET_ARRAY, {
-      arrayName: 'gfAbeyancesByRequestId',
-      arrayValue: state.gfAbeyancesByRequestIdDefault()
-    })
   },
 
   async [actionTypes.FETCH_DOC_CHECK]({ state, commit }) {

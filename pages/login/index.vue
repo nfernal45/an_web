@@ -38,6 +38,21 @@ export default {
   },
   methods: {
     login() {
+      const redirectCookieKey = 'auth.isGu'
+
+      // const isRedirectCookieExist = document.cookie.split('; ').map(cookie => cookie.includes(redirectCookieKey)).includes(true)
+      const isRedirectFromGu = document.cookie.split('; ').map(cookie => cookie.includes(redirectCookieKey)).includes(true)
+
+      if (!isRedirectFromGu) {
+        this.$auth.$storage.setCookie('redirect',
+          `${
+            this.$router.options.base.slice(0, -1)
+          }${
+            this.$router.options.routes.find(route => route.name === 'registry').path 
+          }`, false
+        )
+      }
+
       try {
         this.$auth.loginWith('oauth2').then(() => {
           setLastTokenDate()

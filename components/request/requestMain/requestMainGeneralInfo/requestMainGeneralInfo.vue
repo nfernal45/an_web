@@ -1,11 +1,15 @@
 <template lang="pug">
   form-block.mb-10(title='Основные сведения')
     template(slot='content')
-      el-form(size='small' label-position='top')
+      el-form(
+        size='small' 
+        label-position='top'
+        :disabled='disabledEditing'
+      )
         el-row.mb-20(:gutter='20')
           el-col(:span='10')
             h4.form-title.mb-10 Цель обращения
-            el-radio-group(v-model='requestTypeId')
+            el-radio-group(v-model='requestTypeId' :disabled='regPlaceId === 2')
               el-radio(
                 v-for='item in computedRequestTypesOptions'
                 :key='item.typeId'
@@ -25,7 +29,7 @@
               el-form-item(label='Плановый срок оказания ГФ')
                 el-date-picker(
                   v-model='planConsidDate'
-                  placeholder='Укажите плановый срок оказания ГФ'
+                  disabled
                   format='dd.MM.yyyy'
                   value-format='dd.MM.yyyy'
                   :picker-options='{ firstDayOfWeek: 1 }'
@@ -65,6 +69,7 @@
               el-date-picker(
                 :picker-options='{ firstDayOfWeek: 1 }' 
                 v-model='requestDate'
+                disabled
                 placeholder='Укажите дату получения в МЖИ'
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
@@ -79,13 +84,14 @@
 
           el-col(:span='6' v-if='regPlaceId === 2')
             el-form-item(label='Рег.№ портала')
-              el-input(v-model='outerRegnum')
+              el-input(v-model='outerRegnum' disabled)
 
           el-col(:span='6' v-if='regPlaceId === 2')
             el-form-item(label='Дата подачи на портале')
               el-date-picker(
                 :picker-options='{ firstDayOfWeek: 1 }' 
                 v-model='outerRequestDate'
+                disabled
                 placeholder='Укажите дату подачи заявления'
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
@@ -102,6 +108,12 @@ import fetchRegPlaceOptions from '@/services/api/references/fetchRegPlaceOptions
 const moduleName = 'request'
 export default {
   name: 'RequestMainGeneralInfo',
+  props: {
+    disabledEditing: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       requestTypesOptions: [],

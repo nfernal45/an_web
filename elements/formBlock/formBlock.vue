@@ -4,6 +4,8 @@
       :class='styles["item-title"]'
       @click='contentIsVisible = !contentIsVisible')
       h3 {{ title }}
+      div(style='margin-right:auto; margin-left:10px;')
+        slot(name='tooltip')
       font-awesome-icon.arrow-icon(:icon='currentIconPosition')
 
     transition(name='fade' appear)
