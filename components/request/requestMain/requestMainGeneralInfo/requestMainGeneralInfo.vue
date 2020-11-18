@@ -26,7 +26,7 @@
                           :label='item.decisionIssueMethodName'
                           :value='item.decisionIssueMethodId')
             el-row
-              el-form-item(label='Плановый срок оказания ГФ')
+              el-form-item(label='Плановый срок оказания ГУ')
                 el-date-picker(
                   v-model='planConsidDate'
                   disabled
