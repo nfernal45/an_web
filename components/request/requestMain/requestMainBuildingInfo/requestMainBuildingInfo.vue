@@ -21,7 +21,7 @@
                 ) {{ item.numTypeName }}
 
           el-col(:span='8')
-            el-form-item(label='Код БТИ')
+            el-form-item(label='Код БТИ (UNOM)')
               el-input(v-model='unom' :disabled='!!request.regPlaceId')
             el-form-item(label='Код ФИАС')
               el-input(v-model="fiasHouseguid" :disabled='!!request.regPlaceId')

@@ -235,7 +235,7 @@
             
           el-row(:gutter='20')
             el-col(:span='5')
-              el-form-item(label='UNOM')
+              el-form-item(label='Код БТИ (UNOM)')
                   el-input(v-model='searchForm.unom')
             el-col(:span='11')
                 employee-picker(label='Ответственный исполнитель' v-model='searchForm.performerId')
