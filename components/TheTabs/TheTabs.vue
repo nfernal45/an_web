@@ -138,6 +138,19 @@ export default {
 
       return permittedTabs
         .filter((tab) => {
+          if (
+            this.request.typeId === 10 &&
+            (this.request.agreementFoundationId === 5 ||
+              this.request.agreementFoundationId === 6)
+          ) {
+            if (
+              tab.title === 'Приостановление' ||
+              tab.title === 'Ход рассмотрения'
+            ) {
+              return false
+            }
+          }
+
           return (
             !tab.activeStatuses ||
             tab.activeStatuses.includes(this.request.requestStatusId)
