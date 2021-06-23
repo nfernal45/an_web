@@ -2,7 +2,7 @@
   form-block.mb-10(title='Дополнительные сведения')
     template(slot='content')
       el-form(
-        label-position='top' 
+        label-position='top'
         size='small'
         :disabled='disabledEditing'
       )
@@ -51,12 +51,12 @@
           el-col(:span='12')
             el-form-item(label='Дата выдачи действующей лицензии')
               el-date-picker(
-                :picker-options='{ firstDayOfWeek: 1 }' 
+                :picker-options='{ firstDayOfWeek: 1 }'
                 v-model='currentLicenseDate'
                 format='dd.MM.yyyy'
                 value-format='dd.MM.yyyy'
               )
-  
+
         el-row(:gutter='20' v-if='request.typeId === 9 && request.licenseeType === "L" && isReorg === "Y"')
           el-col(:span='14')
             el-select.width-100(v-model='reorganizationFormId' size='small' placeholder='Укажите форму реорганизации')
@@ -167,8 +167,16 @@ export default {
     }),
 
     async fetchAgreementFoundations() {
-      this.agreementFoundationsOptions = await fetchAgreementFoundations({
+      const response = await fetchAgreementFoundations({
         axiosModule: this.$axios
+      })
+      this.agreementFoundationsOptions = response.filter((item) => {
+        if (item.id === 5 || item.id === 6) {
+          if (this.request.typeId === 10 && this.request.regPlaceId === 1) {
+            return false
+          }
+        }
+        return true
       })
     },
 

@@ -137,11 +137,7 @@ export default {
       }
     },
     isDecisionTypeRadioGroupDisabled() {
-      // this.request.typeId === 10 - это какая-то напутанность,
-      // по факту тут typeId === 3, посмотри функцию getTheRightReason
-      // Исключение дома из реестра - typeId 10, в доке - 3
-
-      // Если Заявление с ЦО=3
+      // Если Заявление с ЦО=10
       // «Исключение дома из реестра» и Основание =
       // (Решение суда (agreementFoundationId = 5) или Решения ОГЖН (6))
       // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
@@ -226,26 +222,27 @@ export default {
               item.refViolationGroupByGroupId.id === 1 &&
               item.primaryInspResultId === 2
             ) {
-              return item
+              return true
             }
             if (
               item.refViolationGroupByGroupId.id === 4 &&
               item.primaryInspResultId === 2
             ) {
-              return item
+              return true
             }
             if (
               item.refViolationGroupByGroupId.id === 5 &&
               item.primaryInspResultId === 2
             ) {
-              return item
+              return true
             }
             if (
               item.refViolationGroupByGroupId.id === 6 &&
               item.primaryInspResultId === 2
             ) {
-              return item
+              return true
             }
+            return false
           }).length
         ) {
           return true
