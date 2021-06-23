@@ -143,12 +143,15 @@ export default {
 
       // Если Заявление с ЦО=3
       // «Исключение дома из реестра» и Основание =
-      // (Решение суда или Решения ОГЖН)
+      // (Решение суда (agreementFoundationId = 5) или Решения ОГЖН (6))
       // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
       // и радиогруппа заблокирована
 
-      // дописать условие для Основание
-      if (this.request.typeId === 10) {
+      if (
+        this.request.typeId === 10 &&
+        (this.request.agreementFoundationId === 5 ||
+          this.request.agreementFoundationId === 6)
+      ) {
         return true
       }
 
@@ -160,104 +163,109 @@ export default {
       // PRIMARY_INSP_RESULT_ID=2 или ABEYANCE_INSP_RESULT_ID=2
       // то "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
       // и радиогруппа заблокирована
-      const violation = this.gfCheckViolationsByCheckId.find(
-        (item) => item.refViolationGroupByGroupId.id === 6
-      )
 
       if (
-        violation &&
-        (violation.abeyanceInspResultId === 2 ||
-          violation.primaryInspResultId === 2)
+        this.gfCheckViolationsByCheckId &&
+        this.gfCheckViolationsByCheckId.length
       ) {
-        return true
-      }
-
-      // Если в Заявлении все записи с проверками нарушений Требований
-      // GF_CHECK_VIOLATION.ID с "Результат проверки по первичному осмотру"
-      // = Соответствует //PRIMARY_INSP_RESULT_ID=1 или с "Результат проверки по
-      // осмотру после приостановки" = Соответствует
-      // ABEYANCE_INSP_RESULT_ID=1
-      // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
-      // и радиогруппа заблокирована
-
-      const allViolationDecided = this.gfCheckViolationsByCheckId.filter(
-        (item) =>
-          item.primaryInspResultId === 1 || item.abeyanceInspResultId === 1
-      )
-
-      if (
-        allViolationDecided.length === this.gfCheckViolationsByCheckId.length
-      ) {
-        return true
-      }
-
-      // Если в Заявлении есть хотя бы одна запись с проверкой нарушений Требования
-      // GF_CHECK_VIOLATION.ID
-
-      // с Требованием 1
-      // GF_CHECK_VIOLATION.GROUP_ID=1 и Результат проверки по первичному осмотру
-      // = Не соответствует PRIMARY_INSP_RESULT_ID=2
-
-      // с Требованием 4
-      // GF_CHECK_VIOLATION.GROUP_ID=4 и Результат проверки по первичному
-      // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
-
-      // с Требованием 5
-      // GF_CHECK_VIOLATION.GROUP_ID=5 и Результат проверки по первичному
-      // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
-
-      // с Требованием 6
-      // GF_CHECK_VIOLATION.GROUP_ID=6 и Результат проверки по первичному
-      // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
-      // то "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
-      // и радиогруппа заблокирована
-
-      if (
-        this.gfCheckViolationsByCheckId.filter((item) => {
-          if (
-            item.refViolationGroupByGroupId.id === 1 &&
-            item.primaryInspResultId === 2
-          ) {
-            return item
-          }
-          if (
-            item.refViolationGroupByGroupId.id === 4 &&
-            item.primaryInspResultId === 2
-          ) {
-            return item
-          }
-          if (
-            item.refViolationGroupByGroupId.id === 5 &&
-            item.primaryInspResultId === 2
-          ) {
-            return item
-          }
-          if (
-            item.refViolationGroupByGroupId.id === 6 &&
-            item.primaryInspResultId === 2
-          ) {
-            return item
-          }
-        }).length
-      ) {
-        return true
-      }
-
-      // Если в Заявлении есть хотя бы одна запись с проверкой нарушений
-      // Требования GF_CHECK_VIOLATION.ID и с "Результат проверки по осмотру
-      // после приостановки" = Не соответствует
-      // ABEYANCE_INSP_RESULT_ID=2 то
-      // "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
-      //  и радиогруппа заблокирована
-
-      if (
-        this.gfCheckViolationsByCheckId.find(
-          (item) => item.abeyanceInspResultId === 2
+        const violation = this.gfCheckViolationsByCheckId.find(
+          (item) => item.refViolationGroupByGroupId.id === 6
         )
-      ) {
-        return true
-      }
 
+        if (
+          violation &&
+          (violation.abeyanceInspResultId === 2 ||
+            violation.primaryInspResultId === 2)
+        ) {
+          return true
+        }
+
+        // Если в Заявлении все записи с проверками нарушений Требований
+        // GF_CHECK_VIOLATION.ID с "Результат проверки по первичному осмотру"
+        // = Соответствует //PRIMARY_INSP_RESULT_ID=1 или с "Результат проверки по
+        // осмотру после приостановки" = Соответствует
+        // ABEYANCE_INSP_RESULT_ID=1
+        // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
+        // и радиогруппа заблокирована
+
+        const allViolationDecided = this.gfCheckViolationsByCheckId.filter(
+          (item) =>
+            item.primaryInspResultId === 1 || item.abeyanceInspResultId === 1
+        )
+
+        if (
+          allViolationDecided.length === this.gfCheckViolationsByCheckId.length
+        ) {
+          return true
+        }
+
+        // Если в Заявлении есть хотя бы одна запись с проверкой нарушений Требования
+        // GF_CHECK_VIOLATION.ID
+
+        // с Требованием 1
+        // GF_CHECK_VIOLATION.GROUP_ID=1 и Результат проверки по первичному осмотру
+        // = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+        // с Требованием 4
+        // GF_CHECK_VIOLATION.GROUP_ID=4 и Результат проверки по первичному
+        // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+        // с Требованием 5
+        // GF_CHECK_VIOLATION.GROUP_ID=5 и Результат проверки по первичному
+        // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+        // с Требованием 6
+        // GF_CHECK_VIOLATION.GROUP_ID=6 и Результат проверки по первичному
+        // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+        // то "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
+        // и радиогруппа заблокирована
+
+        if (
+          this.gfCheckViolationsByCheckId.filter((item) => {
+            if (
+              item.refViolationGroupByGroupId.id === 1 &&
+              item.primaryInspResultId === 2
+            ) {
+              return item
+            }
+            if (
+              item.refViolationGroupByGroupId.id === 4 &&
+              item.primaryInspResultId === 2
+            ) {
+              return item
+            }
+            if (
+              item.refViolationGroupByGroupId.id === 5 &&
+              item.primaryInspResultId === 2
+            ) {
+              return item
+            }
+            if (
+              item.refViolationGroupByGroupId.id === 6 &&
+              item.primaryInspResultId === 2
+            ) {
+              return item
+            }
+          }).length
+        ) {
+          return true
+        }
+
+        // Если в Заявлении есть хотя бы одна запись с проверкой нарушений
+        // Требования GF_CHECK_VIOLATION.ID и с "Результат проверки по осмотру
+        // после приостановки" = Не соответствует
+        // ABEYANCE_INSP_RESULT_ID=2 то
+        // "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
+        //  и радиогруппа заблокирована
+
+        if (
+          this.gfCheckViolationsByCheckId.find(
+            (item) => item.abeyanceInspResultId === 2
+          )
+        ) {
+          return true
+        }
+      }
       return false
     }
   },
