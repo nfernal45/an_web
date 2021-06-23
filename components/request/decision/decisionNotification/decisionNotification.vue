@@ -2,21 +2,21 @@
   form-block(title='Уведомление')
     template(slot='content')
       el-form(
-        size='small' 
+        size='small'
         label-position='top'
         :disabled='disabledEditing'
       )
         el-row.mb-20(:gutter='20')
           el-col.mb-10
             el-col(:span='6')
-              el-radio(v-model='decisionType' label='D') О внесении изменений
+              el-radio(v-model='decisionType' :disabled="isDecisionTypeRadioGroupDisabled" label='D') О внесении изменений
             el-col(:span='6')
-              el-radio(v-model='decisionType' label='R') Отказ
+              el-radio(v-model='decisionType' :disabled="isDecisionTypeRadioGroupDisabled" label='R') Отказ
           el-col
             el-col(:span='16')
               el-form-item(label='Примечание')
                 el-input(type='textarea' v-model='decisionComments' :maxlength='2000')
-        
+
         el-row(:gutter='20')
           el-col(v-show='decisionType === "D"')
             el-col
@@ -29,8 +29,8 @@
                                 format="dd.MM.yyyy"
                                 value-format="dd.MM.yyyy"
                               )
-          
-          
+
+
           el-col(v-show='decisionType === "R"')
             el-col
               el-checkbox-group(v-model='gfRefusalReasonRequestId')
@@ -63,6 +63,8 @@ export default {
   },
   computed: {
     ...mapState(moduleName, {
+      gfCheckViolationsByCheckId: (state) =>
+        state.docCheck.gfCheckViolationsByCheckId,
       request: (state) => state.request,
       requestRefusalReason: (state) => state.request.gfRefusalReasonRequestId
     }),
@@ -133,6 +135,130 @@ export default {
 
         this.set({ propName: 'gfRefusalReasonRequestId', propValue: result })
       }
+    },
+    isDecisionTypeRadioGroupDisabled() {
+      // this.request.typeId === 10 - это какая-то напутанность,
+      // по факту тут typeId === 3, посмотри функцию getTheRightReason
+      // Исключение дома из реестра - typeId 10, в доке - 3
+
+      // Если Заявление с ЦО=3
+      // «Исключение дома из реестра» и Основание =
+      // (Решение суда или Решения ОГЖН)
+      // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
+      // и радиогруппа заблокирована
+
+      // дописать условие для Основание
+      if (this.request.typeId === 10) {
+        return true
+      }
+
+      // Если в Заявлении есть запись с проверкой нарушений Требования
+      // GF_CHECK_VIOLATION.ID с Требованием 6
+      // GF_CHECK_VIOLATION.GROUP_ID=6 и
+      // (Результат проверки по первичному осмотру=Не соответствует или
+      // Результат проверки по осмотру после приостановки=Не соответствует)
+      // PRIMARY_INSP_RESULT_ID=2 или ABEYANCE_INSP_RESULT_ID=2
+      // то "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
+      // и радиогруппа заблокирована
+      const violation = this.gfCheckViolationsByCheckId.find(
+        (item) => item.refViolationGroupByGroupId.id === 6
+      )
+
+      if (
+        violation &&
+        (violation.abeyanceInspResultId === 2 ||
+          violation.primaryInspResultId === 2)
+      ) {
+        return true
+      }
+
+      // Если в Заявлении все записи с проверками нарушений Требований
+      // GF_CHECK_VIOLATION.ID с "Результат проверки по первичному осмотру"
+      // = Соответствует //PRIMARY_INSP_RESULT_ID=1 или с "Результат проверки по
+      // осмотру после приостановки" = Соответствует
+      // ABEYANCE_INSP_RESULT_ID=1
+      // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
+      // и радиогруппа заблокирована
+
+      const allViolationDecided = this.gfCheckViolationsByCheckId.filter(
+        (item) =>
+          item.primaryInspResultId === 1 || item.abeyanceInspResultId === 1
+      )
+
+      if (
+        allViolationDecided.length === this.gfCheckViolationsByCheckId.length
+      ) {
+        return true
+      }
+
+      // Если в Заявлении есть хотя бы одна запись с проверкой нарушений Требования
+      // GF_CHECK_VIOLATION.ID
+
+      // с Требованием 1
+      // GF_CHECK_VIOLATION.GROUP_ID=1 и Результат проверки по первичному осмотру
+      // = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+      // с Требованием 4
+      // GF_CHECK_VIOLATION.GROUP_ID=4 и Результат проверки по первичному
+      // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+      // с Требованием 5
+      // GF_CHECK_VIOLATION.GROUP_ID=5 и Результат проверки по первичному
+      // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+      // с Требованием 6
+      // GF_CHECK_VIOLATION.GROUP_ID=6 и Результат проверки по первичному
+      // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+      // то "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
+      // и радиогруппа заблокирована
+
+      if (
+        this.gfCheckViolationsByCheckId.filter((item) => {
+          if (
+            item.refViolationGroupByGroupId.id === 1 &&
+            item.primaryInspResultId === 2
+          ) {
+            return item
+          }
+          if (
+            item.refViolationGroupByGroupId.id === 4 &&
+            item.primaryInspResultId === 2
+          ) {
+            return item
+          }
+          if (
+            item.refViolationGroupByGroupId.id === 5 &&
+            item.primaryInspResultId === 2
+          ) {
+            return item
+          }
+          if (
+            item.refViolationGroupByGroupId.id === 6 &&
+            item.primaryInspResultId === 2
+          ) {
+            return item
+          }
+        }).length
+      ) {
+        return true
+      }
+
+      // Если в Заявлении есть хотя бы одна запись с проверкой нарушений
+      // Требования GF_CHECK_VIOLATION.ID и с "Результат проверки по осмотру
+      // после приостановки" = Не соответствует
+      // ABEYANCE_INSP_RESULT_ID=2 то
+      // "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
+      //  и радиогруппа заблокирована
+
+      if (
+        this.gfCheckViolationsByCheckId.find(
+          (item) => item.abeyanceInspResultId === 2
+        )
+      ) {
+        return true
+      }
+
+      return false
     }
   },
   async mounted() {
