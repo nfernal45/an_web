@@ -61,7 +61,7 @@
               )
 
 
-          div(v-if='request.isAbeyance === "Y" || true')
+          div(v-if='request.isAbeyance === "Y"')
             p Осмотр после приостановки
             el-row
               el-form-item(label='Результат проверки')
