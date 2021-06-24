@@ -74,7 +74,7 @@ export default {
       }
     },
     async onSave() {
-      const canSave = validation(this.request)
+      const canSave = validation(this.request, this.docCheck)
 
       if (canSave) {
         this.isRequestSaving = true

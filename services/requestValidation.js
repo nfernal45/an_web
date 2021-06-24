@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-export const validation = function(request) {
+export const validation = function(request, docCheck = {}) {
   const errors = []
 
   if (!request.typeId) errors.push('Укажите цель обращения.')
@@ -56,6 +56,43 @@ export const validation = function(request) {
         )
     } else {
       errors.push('Необходимо выбрать тип представителя заявителя.')
+    }
+  }
+
+  if (Object.keys(docCheck).length !== 0) {
+    if (
+      docCheck.gfCheckViolationsByCheckId &&
+      docCheck.gfCheckViolationsByCheckId.length
+    ) {
+      const checkIsDocCheckRequired = docCheck.gfCheckViolationsByCheckId
+        .filter((item) => {
+          if (
+            item.primaryInspResultId === 1 ||
+            item.abeyanceInspResultId === 2
+          ) {
+            return true
+          }
+          if (
+            item.primaryInspResultId === 2 ||
+            item.abeyanceInspResultId === 2
+          ) {
+            return true
+          }
+          if (
+            item.primaryInspResultId === 4 ||
+            item.abeyanceInspResultId === 2
+          ) {
+            return true
+          }
+          return false
+        })
+        .map((item) => item.refViolationGroupByGroupId.name)
+        .join(', ')
+
+      errors.push(
+        'Необходимо заполнить поле "Описание нарушений по первичному осмотру", вкладка "Ход рассмотрения", блоки: ' +
+        checkIsDocCheckRequired
+      )
     }
   }
 
