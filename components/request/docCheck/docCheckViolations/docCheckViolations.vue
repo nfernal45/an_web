@@ -25,7 +25,7 @@
               el-select(
                 placeholder='Не выбрано'
                 class='mr-10'
-                :disabled='violationIsFixed || request.isAbeyance === "Y" || ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3)'
+                :disabled='violationIsFixed || request.isAbeyance === "Y" || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
                 :value='violationGroup.primaryInspResultId'
                 @input='changePrimaryInspectionResult({ value: $event, violationGroupId: violationGroup.id })'
               )
@@ -67,7 +67,7 @@
               el-form-item(label='Результат проверки')
                 el-select(
                   class='mr-10'
-                  :disabled='(violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.abeyanceInspResultId === 3'
+                  :disabled='(((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7)) && violationGroup.abeyanceInspResultId === 3'
                   :value='violationGroup.abeyanceInspResultId'
                   @input='changeAbeyanceInspectionResult({ value: $event, violationGroupId: violationGroup.id })'
                 )
