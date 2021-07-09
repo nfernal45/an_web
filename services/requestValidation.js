@@ -89,10 +89,12 @@ export const validation = function(request, docCheck = {}) {
         .map((item) => item.refViolationGroupByGroupId.name)
         .join(', ')
 
-      errors.push(
-        'Необходимо заполнить поле "Описание нарушений по первичному осмотру", вкладка "Ход рассмотрения", блоки: ' +
-        checkIsDocCheckRequired
-      )
+      if (checkIsDocCheckRequired) {
+        errors.push(
+          'Необходимо заполнить поле "Описание нарушений по первичному осмотру", вкладка "Ход рассмотрения", блоки: ' +
+          checkIsDocCheckRequired
+        )
+      }
     }
   }
 
