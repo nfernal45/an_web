@@ -173,7 +173,7 @@ export default {
       this.agreementFoundationsOptions = response.filter((item) => {
         if (item.id === 5 || item.id === 6) {
           if (this.request.typeId === 10 && this.request.regPlaceId === 1) {
-            return false
+            return true
           }
         }
         return true
