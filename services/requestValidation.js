@@ -92,7 +92,7 @@ export const validation = function(request, docCheck = {}) {
       if (checkIsDocCheckRequired) {
         errors.push(
           'Необходимо заполнить поле "Описание нарушений по первичному осмотру", вкладка "Ход рассмотрения", блоки: ' +
-          checkIsDocCheckRequired
+            checkIsDocCheckRequired
         )
       }
     }
@@ -103,8 +103,6 @@ export const validation = function(request, docCheck = {}) {
     for (const error of errors) {
       errorMessage += `<div> - ${error}</div>`
     }
-
-    console.log(errorMessage)
 
     Vue.prototype.$notify.warning({
       title: 'Внимание',

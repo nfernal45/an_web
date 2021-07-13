@@ -42,9 +42,34 @@ export const state = () => ({
 })
 
 export const getters = {
-  can: (state) => (perm) => state.permissions.includes(perm),
+  can: (state) => (perm, statusId = null) => {
+    if (statusId) {
+      const requestStatusesPermissions = {
+        DECIDED: 7
+      }
+      switch (statusId) {
+        case requestStatusesPermissions.DECIDED:
+          const permissions = ['RL_GF_READONLY']
+          if (permissions.includes(perm)) return true
+          return false
+      }
+    }
+    return state.permissions.includes(perm)
+  },
   canAny: (state, getters) => {
-    return (perms = []) => perms.some((x) => getters.can(x))
+    return (perms = [], statusId = null) => {
+      if (statusId) {
+        const requestStatusesPermissions = {
+          DECIDED: 7
+        }
+        switch (statusId) {
+          case requestStatusesPermissions.DECIDED:
+            const permissions = ['RL_GF_READONLY']
+            return !!perms.filter((perm) => permissions.includes(perm)).length
+        }
+      }
+      return perms.some((x) => getters.can(x))
+    }
   }
 }
 

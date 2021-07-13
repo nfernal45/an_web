@@ -22,8 +22,8 @@
           font-awesome-icon(icon="user" transform="shrink-3" size="2x" title="Мои настройки" @click="userSettings()")
           font-awesome-icon(
             v-show='can("RL_GF_READONLY")'
-            icon="sign-out-alt" size="2x" 
-            title="Выйти из системы" 
+            icon="sign-out-alt" size="2x"
+            title="Выйти из системы"
             @click="logout()"
           )
 </template>

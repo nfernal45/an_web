@@ -37,7 +37,10 @@ export default {
     ...mapGetters(['can', 'canAny']),
 
     disabledEditing() {
-      if (this.can('RL_GF_DOC_CHECK_EDIT')) return false
+      if (
+        this.can('RL_GF_DOC_CHECK_EDIT', this.request.request.requestStatusId)
+      )
+        return false
       return true
     }
   }

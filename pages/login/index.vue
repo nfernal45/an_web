@@ -48,7 +48,7 @@ export default {
           `${
             this.$router.options.base.slice(0, -1)
           }${
-            this.$router.options.routes.find(route => route.name === 'registry').path 
+            this.$router.options.routes.find(route => route.name === 'registry').path
           }`, false
         )
       }
