@@ -47,15 +47,20 @@ export default {
     ...mapGetters(['can', 'canAny']),
     ...mapGetters(requestModuleName, {
       requestPagesActiveStatuses:
-        requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
+      requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
     }),
 
     requestId() {
       return this.$route.params.id
     },
     disabledEditing() {
-      if (this.canAny(['RL_GF_DECISION_PREPARING', 'RL_GF_DECISION_APPROVAL']))
-        return false
+      if (
+        this.canAny(
+          ['RL_GF_DECISION_PREPARING', 'RL_GF_DECISION_APPROVAL'],
+          this.request.request.requestStatusId
+        )
+      )
+        return true
 
       return true
     }
