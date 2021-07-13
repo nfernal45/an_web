@@ -2,7 +2,7 @@
   form-block.mb-10(title='Внутренние документы МЖИ')
     template(slot='content')
       el-form(
-        size='small' 
+        size='small'
         label-position='top'
         :disabled='disabledEditing'
       )
@@ -13,7 +13,7 @@
                        v-model='isAddDocumentPopoverVisible'
                        @after-leave='additionalDocumentTypeId = null')
               el-form-item(label='Тип документа')
-                el-select(v-model='additionalDocumentTypeId' 
+                el-select(v-model='additionalDocumentTypeId'
                           filterable
                           size='small'
                           style='width: 400px')
@@ -22,11 +22,11 @@
                             :value='item.typeId'
                             :label='item.typeName')
               div
-                el-button(size='mini' 
-                          type='primary' 
-                           @click='addDocument(additionalDocumentTypeId)' 
+                el-button(size='mini'
+                          type='primary'
+                           @click='addDocument(additionalDocumentTypeId)'
                            :disabled='!additionalDocumentTypeId') Добавить
-                el-button(size='mini' 
+                el-button(size='mini'
                           type='text'
                           @click='isAddDocumentPopoverVisible = false; additionalDocumentTypeId = null') Отмена
               el-button(slot='reference'
@@ -67,12 +67,12 @@
                       :maxlength='300'
                       @input='setArrayObjectProp({ arrayName: "internalAttachedDocs", propName: "docComment", propValue: $event, propIndex: index })'
                     )
-                
+
                 transition(name='fade' mode='out-in')
                   el-col(:span='7' v-if='doc.docFileName && doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId !== 3')
                     el-form-item(label=' ')
                       a.file-link(:href='doc.fileLink')
-                        i.el-icon-document 
+                        i.el-icon-document
                         span {{ doc.docFileName }}
 
                 el-col(:span='7' v-if='(doc.refDocTypeByDocTypeId.refDocTypeGroupByGroupId.groupId === 3) && can("RL_GF_DOC_MZHI")')
@@ -100,12 +100,12 @@
                           @click.stop='deleteFile(index)'
                         )
                           i.el-icon-close
-                        
+
         el-row(v-else)
           el-col
             div(style='height:200px'
                 v-loading='true')
-          
+
 </template>
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
@@ -194,7 +194,6 @@ export default {
       this.$refs.uploadInput[index].click()
     },
     uploadFile(event, index) {
-      console.log(this.requestId)
       const file = event.srcElement.files[0]
       const maxLengthFileName = 120
 

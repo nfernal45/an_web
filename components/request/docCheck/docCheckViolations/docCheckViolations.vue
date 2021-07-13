@@ -3,7 +3,7 @@
     form-block.mb-10(title='Отвественный исполнитель' class='doc-check-violation-block')
       template(slot='content')
         el-form(
-          label-position='top' 
+          label-position='top'
           size='small'
           :disabled='disabledEditing')
           el-row(:gutter='20')
@@ -11,7 +11,7 @@
               employee-picker(label='Ответственный исполнитель' v-model='performerId')
 
     el-form(
-      label-position='top' 
+      label-position='top'
       size='small'
       :disabled='disabledEditing')
       form-block.mb-10(
@@ -20,7 +20,7 @@
         :title='violationGroup.refViolationGroupByGroupId.name')
         template(slot='content')
           p Первичный осмотр
-          el-row 
+          el-row
             el-form-item(label='Результат проверки')
               el-select(
                 placeholder='Не выбрано'
@@ -102,7 +102,7 @@
     form-block(title='Дополнительная проверка')
       template(slot='content')
         el-form(
-          label-position='top' 
+          label-position='top'
           size='small'
           :disabled='disabledEditing')
           el-row
@@ -141,7 +141,7 @@
       :refViolationGroupId='violationDescriptionDialog.refViolationGroupId'
       @select='selectViolationsDescriptions'
       @close='closeViolationDescriptionDialog')
-    
+
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'

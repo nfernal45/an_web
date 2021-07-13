@@ -8,8 +8,8 @@
       li(v-for='(button, index) in requestStatuses' :key='index' :class='styles["list-item"]')
         el-button(
           v-if='availableStatusButton(button.statusId)'
-          type='warning' 
-          plain 
+          type='warning'
+          plain
           :class='styles["list-button", "status-button"]'
           @click='onStatusChange(button.statusId)'
         ) {{ button.buttonName }}
@@ -17,10 +17,10 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import styles from './TheAsideStatusesButtons.module.sass?module'
 import { getterTypes as referencesGetterTypes } from '@/store/types/references'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
 import { validation } from '@/services/requestValidation'
+import styles from './TheAsideStatusesButtons.module.sass?module'
 
 const requestModuleName = 'request'
 const referencesModuleName = 'references'

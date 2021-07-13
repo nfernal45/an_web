@@ -1,7 +1,5 @@
 import { actionTypes, mutationTypes } from '@/store/types/request'
 import fetchRequestRecord from '@/services/api/request/fetchRequestRecord'
-import saveRequestRecord from '~/services/api/request/saveRequestRecord'
-import fetchNextRequestStatuses from '~/services/api/request/fetchNextRequestStatuses'
 import fetchDocCheckByRequestId from '@/services/api/request/fetchDocCheckByRequestId'
 import saveDocCheck from '@/services/api/request/saveDocCheck'
 import defaultDocCheck from '@/constants/defaultDocCheck'
@@ -9,6 +7,8 @@ import changeRequestStatus from '@/services/api/request/changeRequestStatus'
 import postAttachedDoc from '@/services/api/request/postAttachedDoc'
 import uploadInternalMzhiDocument from '@/services/api/request/uploadInternalMzhiDocument'
 import deleteInternalMzhiDocument from '@/services/api/request/deleteInternalMzhiDocument'
+import saveRequestRecord from '~/services/api/request/saveRequestRecord'
+import fetchNextRequestStatuses from '~/services/api/request/fetchNextRequestStatuses'
 
 export default {
   [actionTypes.FETCH_REQUEST_LIST]: async ({ commit }) => {
@@ -63,7 +63,6 @@ export default {
       await dispatch(actionTypes.SET_REQUEST, data)
       await dispatch(actionTypes.FETCH_DOC_CHECK)
     } catch (error) {
-      console.log(new Error(error))
       throw error
     }
   },

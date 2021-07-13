@@ -4,7 +4,7 @@
       li(:class="styles['list-item']")
         nuxt-link(to="/registry")
           el-button(
-            type="primary" 
+            type="primary"
             :class="styles['list-button']"
             v-show='can("RL_GF_READONLY")')
             font-awesome-icon(icon="reply")
@@ -12,8 +12,8 @@
       li(:class="styles['list-item']")
         el-button(
           v-show="can('RL_GF_REQUEST_SAVE')"
-          type="success" 
-          :class="styles['list-button']" 
+          type="success"
+          :class="styles['list-button']"
           @click="onSave()" :loading='isRequestSaving')
           font-awesome-icon(icon="save")
           span Сохранить
@@ -30,12 +30,12 @@
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
-import TheAsideStatusesButtons from './TheAsideStatusesButtons'
-import styles from './TheAside.module.sass?module'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
 import printFormDialog from '@/components/printFormDialog/printFormDialog'
 import { validation } from '@/services/requestValidation'
+import TheAsideStatusesButtons from './TheAsideStatusesButtons'
+import styles from './TheAside.module.sass?module'
 
 const moduleName = 'request'
 export default {

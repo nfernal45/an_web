@@ -159,7 +159,6 @@
         ) Выбрать адрес
 </template>
 <script>
-import styles from './addressPicker.module.sass?module'
 import fetchAddress from '@/services/api/references/addresses/fetchAddress'
 import fetchAdmDistrictsOptions from '@/services/api/references/addresses/fetchAdmDistrictsOptions'
 import fetchDistrictsOptions from '@/services/api/references/addresses/fetchDistrictsOptions'
@@ -167,6 +166,8 @@ import fetchStreetsOptions from '@/services/api/references/addresses/fetchStreet
 import fetchHouseNumbersOptions from '@/services/api/references/addresses/fetchHouseNumbersOptions'
 import fetchCorpsNumbersOptions from '@/services/api/references/addresses/fetchCorpsNumbersOptions'
 import fetchConstrctsNumbersOptions from '@/services/api/references/addresses/fetchConstrctsNumbersOptions'
+import styles from './addressPicker.module.sass?module'
+
 export default {
   name: 'AddressPicker',
   props: {

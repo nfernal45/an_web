@@ -3,7 +3,7 @@
     el-button.mb-20(
       v-show='can("RL_GF_REQUEST_CREATE")'
       type="success"
-      icon='el-icon-document-add' 
+      icon='el-icon-document-add'
       @click="createRequest") Создать новое заявление
     el-button(
       v-show='can("RL_GF_READONLY")'
@@ -19,20 +19,20 @@
       size='55%')
       div(style='padding: 0px 20px 20px 20px')
         el-button(
-          v-show='can("RL_GF_READONLY")' 
+          v-show='can("RL_GF_READONLY")'
           type="primary"
-          @click="onSearch" 
+          @click="onSearch"
           :loading="isSearchLoading"
           :disabled='!!requestsCount || !!errorAddressMessage.length'
           icon='el-icon-search') {{ requestsCount ? 'Пожалуйста, подождите...' : 'Поиск' }}
         el-button(
           v-show='can("RL_GF_READONLY")'
-          type="warning" 
+          type="warning"
           @click="clearSearchFilter"
           icon='el-icon-circle-close') Очистить поиск
 
         el-form.mt-20(
-          size='mini' 
+          size='mini'
           label-position='top'
           :disabled='!can("RL_GF_READONLY")')
           el-row
@@ -59,7 +59,7 @@
                                     :key='item.regPlaceId'
                                     :label='item.regPlaceId'
                         ) {{ item.regPlaceName }}
-              
+
               el-row
                 el-col(:span='11')
                   el-form-item(label='Дата получения в МЖИ')
@@ -131,7 +131,7 @@
                       format="dd.MM.yyyy"
                       value-format="dd.MM.yyyy"
                     )
-                      
+
 
             el-col(:span='8')
               el-form-item(label='Тип обращения')
@@ -156,13 +156,13 @@
                             :key='item.statusId'
                             :label='item.statusName'
                             :value='item.statusId')
-                  
-          
+
+
           el-row(:gutter='20')
             el-row
               el-col(:span='18')
                 el-divider(content-position="left") Адрес МКД
-            el-col(:span='24') 
+            el-col(:span='24')
               el-tag(v-show='errorAddressMessage.length'
                     type='danger'
                     size='small') {{ errorAddressMessage }}
@@ -184,7 +184,7 @@
                           clearable
                           remote
                           :remote-method='fetchRefDisctricts')
-                  el-option(v-for='item in refDistricts' 
+                  el-option(v-for='item in refDistricts'
                             :key='item.districtId'
                             :label='item.districtName'
                             :value='item.districtId')
@@ -205,11 +205,11 @@
             el-col(:span='3')
               el-form-item(label='Дом')
                 el-input(v-model='searchAddress.house' clearable)
-            
+
             el-col(:span='3')
               el-form-item(label='Корпус')
                 el-input(v-model='searchAddress.corp' clearable)
-            
+
             el-col(:span='3')
               el-form-item(label='Строение')
                 el-input(v-model='searchAddress.constr' clearable)
@@ -218,7 +218,7 @@
             el-row
                 el-col(:span='18')
                   el-divider(content-position="left") Заявитель
-            
+
             el-col(:span='6')
               el-form-item(label='Тип заявителя')
                   el-checkbox-group.flex.justify-start.align-start(v-model='searchForm.licenseeType')
@@ -232,14 +232,14 @@
             el-col(:span='11')
               el-form-item(label='Наименование')
                   el-input(v-model='searchForm.licenseeName')
-            
+
           el-row(:gutter='20')
             el-col(:span='5')
               el-form-item(label='Код БТИ (UNOM)')
                   el-input(v-model='searchForm.unom')
             el-col(:span='11')
                 employee-picker(label='Ответственный исполнитель' v-model='searchForm.performerId')
-          
+
 </template>
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
