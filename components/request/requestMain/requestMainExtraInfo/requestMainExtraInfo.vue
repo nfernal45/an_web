@@ -103,6 +103,18 @@ export default {
       request: (state) => state.request
     }),
 
+    requestTypeId: {
+      get() {
+        return this.request.typeId
+      }
+    },
+
+    regPlaceId: {
+      get() {
+        return this.request.regPlaceId
+      }
+    },
+
     agreementFoundationId: {
       get() {
         return this.request.agreementFoundationId
@@ -157,6 +169,16 @@ export default {
       }
     }
   },
+  watch: {
+    async requestTypeId() {
+      this.agreementFoundationId = null
+      await this.fetchAgreementFoundations()
+    },
+    async regPlaceId() {
+      this.agreementFoundationId = null
+      await this.fetchAgreementFoundations()
+    }
+  },
   mounted() {
     this.fetchAgreementFoundations()
     this.fetchReorganizationForms()
@@ -172,9 +194,7 @@ export default {
       })
       this.agreementFoundationsOptions = response.filter((item) => {
         if (item.id === 5 || item.id === 6) {
-          if (this.request.typeId === 10 && this.request.regPlaceId === 1) {
-            return true
-          }
+          return this.request.typeId === 10 && this.request.regPlaceId === 1
         }
         return true
       })
