@@ -2,9 +2,9 @@
   el-form-item(:label='label')
     el-select.width-100(
       v-model='employeeId'
-      filterable
       clearable
       remote
+      @focus="onFocus"
       :remote-method="fetchEmployeeOptionsByName"
       placeholder="Введите фамилию сотрудника"
       no-match-text="По Вашему запросу сотрудник не найден"
@@ -59,13 +59,28 @@ export default {
     if (this.value) this.fetchEmployeeById()
   },
   methods: {
+    async onFocus() {
+      await this.fetchEmployeeOptionsByName('')
+    },
     async fetchEmployeeOptionsByName(personName) {
-      if (personName.length < 2) return
       this.isLoading = true
-      this.employeeOptions = await fetchEmployeeOptions({
-        axiosModule: this.$axios,
-        query: { 'refPersonByPersonId.personName': `${personName}*` }
-      })
+      if (!personName) {
+        this.employeeOptions = await fetchEmployeeOptions({
+          axiosModule: this.$axios,
+          query: {
+            'refPersonByPersonId.personName!': `null`,
+            'refPersonByPersonId.rsysUserByRsysUserId.rsysFRoleUserByRsysUserId.rsysFRoleByFRoleId.FRoleId': 305
+          }
+        })
+      } else {
+        this.employeeOptions = await fetchEmployeeOptions({
+          axiosModule: this.$axios,
+          query: {
+            'refPersonByPersonId.personName': `${personName}*`,
+            'refPersonByPersonId.rsysUserByRsysUserId.rsysFRoleUserByRsysUserId.rsysFRoleByFRoleId.FRoleId': 305
+          }
+        })
+      }
       this.isLoading = false
     },
     async fetchEmployeeById() {
