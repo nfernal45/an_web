@@ -3,7 +3,7 @@
     form-block.mb-10(title='Отвественный исполнитель' class='doc-check-violation-block')
       template(slot='content')
         el-form(
-          label-position='top' 
+          label-position='top'
           size='small'
           :disabled='disabledEditing')
           el-row(:gutter='20')
@@ -11,7 +11,7 @@
               employee-picker(label='Ответственный исполнитель' v-model='performerId')
 
     el-form(
-      label-position='top' 
+      label-position='top'
       size='small'
       :disabled='disabledEditing')
       form-block.mb-10(
@@ -20,7 +20,7 @@
         :title='violationGroup.refViolationGroupByGroupId.name')
         template(slot='content')
           p Первичный осмотр
-          el-row 
+          el-row
             el-form-item(label='Результат проверки')
               el-select(
                 placeholder='Не выбрано'
@@ -102,7 +102,7 @@
     form-block(title='Дополнительная проверка')
       template(slot='content')
         el-form(
-          label-position='top' 
+          label-position='top'
           size='small'
           :disabled='disabledEditing')
           el-row
@@ -141,7 +141,7 @@
       :refViolationGroupId='violationDescriptionDialog.refViolationGroupId'
       @select='selectViolationsDescriptions'
       @close='closeViolationDescriptionDialog')
-    
+
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
@@ -185,7 +185,7 @@ export default {
     },
 
     computedDocCheckViolations() {
-      return (
+      const violations =
         this.docCheck.gfCheckViolationsByCheckId &&
         [...this.docCheck.gfCheckViolationsByCheckId].sort(
           (prevViolation, nextViolation) => {
@@ -195,7 +195,34 @@ export default {
             )
           }
         )
-      )
+      const violationsWithEdit =
+        violations &&
+        violations.map((violation) => {
+          if (
+            (violation.refViolationGroupByGroupId.id === 6 ||
+              violation.refViolationGroupByGroupId.id === 7) &&
+            this.request.typeId === 11
+          ) {
+            this.changePrimaryInspectionResult({
+              value: 3,
+              violationGroupId: violation.id
+            })
+          }
+          if (
+            (violation.refViolationGroupByGroupId.id === 6 ||
+              violation.refViolationGroupByGroupId.id === 7) &&
+            (this.request.typeId === 8 &&
+              (this.request.agreementFoundationId === 2 ||
+                this.request.agreementFoundationId === 4))
+          ) {
+            this.changePrimaryInspectionResult({
+              value: 3,
+              violationGroupId: violation.id
+            })
+          }
+          return violation
+        })
+      return violationsWithEdit
     },
 
     requestId() {
