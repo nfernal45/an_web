@@ -185,7 +185,7 @@ export default {
     },
 
     computedDocCheckViolations() {
-      return (
+      const violations =
         this.docCheck.gfCheckViolationsByCheckId &&
         [...this.docCheck.gfCheckViolationsByCheckId].sort(
           (prevViolation, nextViolation) => {
@@ -195,7 +195,34 @@ export default {
             )
           }
         )
-      )
+      const violationsWithEdit =
+        violations &&
+        violations.map((violation) => {
+          if (
+            (violation.refViolationGroupByGroupId.id === 6 ||
+              violation.refViolationGroupByGroupId.id === 7) &&
+            this.request.typeId === 11
+          ) {
+            this.changePrimaryInspectionResult({
+              value: 3,
+              violationGroupId: violation.id
+            })
+          }
+          if (
+            (violation.refViolationGroupByGroupId.id === 6 ||
+              violation.refViolationGroupByGroupId.id === 7) &&
+            (this.request.typeId === 8 &&
+              (this.request.agreementFoundationId === 2 ||
+                this.request.agreementFoundationId === 4))
+          ) {
+            this.changePrimaryInspectionResult({
+              value: 3,
+              violationGroupId: violation.id
+            })
+          }
+          return violation
+        })
+      return violationsWithEdit
     },
 
     requestId() {
