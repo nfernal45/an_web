@@ -148,6 +148,8 @@ export default {
         (this.request.agreementFoundationId === 5 ||
           this.request.agreementFoundationId === 6)
       ) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.decisionType = 'D'
         return true
       }
 
@@ -173,6 +175,8 @@ export default {
           (violation.abeyanceInspResultId === 2 ||
             violation.primaryInspResultId === 2)
         ) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.decisionType = 'R'
           return true
         }
 
@@ -192,6 +196,8 @@ export default {
         if (
           allViolationDecided.length === this.gfCheckViolationsByCheckId.length
         ) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.decisionType = 'D'
           return true
         }
 
@@ -245,6 +251,8 @@ export default {
             return false
           }).length
         ) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.decisionType = 'R'
           return true
         }
 
@@ -260,6 +268,8 @@ export default {
             (item) => item.abeyanceInspResultId === 2
           )
         ) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.decisionType = 'R'
           return true
         }
       }
