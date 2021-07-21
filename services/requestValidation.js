@@ -67,19 +67,19 @@ export const validation = function(request, docCheck = {}) {
       const checkIsDocCheckRequired = docCheck.gfCheckViolationsByCheckId
         .filter((item) => {
           if (
-            item.primaryInspResultId === 1 ||
+            item.primaryInspResultId === 1 &&
             item.abeyanceInspResultId === 2
           ) {
             return true
           }
           if (
-            item.primaryInspResultId === 2 ||
+            item.primaryInspResultId === 2 &&
             item.abeyanceInspResultId === 2
           ) {
             return true
           }
           if (
-            item.primaryInspResultId === 4 ||
+            item.primaryInspResultId === 4 &&
             item.abeyanceInspResultId === 2
           ) {
             return true
