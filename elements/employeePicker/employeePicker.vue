@@ -3,7 +3,7 @@
     el-select.width-100(
       v-model='employeeId'
       clearable
-      remote
+      filterable
       @focus="onFocus"
       :remote-method="fetchEmployeeOptionsByName"
       placeholder="Введите фамилию сотрудника"
