@@ -37,7 +37,7 @@
                   :value='item.id')
               el-button(
                 type='primary'
-                :disabled='violationIsFixed || request.isAbeyance === "Y"'
+                :disabled='violationIsFixed || request.isAbeyance === "Y" || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
                 @click=`openViolationDescriptionDialog({
                   currentViolationsDescription: violationGroup.primaryInspDescr,
                   violationGroupId: violationGroup.id,
@@ -79,6 +79,7 @@
                     :value='item.id')
                 el-button(
                   type='primary'
+                  :disabled='((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3)'
                   @click=`openViolationDescriptionDialog({
                     violationGroupId: violationGroup.id,
                     refViolationGroupId: violationGroup.refViolationGroupByGroupId.id,
