@@ -3,7 +3,7 @@
     :visible.sync='isDialogOpen'
     :close-on-click-modal='false'
     :modal-append-to-body='false'
-    title='Справочник нарушений'
+    :title='title'
     @closed='closeDialog'
   )
     p(v-if='!computedRefViolationsDescriptions.length' style="font-size: 20px") Для проверки данных пунктов Порядка справочник нарушений не предусмотрен
@@ -30,6 +30,10 @@ export default {
     refViolationGroupId: {
       type: Number,
       default: null
+    },
+    title: {
+      type: String,
+      default: 'Справочник нарушений'
     }
   },
   data() {

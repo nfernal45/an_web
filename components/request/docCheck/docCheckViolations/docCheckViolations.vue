@@ -42,7 +42,8 @@
                   currentViolationsDescription: violationGroup.primaryInspDescr,
                   violationGroupId: violationGroup.id,
                   refViolationGroupId: violationGroup.refViolationGroupByGroupId.id,
-                  inspectionType: "primaryInspDescr"
+                  inspectionType: "primaryInspDescr",
+                  violationItem: violationGroup.refViolationGroupByGroupId.item
                 })`) Добавить описание из справочника нарушений
           el-row
             el-form-item(label='Описание нарушений по первичному осмотру')
@@ -83,7 +84,8 @@
                   @click=`openViolationDescriptionDialog({
                     violationGroupId: violationGroup.id,
                     refViolationGroupId: violationGroup.refViolationGroupByGroupId.id,
-                    inspectionType: "abeyanceInspDescr"
+                    inspectionType: "abeyanceInspDescr",
+                    violationItem: violationGroup.refViolationGroupByGroupId.item
                   })`) Добавить описание из справочника нарушений
             el-row
               el-form-item(label='Описание нарушений после приостановки')
@@ -137,7 +139,7 @@
             el-col(:span='14')
               employee-picker(label='Ответственный исполнитель' v-model='addCheckExecId')
     doc-check-violations-descriptions-dialog(
-      title='Справочник нарушений'
+      :title='docCheckViolationsDescriptionsDialogTitle'
       :isVisible.sync='violationDescriptionDialog.isVisible'
       :refViolationGroupId='violationDescriptionDialog.refViolationGroupId'
       @select='selectViolationsDescriptions'
@@ -168,6 +170,7 @@ export default {
         refViolationGroupId: null,
         inspectionType: ''
       },
+      docCheckViolationsDescriptionsDialogTitle: '',
       testValue: ''
     }
   },
@@ -321,6 +324,7 @@ export default {
       refViolationGroupId,
       inspectionType
     }) {
+      this.docCheckViolationsDescriptionsDialogTitle = `Нарушение требования ${violationItem} Порядка`
       this.violationDescriptionDialog.currentViolationsDescription = currentViolationsDescription
       this.violationDescriptionDialog.inspectionType = inspectionType
       this.violationDescriptionDialog.refViolationGroupId = refViolationGroupId
