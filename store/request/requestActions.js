@@ -37,7 +37,7 @@ export default {
         requestId: currentRequestId
       })
 
-      if (request.requestStatusId === 9) {
+      if (request.requestStatusId === 9 || request.requestStatusId === 10) {
         request.abeyance = 'Y'
       }
 
