@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    form-block.mb-10(title='Отвественный исполнитель' class='doc-check-violation-block')
+    form-block.mb-10(title='Ответственный исполнитель' class='doc-check-violation-block')
       template(slot='content')
         el-form(
           label-position='top'
@@ -25,7 +25,7 @@
               el-select(
                 placeholder='Не выбрано'
                 class='mr-10'
-                :disabled='violationIsFixed || request.isAbeyance === "Y" || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
+                :disabled='violationIsFixed || request.abeyance === "Y" || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
                 :value='violationGroup.primaryInspResultId'
                 @input='changePrimaryInspectionResult({ value: $event, violationGroupId: violationGroup.id })'
               )
@@ -37,7 +37,7 @@
                   :value='item.id')
               el-button(
                 type='primary'
-                :disabled='violationIsFixed || request.isAbeyance === "Y" || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
+                :disabled='violationIsFixed || request.abeyance === "Y" || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
                 @click=`openViolationDescriptionDialog({
                   currentViolationsDescription: violationGroup.primaryInspDescr,
                   violationGroupId: violationGroup.id,
@@ -50,7 +50,7 @@
               //- v-model='testValue'
               el-input(
                 :value='violationGroup.primaryInspDescr'
-                :disabled='violationIsFixed || request.isAbeyance === "Y" || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7))'
+                :disabled='violationIsFixed || request.abeyance === "Y" || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7))'
                 class='doc-check-description-input'
                 type='textarea'
                 :autosize='{ minRows: 3 }'
@@ -62,7 +62,7 @@
               )
 
 
-          div(v-if='request.isAbeyance === "Y"')
+          div(v-if='request.abeyance === "Y"')
             p Осмотр после приостановки
             el-row
               el-form-item(label='Результат проверки')
@@ -73,7 +73,7 @@
                   @input='changeAbeyanceInspectionResult({ value: $event, violationGroupId: violationGroup.id })'
                 )
                   el-option(
-                    v-for='item in refInspectionResultsAbeyancs'
+                    v-for='item in refInspectionResultsAbeyance'
                     v-if="(item.id !== 4 && item.id !== 3) || (item.id === 3 && request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (item.id === 3 && request.typeId === 11)"
                     :key='item.id'
                     :label='item.name'
@@ -281,9 +281,9 @@ export default {
       }
     },
 
-    refInspectionResultsAbeyancs() {
+    refInspectionResultsAbeyance() {
       return this.refInspectionResults.filter(
-        (result) => result.isAbeyance === 'Y'
+        (result) => result.abeyance === 'Y'
       )
     }
   },
@@ -322,7 +322,8 @@ export default {
       currentViolationsDescription,
       violationGroupId,
       refViolationGroupId,
-      inspectionType
+      inspectionType,
+      violationItem
     }) {
       this.docCheckViolationsDescriptionsDialogTitle = `Нарушение требования ${violationItem} Порядка`
       this.violationDescriptionDialog.currentViolationsDescription = currentViolationsDescription
