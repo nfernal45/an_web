@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    form-block.mb-10(title='Отвественный исполнитель' class='doc-check-violation-block')
+    form-block.mb-10(title='Ответственный исполнитель' class='doc-check-violation-block')
       template(slot='content')
         el-form(
           label-position='top'
