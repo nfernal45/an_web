@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-export const validation = function(request, docCheck = {}) {
+export const validation = function(request, rest) {
   const errors = []
 
   if (!request.typeId) errors.push('Укажите цель обращения.')
@@ -59,41 +59,120 @@ export const validation = function(request, docCheck = {}) {
     }
   }
 
-  if (Object.keys(docCheck).length !== 0) {
-    if (
-      docCheck.gfCheckViolationsByCheckId &&
-      docCheck.gfCheckViolationsByCheckId.length
-    ) {
-      const checkIsDocCheckRequired = docCheck.gfCheckViolationsByCheckId
-        .filter((item) => {
-          if (
-            item.primaryInspResultId === 1 &&
-            item.abeyanceInspResultId === 2
-          ) {
-            return true
-          }
-          if (
-            item.primaryInspResultId === 2 &&
-            item.abeyanceInspResultId === 2
-          ) {
-            return true
-          }
-          if (
-            item.primaryInspResultId === 4 &&
-            item.abeyanceInspResultId === 2
-          ) {
-            return true
-          }
-          return false
-        })
-        .map((item) => item.refViolationGroupByGroupId.name)
-        .join(', ')
+  if (request.gfAbeyancesByRequestId.length) {
+    // Оформляется решение === 6
+    if (rest.nextStatusId === 6) {
+      if (rest.docCheck && Object.keys(rest.docCheck).length !== 0) {
+        if (
+          rest.docCheck.gfCheckViolationsByCheckId &&
+          rest.docCheck.gfCheckViolationsByCheckId.length
+        ) {
+          const checkIsDocCheckRequired = rest.docCheck.gfCheckViolationsByCheckId
+            .filter((item) => {
+              if (
+                item.primaryInspResultId === 1 &&
+                item.abeyanceInspResultId === 2 &&
+                item.abeyanceInspDescr === null
+              ) {
+                return true
+              }
+              if (
+                item.primaryInspResultId === 2 &&
+                item.abeyanceInspResultId === 2 &&
+                item.abeyanceInspDescr === null
+              ) {
+                return true
+              }
+              if (
+                item.primaryInspResultId === 4 &&
+                item.abeyanceInspResultId === 2 &&
+                item.abeyanceInspDescr === null
+              ) {
+                return true
+              }
+              return false
+            })
+            .map((item) => item.refViolationGroupByGroupId.name)
 
-      if (checkIsDocCheckRequired) {
-        errors.push(
-          'Необходимо заполнить поле "Описание нарушений по первичному осмотру", вкладка "Ход рассмотрения", блоки: ' +
-            checkIsDocCheckRequired
-        )
+          if (checkIsDocCheckRequired.length) {
+            errors.push(
+              'Необходимо заполнить поле "Описание нарушений после приостановки", вкладка "Ход рассмотрения", блоки:'
+            )
+            checkIsDocCheckRequired.forEach((item) => {
+              errors.push(item)
+            })
+          }
+
+          const checkIsPrimaryInspResultFilled = rest.docCheck.gfCheckViolationsByCheckId.filter(
+            (item) => {
+              if (item.primaryInspResultId === null) {
+                return true
+              } else {
+                return false
+              }
+            }
+          )
+
+          if (checkIsPrimaryInspResultFilled.length) {
+            errors.push(
+              'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
+            )
+          }
+
+          const checkIsAbeyanceInspResultFilled = rest.docCheck.gfCheckViolationsByCheckId.filter(
+            (item) => {
+              if (item.abeyanceInspResultId === null) {
+                return true
+              } else {
+                return false
+              }
+            }
+          )
+
+          if (checkIsAbeyanceInspResultFilled.length) {
+            errors.push(
+              'Необходимо заполнить поле "Осмотр после приостановки, результат проверки", вкладка "Ход рассмотрения";'
+            )
+          }
+
+          if (rest.docCheck.isInstructionRequired === null) {
+            errors.push(
+              'Необходимо выбрать флаг "Создание распоряжения в ходе рассмотрения заявления", вкладка "Ход рассмотрения";'
+            )
+          }
+        }
+      }
+    }
+
+    // Приостановление === 9
+    if (rest.nextStatusId === 9) {
+      if (rest.docCheck && Object.keys(rest.docCheck).length !== 0) {
+        if (
+          rest.docCheck.gfCheckViolationsByCheckId &&
+          rest.docCheck.gfCheckViolationsByCheckId.length
+        ) {
+          const checkIsPrimaryInspResultFilled = rest.docCheck.gfCheckViolationsByCheckId.filter(
+            (item) => {
+              if (item.primaryInspResultId === null) {
+                return true
+              } else {
+                return false
+              }
+            }
+          )
+
+          if (checkIsPrimaryInspResultFilled.length) {
+            errors.push(
+              'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
+            )
+          }
+
+          if (rest.docCheck.isInstructionRequired === null) {
+            errors.push(
+              'Необходимо выбрать флаг "Создание распоряжения в ходе рассмотрения заявления", вкладка "Ход рассмотрения";'
+            )
+          }
+        }
       }
     }
   }
