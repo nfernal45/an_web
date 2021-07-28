@@ -2,7 +2,7 @@
   form-block.mb-10(title='Заявитель')
     template(slot='content')
       el-form(
-        label-position='top' 
+        label-position='top'
         size='small'
         :disabled='disabledEditing || request.regPlaceId === 2'
       )
@@ -17,7 +17,7 @@
                     :label='item.licenseeTypeId'
                   ) {{ item.licenseeTypeName }}
 
-            el-row  
+            el-row
               el-col
                 el-form-item(v-show='licenseeType === "L"' label='Полное наименование')
                   el-input(v-model='licenseeFullname')
@@ -38,9 +38,8 @@
           el-col(:span='8')
             el-form-item(label='ИНН')
               el-input(
-                v-model='licenseeInn' 
-                :maxlength='licenseeType === "L" ? 10 : 12'
-                :rules="[{ type: 'number', message: 'age must be a number'}]")
+                v-model='licenseeInn'
+                :maxlength='licenseeType === "L" ? 10 : 12')
             el-form-item(label='ОГРН')
               el-input(v-model='licenseeOgrn' :maxlength='licenseeType === "L" ? 13 : 15')
             el-form-item(label='Телефон')
@@ -73,7 +72,8 @@ export default {
           licenseeTypeId: 'I'
         }
       ],
-      onlyNumbers: /^[-+]?[0-9]+$/
+      onlyNumbers: /^[-+]?[0-9]+$/,
+      numbersWithLeadingZero: /^([0-9]+)$/
     }
   },
   computed: {
@@ -113,10 +113,10 @@ export default {
         return this.request.licenseeInn
       },
       set(value) {
-        if (value.match(this.onlyNumbers) || !value.length)
+        if (value.match(this.numbersWithLeadingZero) || !value.length)
           this.set({
             propName: 'licenseeInn',
-            propValue: value.length ? Number(value) : value
+            propValue: value.toString()
           })
       }
     },
