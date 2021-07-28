@@ -2,7 +2,7 @@
   form-block.mb-10(title='Уполномоченная организация - представитель заявителя')
     template(slot='content')
       el-form(
-        label-position='top' 
+        label-position='top'
         size='small'
         :disabled='disabledEditing || request.regPlaceId === 2'
       )
@@ -16,7 +16,7 @@
                     :key='item.reprTypeId'
                     :label='item.reprTypeId'
                   ) {{ item.reprTypeName }}
-            el-row  
+            el-row
               el-col
                 el-form-item(v-show='reprType === "L"' label='Полное наименование')
                   el-input(v-model='reprFullname')
@@ -43,7 +43,7 @@
               el-input(v-model='reprPhone')
             el-form-item(label='Электронная почта')
               el-input(v-model='reprEmail')
-              
+
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
@@ -69,7 +69,8 @@ export default {
           reprTypeId: 'I'
         }
       ],
-      onlyNumbers: /^[-+]?[0-9]+$/
+      onlyNumbers: /^[-+]?[0-9]+$/,
+      numbersWithLeadingZero: /^([0-9]+)$/
     }
   },
   computed: {
@@ -109,10 +110,10 @@ export default {
         return this.request.reprInn
       },
       set(value) {
-        if (value.match(this.onlyNumbers) || !value.length)
+        if (value.match(this.numbersWithLeadingZero) || !value.length)
           this.set({
             propName: 'reprInn',
-            propValue: value.length ? Number(value) : value
+            propValue: value.toString()
           })
       }
     },
