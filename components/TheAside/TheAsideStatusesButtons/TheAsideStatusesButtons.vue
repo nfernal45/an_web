@@ -35,6 +35,10 @@ export default {
       docTypesConstants: (state) => state.request.docTypesConstants
     }),
 
+    ...mapState(requestModuleName, {
+      docCheck: (state) => state.docCheck
+    }),
+
     ...mapGetters(referencesModuleName, {
       requestStatusesConstants:
         referencesGetterTypes.GET_REQUEST_STATUSES_OPTIONS_CONSTANTS
@@ -196,7 +200,10 @@ export default {
         return
       }
 
-      const canChangeStatus = validation(this.request)
+      const canChangeStatus = validation(this.request, {
+        nextStatusId,
+        docCheck: this.docCheck
+      })
 
       if (!canChangeStatus) return false
 

@@ -80,7 +80,7 @@
                     :value='item.id')
                 el-button(
                   type='primary'
-                  :disabled='((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3)'
+                  :disabled='(((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7)) && violationGroup.primaryInspResultId === 3'
                   @click=`openViolationDescriptionDialog({
                     violationGroupId: violationGroup.id,
                     refViolationGroupId: violationGroup.refViolationGroupByGroupId.id,
@@ -211,6 +211,10 @@ export default {
               value: 3,
               violationGroupId: violation.id
             })
+            this.changeAbeyanceInspectionResult({
+              value: 3,
+              violationGroupId: violation.id
+            })
           }
           if (
             (violation.refViolationGroupByGroupId.id === 6 ||
@@ -220,6 +224,10 @@ export default {
                 this.request.agreementFoundationId === 4))
           ) {
             this.changePrimaryInspectionResult({
+              value: 3,
+              violationGroupId: violation.id
+            })
+            this.changeAbeyanceInspectionResult({
               value: 3,
               violationGroupId: violation.id
             })
@@ -283,7 +291,7 @@ export default {
 
     refInspectionResultsAbeyance() {
       return this.refInspectionResults.filter(
-        (result) => result.abeyance === 'Y'
+        (result) => result.isAbeyance === 'Y'
       )
     }
   },
