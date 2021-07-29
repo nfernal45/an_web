@@ -5,7 +5,6 @@
       clearable
       filterable
       @focus="onFocus"
-      :remote-method="fetchEmployeeOptionsByName"
       placeholder="Введите фамилию сотрудника"
       no-match-text="По Вашему запросу сотрудник не найден"
       no-data-text="По Вашему запросу сотрудник не найден"
@@ -36,6 +35,7 @@ export default {
   data() {
     return {
       employeeOptions: [],
+      fullEmployeeOptions: [],
       isLoading: false
     }
   },
@@ -56,32 +56,29 @@ export default {
     }
   },
   mounted() {
-    if (this.value) this.fetchEmployeeById()
+    if (this.value) {
+      this.fetchEmployeeById()
+    } else {
+      this.onFocus()
+    }
   },
   methods: {
     async onFocus() {
-      await this.fetchEmployeeOptionsByName('')
-    },
-    async fetchEmployeeOptionsByName(personName) {
-      this.isLoading = true
-      if (!personName) {
-        this.employeeOptions = await fetchEmployeeOptions({
-          axiosModule: this.$axios,
-          query: {
-            'refPersonByPersonId.personName!': `null`,
-            'refPersonByPersonId.rsysUserByRsysUserId.rsysFRoleUserByRsysUserId.rsysFRoleByFRoleId.FRoleId': 305
-          }
-        })
-      } else {
-        this.employeeOptions = await fetchEmployeeOptions({
-          axiosModule: this.$axios,
-          query: {
-            'refPersonByPersonId.personName': `${personName}*`,
-            'refPersonByPersonId.rsysUserByRsysUserId.rsysFRoleUserByRsysUserId.rsysFRoleByFRoleId.FRoleId': 305
-          }
-        })
+      if (this.fullEmployeeOptions.length === 0) {
+        this.fullEmployeeOptions = await this.fetchEmployeeOptionsByName()
       }
+    },
+    async fetchEmployeeOptionsByName() {
+      this.isLoading = true
+      this.employeeOptions = await fetchEmployeeOptions({
+        axiosModule: this.$axios,
+        query: {
+          'refPersonByPersonId.personName!': null,
+          'refPersonByPersonId.rsysUserByRsysUserId.rsysFRoleUserByRsysUserId.rsysFRoleByFRoleId.FRoleId': 305
+        }
+      })
       this.isLoading = false
+      return this.employeeOptions
     },
     async fetchEmployeeById() {
       if (!this.value) return
