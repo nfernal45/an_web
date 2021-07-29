@@ -37,20 +37,8 @@ export default {
         requestId: currentRequestId
       })
 
-      if (
-        request.gfAbeyancesByRequestId.length &&
-        request.requestStatusId !== 8 &&
-        request.abeyance === 'N'
-      ) {
+      if (request.gfAbeyancesByRequestId.length) {
         request.abeyance = 'Y'
-      }
-
-      if (
-        request.gfAbeyancesByRequestId.length &&
-        request.requestStatusId === 8 &&
-        request.abeyance === 'Y'
-      ) {
-        request.abeyance = 'N'
       }
 
       delete request._links
