@@ -12,7 +12,6 @@ export default async function({ axiosModule, query }) {
   })
 
   const params = {
-    limit: 20,
     search: search.join(';')
   }
 
