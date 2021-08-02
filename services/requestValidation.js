@@ -1,5 +1,14 @@
 import Vue from 'vue'
 
+const filterArrayByField = (array, field) =>
+  array.filter((item) => item[field] === null)
+
+const isNeedCheckViolationsErrors = (array) =>
+  array.docCheck &&
+  Object.keys(array.docCheck).length !== 0 &&
+  array.docCheck.gfCheckViolationsByCheckId &&
+  array.docCheck.gfCheckViolationsByCheckId.length
+
 export const validation = function(request, rest) {
   const errors = []
 
@@ -59,57 +68,40 @@ export const validation = function(request, rest) {
     }
   }
 
-  // Оформляется решение === 6
+  // Оформляется решение === 6 (без приостановки)
   if (rest.nextStatusId === 6 && request.typeId !== 10) {
-    if (rest.docCheck && Object.keys(rest.docCheck).length !== 0) {
-      if (
-        rest.docCheck.gfCheckViolationsByCheckId &&
-        rest.docCheck.gfCheckViolationsByCheckId.length
-      ) {
-        const checkIsPrimaryInspResultFilled = rest.docCheck.gfCheckViolationsByCheckId.filter(
-          (item) => {
-            if (item.primaryInspResultId === null) {
-              return true
-            } else {
-              return false
-            }
-          }
+    if (isNeedCheckViolationsErrors(rest)) {
+      const isPrimaryInspResultFilled = filterArrayByField(
+        rest.docCheck.gfCheckViolationsByCheckId,
+        'primaryInspResultId'
+      ).length
+
+      if (isPrimaryInspResultFilled) {
+        errors.push(
+          'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
         )
+      }
 
-        if (checkIsPrimaryInspResultFilled.length) {
-          errors.push(
-            'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
-          )
-        }
-
-        if (rest.docCheck.isInstructionRequired === null) {
-          errors.push(
-            'Необходимо выбрать флаг "Создание распоряжения в ходе рассмотрения заявления", вкладка "Ход рассмотрения";'
-          )
-        }
+      if (rest.docCheck.isInstructionRequired === null) {
+        errors.push(
+          'Необходимо выбрать флаг "Создание распоряжения в ходе рассмотрения заявления", вкладка "Ход рассмотрения";'
+        )
       }
     }
   }
 
+  // (была приостановка)
   if (request.gfAbeyancesByRequestId.length) {
-    // Оформляется решение === 6
-    if (rest.nextStatusId === 6) {
-      if (rest.docCheck && Object.keys(rest.docCheck).length !== 0) {
-        if (
-          rest.docCheck.gfCheckViolationsByCheckId &&
-          rest.docCheck.gfCheckViolationsByCheckId.length
-        ) {
-          const checkIsAbeyanceInspResultFilled = rest.docCheck.gfCheckViolationsByCheckId.filter(
-            (item) => {
-              if (item.abeyanceInspResultId === null) {
-                return true
-              } else {
-                return false
-              }
-            }
-          )
+    switch (rest.nextStatusId) {
+      // Оформляется решение === 6
+      case 6: {
+        if (isNeedCheckViolationsErrors(rest)) {
+          const isAbeyanceInspResultFilled = filterArrayByField(
+            rest.docCheck.gfCheckViolationsByCheckId,
+            'abeyanceInspResultId'
+          ).length
 
-          if (checkIsAbeyanceInspResultFilled.length) {
+          if (isAbeyanceInspResultFilled) {
             errors.push(
               'Необходимо заполнить поле "Осмотр после приостановки, результат проверки", вкладка "Ход рассмотрения";'
             )
@@ -151,27 +143,18 @@ export const validation = function(request, rest) {
             })
           }
         }
+        break
       }
-    }
 
-    // Приостановление === 9
-    if (rest.nextStatusId === 9) {
-      if (rest.docCheck && Object.keys(rest.docCheck).length !== 0) {
-        if (
-          rest.docCheck.gfCheckViolationsByCheckId &&
-          rest.docCheck.gfCheckViolationsByCheckId.length
-        ) {
-          const checkIsPrimaryInspResultFilled = rest.docCheck.gfCheckViolationsByCheckId.filter(
-            (item) => {
-              if (item.primaryInspResultId === null) {
-                return true
-              } else {
-                return false
-              }
-            }
-          )
+      // Приостановление === 9
+      case 9: {
+        if (isNeedCheckViolationsErrors(rest)) {
+          const isPrimaryInspResultFilled = filterArrayByField(
+            rest.docCheck.gfCheckViolationsByCheckId,
+            'primaryInspResultId'
+          ).length
 
-          if (checkIsPrimaryInspResultFilled.length) {
+          if (isPrimaryInspResultFilled) {
             errors.push(
               'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
             )
@@ -183,6 +166,7 @@ export const validation = function(request, rest) {
             )
           }
         }
+        break
       }
     }
   }
