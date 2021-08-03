@@ -17,10 +17,10 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
+import styles from './TheAsideStatusesButtons.module.sass?module'
 import { getterTypes as referencesGetterTypes } from '@/store/types/references'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
 import { validation } from '@/services/requestValidation'
-import styles from './TheAsideStatusesButtons.module.sass?module'
 
 const requestModuleName = 'request'
 const referencesModuleName = 'references'
@@ -84,7 +84,25 @@ export default {
             if (this.can('RL_GF_QUERY')) return true
             break
           case NOTICEPREPARING:
-            if (this.can('RL_GF_ABEYANCE_PREPARING')) return true
+            if (this.can('RL_GF_ABEYANCE_PREPARING')) {
+              const isAbeyanceAvailable = !!this.docCheck.gfCheckViolationsByCheckId.filter(
+                (item) => {
+                  if (
+                    item.refViolationGroupByGroupId.id === 2 ||
+                    item.refViolationGroupByGroupId.id === 3 ||
+                    item.refViolationGroupByGroupId.id === 7
+                  ) {
+                    if (item.primaryInspResultId === 2) {
+                      return true
+                    }
+                  }
+                  return false
+                }
+              ).length
+              if (isAbeyanceAvailable) {
+                return true
+              }
+            }
             break
           case VIOLATIONELIMINATION:
             if (this.can('RL_GF_ABEYANCE_PREPARING')) return true
