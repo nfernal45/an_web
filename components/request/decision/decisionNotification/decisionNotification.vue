@@ -188,13 +188,19 @@ export default {
         // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
         // и радиогруппа заблокирована
 
-        const allViolationDecided = this.gfCheckViolationsByCheckId.filter(
-          (item) =>
-            item.primaryInspResultId === 1 || item.abeyanceInspResultId === 1
+        const allPrimaryViolationDecided = this.gfCheckViolationsByCheckId.filter(
+          (item) => item.primaryInspResultId === 1
+        )
+
+        const allAbeyanceViolationDecided = this.gfCheckViolationsByCheckId.filter(
+          (item) => item.abeyanceInspResultId === 1
         )
 
         if (
-          allViolationDecided.length === this.gfCheckViolationsByCheckId.length
+          allPrimaryViolationDecided.length ===
+            this.gfCheckViolationsByCheckId.length &&
+          allAbeyanceViolationDecided.length ===
+            this.gfCheckViolationsByCheckId.length
         ) {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           this.decisionType = 'D'
