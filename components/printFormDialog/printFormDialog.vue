@@ -19,7 +19,7 @@
 
     span(slot="footer")
       el-button(@click='handleClose') Закрыть
-        
+
 </template>
 
 <script>
@@ -47,13 +47,26 @@ export default {
     }),
     isRptLinkVisible() {
       return (item) => {
+        if (item.refReportFormByReportFormId.reportFormId === 17) {
+          return !(this.request.abeyance === 'Y')
+        }
+        if (item.refReportFormByReportFormId.reportFormId === 18) {
+          return this.request.abeyance === 'Y'
+        }
         const status = this.request.requestStatusId
         if (status === 6 || status === 7) {
           if (item.decisionType) {
-            if (item.decisionType === this.request.decisionType) return true
-            else return false
-          } else return true
-        } else return true
+            if (item.decisionType === this.request.decisionType) {
+              return true
+            } else {
+              return false
+            }
+          } else {
+            return true
+          }
+        } else {
+          return true
+        }
       }
     }
   },
