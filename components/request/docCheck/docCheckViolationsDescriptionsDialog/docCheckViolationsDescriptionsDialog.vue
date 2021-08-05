@@ -71,8 +71,8 @@ export default {
       this.isDialogOpen = false
     },
     cancelSelection() {
-      this.$emit('select', [])
-      this.closeDialog()
+      this.$emit('select', null)
+      this.isDialogOpen = false
     },
     async fetchViloatioinsDescriptions() {
       if (this.refViolationsDescriptions.length) return

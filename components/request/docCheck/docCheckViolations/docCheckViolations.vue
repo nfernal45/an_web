@@ -349,6 +349,9 @@ export default {
       this.violationDescriptionDialog.isVisible = false
     },
     selectViolationsDescriptions(violationsArray) {
+      if (violationsArray === null) {
+        return
+      }
       const initialValue = this.violationDescriptionDialog
         .currentViolationsDescription
         ? `${this.violationDescriptionDialog.currentViolationsDescription}\n`
