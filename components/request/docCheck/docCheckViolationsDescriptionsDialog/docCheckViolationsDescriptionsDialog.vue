@@ -14,7 +14,7 @@
         :label='violation.name') {{ violation.name }}
     div(slot='footer' class='dialog-footer')
       el-button(@click='confirmSelection' type='primary' v-if='computedRefViolationsDescriptions.length') Выбрать
-      el-button(@click='isDialogOpen = false') Закрыть
+      el-button(@click='cancelSelection') Отменить
 
 </template>
 <script>
@@ -68,6 +68,11 @@ export default {
     },
     confirmSelection() {
       this.$emit('select', this.selectedViolations)
+      this.isDialogOpen = false
+    },
+    cancelSelection() {
+      this.$emit('select', null)
+      this.isDialogOpen = false
     },
     async fetchViloatioinsDescriptions() {
       if (this.refViolationsDescriptions.length) return
