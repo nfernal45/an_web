@@ -198,7 +198,7 @@ export default {
 
         if (
           allPrimaryViolationDecided.length ===
-            this.gfCheckViolationsByCheckId.length &&
+            this.gfCheckViolationsByCheckId.length ||
           allAbeyanceViolationDecided.length ===
             this.gfCheckViolationsByCheckId.length
         ) {
