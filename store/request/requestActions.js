@@ -37,10 +37,6 @@ export default {
         requestId: currentRequestId
       })
 
-      if (request.gfAbeyancesByRequestId.length) {
-        request.abeyance = 'Y'
-      }
-
       delete request._links
       await dispatch(mutationTypes.SET_REQUEST, request)
       dispatch(actionTypes.FETCH_REQUEST_STATUSES)
@@ -235,7 +231,12 @@ export default {
     }
   },
 
-  async [actionTypes.CHANGE_REQUEST_STATUS]({ state, dispatch }, nextStatusId) {
+  async [actionTypes.CHANGE_REQUEST_STATUS](
+    { state, dispatch, commit },
+    nextStatusId
+  ) {
+    dispatch(actionTypes.SET_PROPS_BY_STATUS, nextStatusId)
+
     await dispatch(actionTypes.SAVE_REQUEST_RELATED)
 
     await changeRequestStatus({
@@ -246,10 +247,174 @@ export default {
     })
 
     await dispatch(actionTypes.FETCH_REQUEST)
+
+    if (nextStatusId !== state.request.requestStatusId && nextStatusId === 8) {
+      commit(mutationTypes.SET_REQUEST, { ...state.request, abeyance: 'N' })
+    }
   },
 
   async [actionTypes.SAVE_REQUEST_RELATED]({ dispatch }) {
     await dispatch(actionTypes.SAVE_DOC_CHECK)
     await dispatch(actionTypes.SAVE_REQUEST)
+  },
+
+  [actionTypes.SET_PROPS_BY_STATUS]({ state, commit }, nextStatusId) {
+    if (nextStatusId === 6) {
+      // Если Заявление с ЦО=10
+      // «Исключение дома из реестра» и Основание =
+      // (Решение суда (agreementFoundationId = 5) или Решения ОГЖН (6))
+      // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
+      // и радиогруппа заблокирована
+
+      if (
+        state.request.typeId === 10 &&
+        (state.request.agreementFoundationId === 5 ||
+          state.request.agreementFoundationId === 6)
+      ) {
+        commit(mutationTypes.SET_PROP, {
+          propName: 'decisionType',
+          propValue: 'D'
+        })
+        return
+      }
+
+      // Если в Заявлении есть запись с проверкой нарушений Требования
+      // GF_CHECK_VIOLATION.ID с Требованием 6
+      // GF_CHECK_VIOLATION.GROUP_ID=6 и
+      // (Результат проверки по первичному осмотру=Не соответствует или
+      // Результат проверки по осмотру после приостановки=Не соответствует)
+      // PRIMARY_INSP_RESULT_ID=2 или ABEYANCE_INSP_RESULT_ID=2
+      // то "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
+      // и радиогруппа заблокирована
+
+      if (
+        state.docCheck.gfCheckViolationsByCheckId &&
+        state.docCheck.gfCheckViolationsByCheckId.length
+      ) {
+        const violation = state.docCheck.gfCheckViolationsByCheckId.find(
+          (item) => item.refViolationGroupByGroupId.id === 6
+        )
+
+        if (
+          violation &&
+          (violation.abeyanceInspResultId === 2 ||
+            violation.primaryInspResultId === 2)
+        ) {
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionType',
+            propValue: 'R'
+          })
+          return
+        }
+
+        // Если в Заявлении все записи с проверками нарушений Требований
+        // GF_CHECK_VIOLATION.ID с "Результат проверки по первичному осмотру"
+        // = Соответствует //PRIMARY_INSP_RESULT_ID=1 или с "Результат проверки по
+        // осмотру после приостановки" = Соответствует
+        // ABEYANCE_INSP_RESULT_ID=1
+        // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
+        // и радиогруппа заблокирована
+
+        const allPrimaryViolationDecided = state.docCheck.gfCheckViolationsByCheckId.filter(
+          (item) => item.primaryInspResultId === 1
+        )
+
+        const allAbeyanceViolationDecided = state.docCheck.gfCheckViolationsByCheckId.filter(
+          (item) => item.abeyanceInspResultId === 1
+        )
+
+        if (
+          allPrimaryViolationDecided.length ===
+            state.docCheck.gfCheckViolationsByCheckId.length ||
+          allAbeyanceViolationDecided.length ===
+            state.docCheck.gfCheckViolationsByCheckId.length
+        ) {
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionType',
+            propValue: 'D'
+          })
+          return
+        }
+
+        // Если в Заявлении есть хотя бы одна запись с проверкой нарушений Требования
+        // GF_CHECK_VIOLATION.ID
+
+        // с Требованием 1
+        // GF_CHECK_VIOLATION.GROUP_ID=1 и Результат проверки по первичному осмотру
+        // = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+        // с Требованием 4
+        // GF_CHECK_VIOLATION.GROUP_ID=4 и Результат проверки по первичному
+        // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+        // с Требованием 5
+        // GF_CHECK_VIOLATION.GROUP_ID=5 и Результат проверки по первичному
+        // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+
+        // с Требованием 6
+        // GF_CHECK_VIOLATION.GROUP_ID=6 и Результат проверки по первичному
+        // осмотру = Не соответствует PRIMARY_INSP_RESULT_ID=2
+        // то "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
+        // и радиогруппа заблокирована
+
+        if (
+          state.docCheck.gfCheckViolationsByCheckId.filter((item) => {
+            if (
+              item.refViolationGroupByGroupId.id === 1 &&
+              item.primaryInspResultId === 2
+            ) {
+              return true
+            }
+            if (
+              item.refViolationGroupByGroupId.id === 4 &&
+              item.primaryInspResultId === 2
+            ) {
+              return true
+            }
+            if (
+              item.refViolationGroupByGroupId.id === 5 &&
+              item.primaryInspResultId === 2
+            ) {
+              return true
+            }
+            if (
+              item.refViolationGroupByGroupId.id === 6 &&
+              item.primaryInspResultId === 2
+            ) {
+              return true
+            }
+            return false
+          }).length
+        ) {
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionType',
+            propValue: 'R'
+          })
+          return
+        }
+
+        // Если в Заявлении есть хотя бы одна запись с проверкой нарушений
+        // Требования GF_CHECK_VIOLATION.ID и с "Результат проверки по осмотру
+        // после приостановки" = Не соответствует
+        // ABEYANCE_INSP_RESULT_ID=2 то
+        // "Тип уведомления" = Отказ (GF_REQUEST.DECISION_TYPE=R)
+        //  и радиогруппа заблокирована
+
+        if (
+          state.docCheck.gfCheckViolationsByCheckId.find(
+            (item) => item.abeyanceInspResultId === 2
+          )
+        ) {
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionType',
+            propValue: 'R'
+          })
+        }
+      }
+    }
+
+    if (nextStatusId === 8) {
+      commit(mutationTypes.SET_REQUEST, { ...state.request, abeyance: 'Y' })
+    }
   }
 }
