@@ -37,10 +37,6 @@ export default {
         requestId: currentRequestId
       })
 
-      if (request.gfAbeyancesByRequestId.length) {
-        request.abeyance = 'Y'
-      }
-
       delete request._links
       await dispatch(mutationTypes.SET_REQUEST, request)
       dispatch(actionTypes.FETCH_REQUEST_STATUSES)
@@ -235,7 +231,14 @@ export default {
     }
   },
 
-  async [actionTypes.CHANGE_REQUEST_STATUS]({ state, dispatch }, nextStatusId) {
+  async [actionTypes.CHANGE_REQUEST_STATUS](
+    { state, dispatch, commit },
+    nextStatusId
+  ) {
+    if (nextStatusId === 8) {
+      commit(mutationTypes.SET_REQUEST, { ...state.request, abeyance: 'Y' })
+    }
+
     await dispatch(actionTypes.SAVE_REQUEST_RELATED)
 
     await changeRequestStatus({
@@ -246,6 +249,10 @@ export default {
     })
 
     await dispatch(actionTypes.FETCH_REQUEST)
+
+    if (nextStatusId !== state.request.requestStatusId && nextStatusId === 8) {
+      commit(mutationTypes.SET_REQUEST, { ...state.request, abeyance: 'N' })
+    }
   },
 
   async [actionTypes.SAVE_REQUEST_RELATED]({ dispatch }) {
