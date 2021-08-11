@@ -2,7 +2,7 @@
   form-block.mb-10(title='Сведения о многоквартирном доме')
     template(slot='content')
       el-form(
-        label-position='top' 
+        label-position='top'
         size='small'
         :disabled='disabledEditing'
       )
@@ -119,10 +119,10 @@ export default {
     ...mapMutations(moduleName, {
       set: mutationTypes.SET_PROP
     }),
-    selectAddress({ addressId, fiasHouseGuid, btiAddrId }) {
+    selectAddress({ addressId, fiasHouseGuid, btiHouseItcId }) {
       this.addressId = addressId
       if (fiasHouseGuid) this.fiasHouseguid = fiasHouseGuid
-      if (btiAddrId) this.unom = btiAddrId
+      if (btiHouseItcId) this.unom = btiHouseItcId
     }
   }
 }
