@@ -96,6 +96,12 @@ export default {
                       return true
                     }
                   }
+                  if (
+                    item.refViolationGroupByGroupId.id === 3 &&
+                    item.primaryInspResultId === 4
+                  ) {
+                    return true
+                  }
                   return false
                 }
               ).length
