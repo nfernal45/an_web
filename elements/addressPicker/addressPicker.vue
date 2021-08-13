@@ -182,6 +182,7 @@ export default {
   },
   data() {
     return {
+      savedAddress: null,
       selectedAddressId: null,
       selectedBtiHouseItcId: null,
       addressName: '',
@@ -259,8 +260,15 @@ export default {
       }
     }
   },
-  mounted() {
-    this.fetchAddreesNameById()
+  async mounted() {
+    await this.fetchAddreesNameById()
+    if (this.savedAddress !== null) {
+      this.$emit('selectAddress', {
+        addressId: this.savedAddress.addressId,
+        fiasHouseGuid: this.savedAddress.fiasHouseGuid,
+        btiHouseItcId: this.savedAddress.btiHouseItcId
+      })
+    }
   },
   methods: {
     async fetchAddreesNameById() {
@@ -270,6 +278,7 @@ export default {
         query: { addressId: this.addressId }
       })
 
+      this.savedAddress = addressesOptions[0]
       this.addressName = addressesOptions[0].fullAddress
     },
 
