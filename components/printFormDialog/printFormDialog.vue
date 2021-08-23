@@ -66,12 +66,6 @@ export default {
             return true
           }
         }
-        // if (item.refReportFormByReportFormId.reportFormId === 17) {
-        //   return !(this.request.abeyance === 'Y')
-        // }
-        // if (item.refReportFormByReportFormId.reportFormId === 18) {
-        //   return this.request.abeyance === 'Y'
-        // }
         const status = this.request.requestStatusId
         if (status === 6 || status === 7) {
           if (item.decisionType) {
