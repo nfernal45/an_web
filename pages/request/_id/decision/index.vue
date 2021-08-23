@@ -47,7 +47,7 @@ export default {
     ...mapGetters(['can', 'canAny']),
     ...mapGetters(requestModuleName, {
       requestPagesActiveStatuses:
-      requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
+        requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
     }),
 
     requestId() {

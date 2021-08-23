@@ -48,10 +48,23 @@ export default {
     isRptLinkVisible() {
       return (item) => {
         if (item.refReportFormByReportFormId.reportFormId === 17) {
-          return !(this.request.abeyance === 'Y')
+          if (this.request.requestStatusId === 6) {
+            return this.request.abeyance === 'N'
+          }
+          if (this.request.requestStatusId === 8) {
+            return true
+          }
         }
         if (item.refReportFormByReportFormId.reportFormId === 18) {
-          return this.request.abeyance === 'Y'
+          if (this.request.requestStatusId === 6) {
+            return this.request.abeyance === 'Y'
+          }
+          if (
+            this.request.requestStatusId === 9 ||
+            this.request.requestStatusId === 10
+          ) {
+            return true
+          }
         }
         const status = this.request.requestStatusId
         if (status === 6 || status === 7) {
