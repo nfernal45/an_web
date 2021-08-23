@@ -30,12 +30,12 @@
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
+import TheAsideStatusesButtons from './TheAsideStatusesButtons'
+import styles from './TheAside.module.sass?module'
 import { actionTypes as requestActionTypes } from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
 import printFormDialog from '@/components/printFormDialog/printFormDialog'
 import { validation } from '@/services/requestValidation'
-import TheAsideStatusesButtons from './TheAsideStatusesButtons'
-import styles from './TheAside.module.sass?module'
 
 const moduleName = 'request'
 export default {
