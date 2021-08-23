@@ -41,6 +41,7 @@ export default {
       await dispatch(mutationTypes.SET_REQUEST, request)
       dispatch(actionTypes.FETCH_REQUEST_STATUSES)
       dispatch(actionTypes.FETCH_DOC_CHECK)
+      dispatch(actionTypes.SET_PROPS_BY_STATUS, state.request.requestStatusId)
     } catch (error) {
       throw error
     }
@@ -62,7 +63,9 @@ export default {
       const data = await saveRequestRecord(this.$axios, request)
       await dispatch(actionTypes.SET_REQUEST, data)
       await dispatch(actionTypes.FETCH_DOC_CHECK)
+      dispatch(actionTypes.SET_PROPS_BY_STATUS, state.request.requestStatusId)
     } catch (error) {
+      console.log(new Error(error))
       throw error
     }
   },
@@ -258,8 +261,9 @@ export default {
     await dispatch(actionTypes.SAVE_REQUEST)
   },
 
-  [actionTypes.SET_PROPS_BY_STATUS]({ state, commit }, nextStatusId) {
-    if (nextStatusId === 6) {
+  [actionTypes.SET_PROPS_BY_STATUS]({ state, commit }, statusId) {
+    // Анализ документов === 5, Оформление решения === 6
+    if (statusId === 5 || statusId === 6) {
       // Если Заявление с ЦО=10
       // «Исключение дома из реестра» и Основание =
       // (Решение суда (agreementFoundationId = 5) или Решения ОГЖН (6))
@@ -304,7 +308,35 @@ export default {
             propName: 'decisionType',
             propValue: 'R'
           })
+
+          if (
+            !state.request.gfRefusalReasonRequestId.find(
+              (item) => item.reasonId === 17
+            )
+          ) {
+            commit(mutationTypes.SET_PROP, {
+              propName: 'gfRefusalReasonRequestId',
+              propValue: [
+                ...state.request.gfRefusalReasonRequestId,
+                { reasonId: 17 }
+              ]
+            })
+          }
+
           return
+        } else {
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionType',
+            propValue: null
+          })
+
+          const filteredRefusalReasons = state.request.gfRefusalReasonRequestId.filter(
+            (item) => item.reasonId !== 17
+          )
+          commit(mutationTypes.SET_PROP, {
+            propName: 'gfRefusalReasonRequestId',
+            propValue: filteredRefusalReasons
+          })
         }
 
         // Если в Заявлении все записи с проверками нарушений Требований
@@ -413,7 +445,7 @@ export default {
       }
     }
 
-    if (nextStatusId === 8) {
+    if (statusId === 8) {
       commit(mutationTypes.SET_REQUEST, { ...state.request, abeyance: 'Y' })
     }
   }
