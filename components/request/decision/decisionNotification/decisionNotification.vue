@@ -37,6 +37,7 @@
                 el-checkbox(v-for='item in refRefusalReasons'
                           :key='item.reasonId'
                           :label='item.reasonId'
+                          :disabled='item.reasonId === 17'
                           style='margin-bottom: 3px') {{ item.reasonName }}
 </template>
 <script>
