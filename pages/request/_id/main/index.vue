@@ -2,23 +2,23 @@
   div.request-main
       // Основные сведения
       el-row
-        request-main-general-info(:disabledEditing='disabledEditing')
+        request-main-general-info(:disabledEditing='disabledEditing || isRequestSaving')
 
       // Заявитель
       el-row
-        request-main-licensee(:disabledEditing='disabledEditing')
+        request-main-licensee(:disabledEditing='disabledEditing || isRequestSaving')
 
       // Уполномоченная организация - представитель заявителя
       el-row
-        request-main-licensee-representative(:disabledEditing='disabledEditing')
-      
+        request-main-licensee-representative(:disabledEditing='disabledEditing || isRequestSaving')
+
       // Сведения о многоквартирном доме
       el-row
-        request-main-building-info(:disabledEditing='disabledEditing')
+        request-main-building-info(:disabledEditing='disabledEditing || isRequestSaving')
 
       // Дополнительные сведения
       el-row
-        request-main-extra-info(:disabledEditing='disabledEditing')
+        request-main-extra-info(:disabledEditing='disabledEditing || isRequestSaving')
 </template>
 
 <script>
@@ -46,7 +46,8 @@ export default {
   computed: {
     ...mapGetters(['can', 'canAny']),
     ...mapState(requestModuleName, {
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.isRequestSaving
     }),
     requestId() {
       return this.$route.params.id

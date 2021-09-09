@@ -2,15 +2,15 @@
   div.dicision
     el-row.mb-20
       // Решение по заявлению
-      decision-info(:disabledEditing='disabledEditing')
+      decision-info(:disabledEditing='disabledEditing || isRequestSaving')
 
     el-row.mb-20
       // Уведомление
-      decision-notification(:disabledEditing='disabledEditing')
+      decision-notification(:disabledEditing='disabledEditing || isRequestSaving')
 
     el-row.mb-20
       // Выдача документов
-      documents-issue(:disabledEditing='!can("RL_GF_DOC_ISSUE")')
+      documents-issue(:disabledEditing='!can("RL_GF_DOC_ISSUE") || isRequestSaving')
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -41,7 +41,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.request.isRequestSaving
     }),
 
     ...mapGetters(['can', 'canAny']),

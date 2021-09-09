@@ -4,7 +4,8 @@
       v-model='employeeId'
       clearable
       filterable
-      @focus="onFocus"
+      remote
+      :remote-method="fetchEmployeeOptionsByName"
       placeholder="Введите фамилию сотрудника"
       no-match-text="По Вашему запросу сотрудник не найден"
       no-data-text="По Вашему запросу сотрудник не найден"
@@ -35,7 +36,6 @@ export default {
   data() {
     return {
       employeeOptions: [],
-      fullEmployeeOptions: [],
       isLoading: false
     }
   },
@@ -56,29 +56,20 @@ export default {
     }
   },
   mounted() {
-    if (this.value) {
-      this.fetchEmployeeById()
-    } else {
-      this.onFocus()
-    }
+    if (this.value) this.fetchEmployeeById()
   },
   methods: {
-    async onFocus() {
-      if (this.fullEmployeeOptions.length === 0) {
-        this.fullEmployeeOptions = await this.fetchEmployeeOptionsByName()
-      }
-    },
-    async fetchEmployeeOptionsByName() {
+    async fetchEmployeeOptionsByName(personName) {
+      if (personName.length < 2) return
       this.isLoading = true
       this.employeeOptions = await fetchEmployeeOptions({
         axiosModule: this.$axios,
         query: {
-          'refPersonByPersonId.personName!': null,
+          'refPersonByPersonId.personName': `${personName}*`,
           'refPersonByPersonId.rsysUserByRsysUserId.rsysFRoleUserByRsysUserId.rsysFRoleByFRoleId.FRoleId': 305
         }
       })
       this.isLoading = false
-      return this.employeeOptions
     },
     async fetchEmployeeById() {
       if (!this.value) return
@@ -90,5 +81,3 @@ export default {
   }
 }
 </script>
-
-<style></style>

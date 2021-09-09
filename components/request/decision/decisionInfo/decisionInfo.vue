@@ -2,7 +2,7 @@
   form-block(title='Решение по заявлению')
     template(slot='content')
       el-form(
-        size='small' 
+        size='small'
         label-position='top'
         :disabled='disabledEditing'
       )
@@ -22,7 +22,7 @@
         el-row(:gutter='20')
           el-col(:span='11' :offset='12')
             employee-picker(v-model='licExecutorId' label='Исполнитель')
-          
+
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'

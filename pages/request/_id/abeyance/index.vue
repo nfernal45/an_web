@@ -2,8 +2,8 @@
   div.request-abeyance
     el-row
       // Приостановление решения заявления
-      abeyance-decision(:disabledEditing='disabledEditing')
-    
+      abeyance-decision(:disabledEditing='disabledEditing || isRequestSaving')
+
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -29,7 +29,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.request.isRequestSaving
     }),
 
     ...mapGetters(['can', 'canAny']),

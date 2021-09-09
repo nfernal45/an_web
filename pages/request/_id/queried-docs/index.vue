@@ -1,7 +1,7 @@
 <template lang="pug">
   el-row
     // Межвед. запросы
-    queried-docs-interdept-request(:disabledEditing='disabledEditing')
+    queried-docs-interdept-request(:disabledEditing='disabledEditing || isRequestSaving')
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -27,7 +27,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.request.isRequestSaving
     }),
 
     ...mapGetters(['can', 'canAny']),

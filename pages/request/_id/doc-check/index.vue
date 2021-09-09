@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     // Соответствие заявления и документов требованиям порядка
-    doc-check-violations(:disabledEditing='disabledEditing')
+    doc-check-violations(:disabledEditing='disabledEditing || isRequestSaving')
 
 </template>
 <script>
@@ -26,7 +26,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.request.isRequestSaving
     }),
 
     ...mapGetters(requestModuleName, {

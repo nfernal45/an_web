@@ -6,6 +6,7 @@
           el-button(
             type="primary"
             :class="styles['list-button']"
+            :disabled="isRequestSaving"
             v-show='can("RL_GF_READONLY")')
             font-awesome-icon(icon="reply")
             span Назад к списку
@@ -18,7 +19,12 @@
           font-awesome-icon(icon="save")
           span Сохранить
       li(:class="styles['list-item']")
-        el-button(type="primary" plain :class="styles['list-button']" @click="print()")
+        el-button(
+          type="primary"
+          plain
+          :class="styles['list-button']"
+          :disabled="isRequestSaving"
+          @click="print()")
           font-awesome-icon(icon="print")
           span Печать
 
@@ -29,10 +35,13 @@
 
 </template>
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex'
+import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
 import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
-import { actionTypes as requestActionTypes } from '@/store/types/request'
+import {
+  actionTypes as requestActionTypes,
+  mutationTypes as requestMutationsTypes
+} from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
 import printFormDialog from '@/components/printFormDialog/printFormDialog'
 import { validation } from '@/services/requestValidation'
@@ -46,7 +55,6 @@ export default {
   },
   data() {
     return {
-      isRequestSaving: false,
       isDialogVisible: false
     }
   },
@@ -54,7 +62,8 @@ export default {
     ...mapGetters(['can', 'canAny']),
     ...mapState(moduleName, {
       request: (state) => state.request,
-      docCheck: (state) => state.docCheck
+      docCheck: (state) => state.docCheck,
+      isRequestSaving: (state) => state.isRequestSaving
     }),
 
     styles() {
@@ -64,6 +73,9 @@ export default {
   methods: {
     ...mapActions(moduleName, {
       saveRequestRelated: requestActionTypes.SAVE_REQUEST_RELATED
+    }),
+    ...mapMutations(moduleName, {
+      setIsRequestSaving: requestMutationsTypes.SET_IS_REQUEST_SAVING
     }),
     openNewCreatedRequestPage() {
       if (!isNumber(this.$route.params.id)) {
@@ -77,13 +89,13 @@ export default {
       const canSave = validation(this.request, { docCheck: this.docCheck })
 
       if (canSave) {
-        this.isRequestSaving = true
+        this.setIsRequestSaving(true)
         try {
           await this.saveRequestRelated()
           this.openNewCreatedRequestPage()
-          this.isRequestSaving = false
+          this.setIsRequestSaving(false)
         } catch (error) {
-          this.isRequestSaving = false
+          this.setIsRequestSaving(false)
         }
       }
 

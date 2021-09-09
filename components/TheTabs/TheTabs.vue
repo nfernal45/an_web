@@ -13,8 +13,9 @@
         strong Статус:
         span {{ requestStatusName }}
 
-    el-button-group(:class="styles.tabs")
+    el-button-group(:class="styles.tabs" :disabled="isRequestSaving")
       nuxt-link.el-button(
+        :disabled="isRequestSaving"
         :class="tabLinkClass(tab.link)"
         v-for="(tab, index) in tabsComputed" :key="index"
         :to="tab.link"
@@ -79,7 +80,8 @@ export default {
   computed: {
     ...mapGetters(['can', 'canAny']),
     ...mapState(requestModuleName, {
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.isRequestSaving
     }),
 
     ...mapGetters(requestModuleName, {
@@ -179,4 +181,10 @@ export default {
   }
 }
 </script>
-<style lang="sass"></style>
+<style scoped lang="sass">
+.el-button-group[disabled="disabled"]
+  cursor: not-allowed
+
+.el-button-group[disabled="disabled"] a
+  pointer-events: none
+</style>
