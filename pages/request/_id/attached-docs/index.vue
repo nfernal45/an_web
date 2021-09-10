@@ -5,17 +5,17 @@
       attached-docs-licensee-docs(:refDocTypes='refDocTypes'
                                   :chedSettings='chedSettings'
                                   :chedSettingsLoaded='chedSettingsLoaded'
-                                  :disabledEditing='disabledEditing || isRequestSaving')
+                                  :disabledEditing='disabledEditing')
       // Документы МЖИ
       attached-docs-mzhi-docs(:refDocTypes='refDocTypes'
                               :chedSettings='chedSettings'
                               :chedSettingsLoaded='chedSettingsLoaded'
-                              :disabledEditing='!can("RL_GF_DOC_MZHI") || isRequestSaving')
+                              :disabledEditing='!can("RL_GF_DOC_MZHI") || disabledEditing')
 
       attached-docs-internal(:refDocTypes='refDocTypes'
                               :chedSettings='chedSettings'
                               :chedSettingsLoaded='chedSettingsLoaded'
-                              :disabledEditing='!can("RL_GF_DOC_MZHI") || isRequestSaving')
+                              :disabledEditing='!can("RL_GF_DOC_MZHI") || disabledEditing')
 
 </template>
 <script>
@@ -53,7 +53,8 @@ export default {
     },
     // false - will not disable, true - will be disable
     disabledEditing() {
-      if (this.can('RL_GF_REQUEST_CREATE')) return false
+      if (this.can('RL_GF_REQUEST_CREATE') && !this.isRequestSaving)
+        return false
 
       return true
     }

@@ -2,23 +2,23 @@
   div.request-main
       // Основные сведения
       el-row
-        request-main-general-info(:disabledEditing='disabledEditing || isRequestSaving')
+        request-main-general-info(:disabledEditing='disabledEditing')
 
       // Заявитель
       el-row
-        request-main-licensee(:disabledEditing='disabledEditing || isRequestSaving')
+        request-main-licensee(:disabledEditing='disabledEditing')
 
       // Уполномоченная организация - представитель заявителя
       el-row
-        request-main-licensee-representative(:disabledEditing='disabledEditing || isRequestSaving')
+        request-main-licensee-representative(:disabledEditing='disabledEditing')
 
       // Сведения о многоквартирном доме
       el-row
-        request-main-building-info(:disabledEditing='disabledEditing || isRequestSaving')
+        request-main-building-info(:disabledEditing='disabledEditing')
 
       // Дополнительные сведения
       el-row
-        request-main-extra-info(:disabledEditing='disabledEditing || isRequestSaving')
+        request-main-extra-info(:disabledEditing='disabledEditing')
 </template>
 
 <script>
@@ -54,7 +54,10 @@ export default {
     },
     // false - will not disable, true - will be disable
     disabledEditing() {
-      if (this.canAny(['RL_GF_REQUEST_CREATE', 'RL_GF_REQUEST_REGISTER']))
+      if (
+        this.canAny(['RL_GF_REQUEST_CREATE', 'RL_GF_REQUEST_REGISTER']) &&
+        !this.isRequestSaving
+      )
         return false
 
       return true

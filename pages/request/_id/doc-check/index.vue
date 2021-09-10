@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     // Соответствие заявления и документов требованиям порядка
-    doc-check-violations(:disabledEditing='disabledEditing || isRequestSaving')
+    doc-check-violations(:disabledEditing='disabledEditing')
 
 </template>
 <script>
@@ -39,9 +39,14 @@ export default {
 
     disabledEditing() {
       if (
-        this.can('RL_GF_DOC_CHECK_EDIT', this.request.request.requestStatusId)
+        this.can(
+          'RL_GF_DOC_CHECK_EDIT',
+          this.request.request.requestStatusId
+        ) &&
+        !this.isRequestSaving
       )
         return false
+
       return true
     }
   }
