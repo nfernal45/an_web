@@ -11,15 +11,19 @@
           type='warning'
           plain
           :class='styles["list-button", "status-button"]'
+          :disabled='isRequestSaving'
           @click='onStatusChange(button.statusId)'
         ) {{ button.buttonName }}
 
 </template>
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import styles from './TheAsideStatusesButtons.module.sass?module'
 import { getterTypes as referencesGetterTypes } from '@/store/types/references'
-import { actionTypes as requestActionTypes } from '@/store/types/request'
+import {
+  actionTypes as requestActionTypes,
+  mutationTypes as requestMutationsTypes
+} from '@/store/types/request'
 import { validation } from '@/services/requestValidation'
 
 const requestModuleName = 'request'
@@ -30,6 +34,7 @@ export default {
   computed: {
     ...mapState({
       request: (state) => state.request.request,
+      isRequestSaving: (state) => state.request.isRequestSaving,
       requestStatuses: (state) => state.request.requestStatuses,
       mzhiAttachedDocs: (state) => state.request.mzhiAttachedDocs,
       docTypesConstants: (state) => state.request.docTypesConstants
@@ -140,6 +145,10 @@ export default {
       changeRequestStatus: requestActionTypes.CHANGE_REQUEST_STATUS
     }),
 
+    ...mapMutations(requestModuleName, {
+      setIsRequestSaving: requestMutationsTypes.SET_IS_REQUEST_SAVING
+    }),
+
     checkRequestDecision(nextStatusId) {
       return this.request.requestStatusId === 6
         ? !!this.request.decisionType
@@ -237,7 +246,15 @@ export default {
         lock: true,
         customClass: this.styles['el-loading-mask']
       })
-      await this.changeRequestStatus(nextStatusId)
+      this.setIsRequestSaving(true)
+
+      try {
+        await this.changeRequestStatus(nextStatusId)
+        this.setIsRequestSaving(false)
+      } catch (error) {
+        this.setIsRequestSaving(false)
+      }
+
       loading.close()
     }
   }

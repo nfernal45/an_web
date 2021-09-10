@@ -14,6 +14,10 @@ export default {
     state.request[propName] = propValue
   },
 
+  [mutationTypes.SET_IS_REQUEST_SAVING]: (state, value) => {
+    state.isRequestSaving = value
+  },
+
   [mutationTypes.SET_ARRAY]: (state, { propName, propValue }) => {
     Vue.set(state.request, propName, propValue)
   },

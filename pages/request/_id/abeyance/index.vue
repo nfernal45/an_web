@@ -3,7 +3,7 @@
     el-row
       // Приостановление решения заявления
       abeyance-decision(:disabledEditing='disabledEditing')
-    
+
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -29,7 +29,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.request.isRequestSaving
     }),
 
     ...mapGetters(['can', 'canAny']),
@@ -38,9 +39,11 @@ export default {
         requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
     }),
     disabledEditing() {
-      if (this.canAny(['RL_GF_ABEYANCE_APPROVAL', 'RL_GF_ABEYANCE_PREPARING']))
+      if (
+        this.canAny(['RL_GF_ABEYANCE_APPROVAL', 'RL_GF_ABEYANCE_PREPARING']) &&
+        !this.isRequestSaving
+      )
         return false
-
       return true
     }
   }

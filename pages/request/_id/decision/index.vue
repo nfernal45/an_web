@@ -10,7 +10,7 @@
 
     el-row.mb-20
       // Выдача документов
-      documents-issue(:disabledEditing='!can("RL_GF_DOC_ISSUE")')
+      documents-issue(:disabledEditing='!can("RL_GF_DOC_ISSUE") || disabledEditing')
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
@@ -41,7 +41,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.request.isRequestSaving
     }),
 
     ...mapGetters(['can', 'canAny']),
@@ -58,10 +59,10 @@ export default {
         this.canAny(
           ['RL_GF_DECISION_PREPARING', 'RL_GF_DECISION_APPROVAL'],
           this.request.request.requestStatusId
-        )
+        ) &&
+        !this.isRequestSaving
       )
         return false
-
       return true
     }
   }

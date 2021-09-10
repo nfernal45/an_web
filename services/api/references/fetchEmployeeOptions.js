@@ -4,11 +4,7 @@ export default async function({ axiosModule, query }) {
   const search = []
 
   Object.keys(query).forEach((key) => {
-    if (key.includes('!')) {
-      search.push(`${key}="${query[key]}"`)
-    } else {
-      search.push(`${key}=="${query[key]}"`)
-    }
+    search.push(`${key}=="${query[key]}"`)
   })
 
   const params = {

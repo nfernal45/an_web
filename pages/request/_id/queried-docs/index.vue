@@ -27,7 +27,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.request.isRequestSaving
     }),
 
     ...mapGetters(['can', 'canAny']),
@@ -39,7 +40,7 @@ export default {
       return this.$route.params.id
     },
     disabledEditing() {
-      if (this.can('RL_GF_QUERY')) return false
+      if (this.can('RL_GF_QUERY') && !this.isRequestSaving) return false
 
       return true
     }

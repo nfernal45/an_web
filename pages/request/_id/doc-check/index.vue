@@ -26,7 +26,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.request.isRequestSaving
     }),
 
     ...mapGetters(requestModuleName, {
@@ -38,9 +39,14 @@ export default {
 
     disabledEditing() {
       if (
-        this.can('RL_GF_DOC_CHECK_EDIT', this.request.request.requestStatusId)
+        this.can(
+          'RL_GF_DOC_CHECK_EDIT',
+          this.request.request.requestStatusId
+        ) &&
+        !this.isRequestSaving
       )
         return false
+
       return true
     }
   }

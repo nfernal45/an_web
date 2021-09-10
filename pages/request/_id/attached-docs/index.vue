@@ -10,12 +10,12 @@
       attached-docs-mzhi-docs(:refDocTypes='refDocTypes'
                               :chedSettings='chedSettings'
                               :chedSettingsLoaded='chedSettingsLoaded'
-                              :disabledEditing='!can("RL_GF_DOC_MZHI")')
+                              :disabledEditing='!can("RL_GF_DOC_MZHI") || disabledEditing')
 
       attached-docs-internal(:refDocTypes='refDocTypes'
                               :chedSettings='chedSettings'
                               :chedSettingsLoaded='chedSettingsLoaded'
-                              :disabledEditing='!can("RL_GF_DOC_MZHI")')
+                              :disabledEditing='!can("RL_GF_DOC_MZHI") || disabledEditing')
 
 </template>
 <script>
@@ -45,14 +45,16 @@ export default {
   computed: {
     ...mapGetters(['can', 'canAny']),
     ...mapState(requestModuleName, {
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.isRequestSaving
     }),
     requestId() {
       return this.$route.params.id
     },
     // false - will not disable, true - will be disable
     disabledEditing() {
-      if (this.can('RL_GF_REQUEST_CREATE')) return false
+      if (this.can('RL_GF_REQUEST_CREATE') && !this.isRequestSaving)
+        return false
 
       return true
     }

@@ -11,7 +11,7 @@
       // Уполномоченная организация - представитель заявителя
       el-row
         request-main-licensee-representative(:disabledEditing='disabledEditing')
-      
+
       // Сведения о многоквартирном доме
       el-row
         request-main-building-info(:disabledEditing='disabledEditing')
@@ -46,14 +46,18 @@ export default {
   computed: {
     ...mapGetters(['can', 'canAny']),
     ...mapState(requestModuleName, {
-      request: (state) => state.request
+      request: (state) => state.request,
+      isRequestSaving: (state) => state.isRequestSaving
     }),
     requestId() {
       return this.$route.params.id
     },
     // false - will not disable, true - will be disable
     disabledEditing() {
-      if (this.canAny(['RL_GF_REQUEST_CREATE', 'RL_GF_REQUEST_REGISTER']))
+      if (
+        this.canAny(['RL_GF_REQUEST_CREATE', 'RL_GF_REQUEST_REGISTER']) &&
+        !this.isRequestSaving
+      )
         return false
 
       return true

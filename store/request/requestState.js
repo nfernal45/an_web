@@ -2,6 +2,7 @@ export default () => ({
   request: {
     gfAttachedDocsByRequestId: []
   },
+  isRequestSaving: false,
   docCheck: {},
   licenseeAttachedDocs: [],
   mzhiAttachedDocs: [],
