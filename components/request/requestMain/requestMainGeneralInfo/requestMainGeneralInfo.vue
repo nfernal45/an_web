@@ -2,7 +2,7 @@
   form-block.mb-10(title='Основные сведения')
     template(slot='content')
       el-form(
-        size='small' 
+        size='small'
         label-position='top'
         :disabled='disabledEditing'
       )
@@ -34,7 +34,7 @@
                   value-format='dd.MM.yyyy'
                   :picker-options='{ firstDayOfWeek: 1 }'
                 )
-        
+
         el-row.mb-20(:gutter='20')
           el-col.mt-10(:span='12')
             h4.form-title.mb-10 Место подачи документов
@@ -49,7 +49,7 @@
           el-col(:span='12')
             el-form-item(label='ЕНО')
               el-input(v-model='eno' readonly)
-        
+
         el-row(:gutter='20')
           el-col(:span='6')
             el-form-item(label='Рег.№')
@@ -67,7 +67,7 @@
 
             el-form-item(v-if='regPlaceId === 2' label='Дата получения в МЖИ')
               el-date-picker(
-                :picker-options='{ firstDayOfWeek: 1 }' 
+                :picker-options='{ firstDayOfWeek: 1 }'
                 v-model='requestDate'
                 disabled
                 placeholder='Укажите дату получения в МЖИ'
@@ -77,7 +77,7 @@
 
           el-col(:span='12' v-if='regPlaceId === 1')
             employee-picker(
-          
+              :queryParams='queryParams'
               v-model='regEmployeeId'
               label='Специалист службы одного окна'
             )
@@ -89,7 +89,7 @@
           el-col(:span='6' v-if='regPlaceId === 2')
             el-form-item(label='Дата подачи на портале')
               el-date-picker(
-                :picker-options='{ firstDayOfWeek: 1 }' 
+                :picker-options='{ firstDayOfWeek: 1 }'
                 v-model='outerRequestDate'
                 disabled
                 placeholder='Укажите дату подачи заявления'
@@ -127,7 +127,10 @@ export default {
           decisionIssueMethodName: 'В электронном виде по электронной почте',
           decisionIssueMethodId: 2
         }
-      ]
+      ],
+      queryParams: {
+        'refPersonByPersonId.rsysUserByRsysUserId.rsysFRoleUserByRsysUserId.rsysFRoleByFRoleId.FRoleId': 305
+      }
     }
   },
   computed: {
