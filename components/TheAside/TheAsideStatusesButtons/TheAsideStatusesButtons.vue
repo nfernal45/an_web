@@ -90,6 +90,21 @@ export default {
             break
           case NOTICEPREPARING:
             if (this.can('RL_GF_ABEYANCE_PREPARING')) {
+              const isAbeyanceNotAvailable = !!this.docCheck.gfCheckViolationsByCheckId.filter(
+                (item) => {
+                  if (
+                    item.refViolationGroupByGroupId.id === 1 ||
+                    item.refViolationGroupByGroupId.id === 4 ||
+                    item.refViolationGroupByGroupId.id === 5 ||
+                    item.refViolationGroupByGroupId.id === 6
+                  ) {
+                    if (item.primaryInspResultId === 2) {
+                      return true
+                    }
+                  }
+                  return false
+                }
+              ).length
               const isAbeyanceAvailable = !!this.docCheck.gfCheckViolationsByCheckId.filter(
                 (item) => {
                   if (
@@ -97,13 +112,17 @@ export default {
                     item.refViolationGroupByGroupId.id === 3 ||
                     item.refViolationGroupByGroupId.id === 7
                   ) {
-                    if (item.primaryInspResultId === 2) {
+                    if (
+                      item.primaryInspResultId === 2 &&
+                      !isAbeyanceNotAvailable
+                    ) {
                       return true
                     }
                   }
                   if (
                     item.refViolationGroupByGroupId.id === 3 &&
-                    item.primaryInspResultId === 4
+                    item.primaryInspResultId === 4 &&
+                    !isAbeyanceNotAvailable
                   ) {
                     return true
                   }
