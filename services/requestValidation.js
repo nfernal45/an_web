@@ -89,6 +89,21 @@ export const validation = function(request, rest) {
       }
     }
   }
+  // триггер "Оформить приостановление"
+  if (rest.nextStatusId === 8) {
+    if (isNeedCheckViolationsErrors(rest)) {
+      const isPrimaryInspResultFilled = filterArrayByField(
+        rest.docCheck.gfCheckViolationsByCheckId,
+        'primaryInspResultId'
+      ).length
+
+      if (isPrimaryInspResultFilled) {
+        errors.push(
+          'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
+        )
+      }
+    }
+  }
 
   // (была приостановка)
   if (request.gfAbeyancesByRequestId.length) {
