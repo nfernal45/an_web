@@ -25,7 +25,7 @@
               el-select(
                 placeholder='Не выбрано'
                 class='mr-10'
-                :disabled='violationIsFixed || (isAbeyance === "Y" && requestStatusId !== 8) || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
+                :disabled='violationIsFixed || isAbeyance === "Y" || (inspectionDisabled && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
                 :value='violationGroup.primaryInspResultId'
                 @input='changePrimaryInspectionResult({ value: $event, violationGroupId: violationGroup.id })'
               )
@@ -37,7 +37,7 @@
                   :value='item.id')
               el-button(
                 type='primary'
-                :disabled='violationIsFixed || (isAbeyance === "Y" && requestStatusId !== 8) || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
+                :disabled='violationIsFixed || isAbeyance === "Y" || (inspectionDisabled && ((violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7) && violationGroup.primaryInspResultId === 3))'
                 @click=`openViolationDescriptionDialog({
                   currentViolationsDescription: violationGroup.primaryInspDescr,
                   violationGroupId: violationGroup.id,
@@ -50,7 +50,7 @@
               //- v-model='testValue'
               el-input(
                 :value='violationGroup.primaryInspDescr'
-                :disabled='violationIsFixed || (isAbeyance === "Y" && requestStatusId !== 8) || (((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7))'
+                :disabled='violationIsFixed || isAbeyance === "Y" || (inspectionDisabled && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7))'
                 class='doc-check-description-input'
                 type='textarea'
                 :autosize='{ minRows: 3 }'
@@ -68,7 +68,7 @@
               el-form-item(label='Результат проверки')
                 el-select(
                   class='mr-10'
-                  :disabled='(((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7)) && violationGroup.abeyanceInspResultId === 3'
+                  :disabled='(inspectionDisabled && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7)) && violationGroup.abeyanceInspResultId === 3'
                   :value='violationGroup.abeyanceInspResultId'
                   @input='changeAbeyanceInspectionResult({ value: $event, violationGroupId: violationGroup.id })'
                 )
@@ -80,7 +80,7 @@
                     :value='item.id')
                 el-button(
                   type='primary'
-                  :disabled='(((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7)) && violationGroup.primaryInspResultId === 3'
+                  :disabled='(inspectionDisabled && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7)) && violationGroup.primaryInspResultId === 3'
                   @click=`openViolationDescriptionDialog({
                     violationGroupId: violationGroup.id,
                     refViolationGroupId: violationGroup.refViolationGroupByGroupId.id,
@@ -91,7 +91,7 @@
               el-form-item(label='Описание нарушений после приостановки')
                 el-input(
                   class='doc-check-description-input'
-                  :disabled='((request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (request.typeId === 11)) && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7)'
+                  :disabled='inspectionDisabled && (violationGroup.refViolationGroupByGroupId.id === 6 || violationGroup.refViolationGroupByGroupId.id === 7)'
                   :value='violationGroup.abeyanceInspDescr'
                   type='textarea'
                   :autosize='{ minRows: 3 }'
@@ -295,6 +295,16 @@ export default {
       return this.refInspectionResults.filter(
         (result) => result.isAbeyance === 'Y'
       )
+    },
+    inspectionDisabled() {
+      return (
+        (this.request.typeId === 8 &&
+          /* eslint-disable-next-line */
+            (this.request.agreementFoundationId == 2 ||
+            /* eslint-disable-next-line */
+              this.request.agreementFoundationId == 4)) ||
+        this.request.typeId === 11
+      )
     }
   },
   mounted() {
@@ -367,7 +377,7 @@ export default {
 </script>
 <style lang="sass">
 .doc-check-violation-block h3
-  font-weigth: normal
+  font-weight: normal
 
 .doc-check-description-input
   textarea
