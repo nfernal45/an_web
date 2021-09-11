@@ -31,6 +31,10 @@ export default {
     value: {
       type: null,
       required: true
+    },
+    queryParams: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -66,7 +70,7 @@ export default {
         axiosModule: this.$axios,
         query: {
           'refPersonByPersonId.personName': `${personName}*`,
-          'refPersonByPersonId.rsysUserByRsysUserId.rsysFRoleUserByRsysUserId.rsysFRoleByFRoleId.FRoleId': 305
+          ...this.queryParams
         }
       })
       this.isLoading = false
