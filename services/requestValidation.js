@@ -69,23 +69,31 @@ export const validation = function(request, rest) {
   }
 
   // Оформляется решение === 6 (без приостановки)
-  if (rest.nextStatusId === 6 && request.typeId !== 10) {
-    if (isNeedCheckViolationsErrors(rest)) {
-      const isPrimaryInspResultFilled = filterArrayByField(
-        rest.docCheck.gfCheckViolationsByCheckId,
-        'primaryInspResultId'
-      ).length
+  if (rest.nextStatusId === 6) {
+    if (
+      !(
+        request.typeId === 10 &&
+        (request.agreementFoundationId === 5 ||
+          request.agreementFoundationId === 6)
+      )
+    ) {
+      if (isNeedCheckViolationsErrors(rest)) {
+        const isPrimaryInspResultFilled = filterArrayByField(
+          rest.docCheck.gfCheckViolationsByCheckId,
+          'primaryInspResultId'
+        ).length
 
-      if (isPrimaryInspResultFilled) {
-        errors.push(
-          'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
-        )
-      }
+        if (isPrimaryInspResultFilled) {
+          errors.push(
+            'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
+          )
+        }
 
-      if (rest.docCheck.isInstructionRequired === null) {
-        errors.push(
-          'Необходимо выбрать флаг "Создание распоряжения в ходе рассмотрения заявления", вкладка "Ход рассмотрения";'
-        )
+        if (rest.docCheck.isInstructionRequired === null) {
+          errors.push(
+            'Необходимо выбрать флаг "Создание распоряжения в ходе рассмотрения заявления", вкладка "Ход рассмотрения";'
+          )
+        }
       }
     }
   }
