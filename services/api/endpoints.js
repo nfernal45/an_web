@@ -86,7 +86,7 @@ const restApiGuRef = {
     list: '/ref-reg-places/list'
   },
   guRefDocType: {
-    list: '/ref-doc-types/list'
+    list: '/ref-doc-types/list?isActiveFilter=all'
   },
   guRefAbeyanceReasons: {
     list: '/ref-abeyance-reasons/list'

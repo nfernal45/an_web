@@ -107,7 +107,9 @@ export default {
     }),
     licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
-        return item.refDocTypeGroupByGroupId.groupId === 1
+        return (
+          item.refDocTypeGroupByGroupId.groupId === 1 && item.isActive === 'Y'
+        )
       })
     },
     computedLicenseeAttachedDocs() {
