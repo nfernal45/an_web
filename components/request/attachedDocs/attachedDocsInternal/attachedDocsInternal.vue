@@ -148,7 +148,9 @@ export default {
     ...mapGetters(['can', 'canAny']),
     licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
-        return item.refDocTypeGroupByGroupId.groupId === 3
+        return (
+          item.refDocTypeGroupByGroupId.groupId === 3 && item.isActive === 'Y'
+        )
       })
     },
     computedInternalAttachedDocs() {

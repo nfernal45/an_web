@@ -170,7 +170,8 @@ export default {
     },
     computedRerDocTypes() {
       return this.refDocTypes.filter(
-        (item) => item.interdepRequest === 'Y' && item.isGf
+        (item) =>
+          item.interdepRequest === 'Y' && item.isGf && item.isActive === 'Y'
       )
     },
     isUpdateRequiredParamsButtonDisabled() {
