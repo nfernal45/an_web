@@ -166,7 +166,9 @@ export default {
           return doc
         })
 
-      return computedQueriedDocs
+      return computedQueriedDocs.sort(
+        (prevDoc, nextDoc) => prevDoc.queryId - nextDoc.queryId
+      )
     },
     computedRerDocTypes() {
       return this.refDocTypes.filter(
