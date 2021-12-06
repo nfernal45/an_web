@@ -166,7 +166,10 @@ export default {
           return doc
         })
 
-      if ('sort' in computedQueriedDocs) {
+      if (
+        typeof computedQueriedDocs !== 'undefined' &&
+        'sort' in computedQueriedDocs
+      ) {
         return computedQueriedDocs.sort(
           (prevDoc, nextDoc) => prevDoc.queryId - nextDoc.queryId
         )
