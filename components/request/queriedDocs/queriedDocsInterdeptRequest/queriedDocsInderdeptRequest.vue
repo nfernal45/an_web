@@ -166,9 +166,16 @@ export default {
           return doc
         })
 
-      return computedQueriedDocs.sort(
-        (prevDoc, nextDoc) => prevDoc.queryId - nextDoc.queryId
-      )
+      if (
+        typeof computedQueriedDocs !== 'undefined' &&
+        'sort' in computedQueriedDocs
+      ) {
+        return computedQueriedDocs.sort(
+          (prevDoc, nextDoc) => prevDoc.queryId - nextDoc.queryId
+        )
+      } else {
+        return computedQueriedDocs
+      }
     },
     computedRerDocTypes() {
       return this.refDocTypes.filter(
