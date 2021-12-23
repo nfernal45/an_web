@@ -99,6 +99,12 @@ export default {
     handleClose(closeMessage = '') {
       this.$emit('close')
 
+      // :before-close передаёт функцию hide компонента
+      if (typeof closeMessage === 'function') {
+        closeMessage()
+        closeMessage = ''
+      }
+
       if (closeMessage.length) {
         this.$notify.warning({
           title: 'Внимание',
