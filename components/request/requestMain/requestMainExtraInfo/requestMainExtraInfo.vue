@@ -177,6 +177,10 @@ export default {
     async regPlaceId() {
       this.agreementFoundationId = null
       await this.fetchAgreementFoundations()
+    },
+    async isTsgRepr() {
+      this.agreementFoundationId = null
+      await this.fetchAgreementFoundations()
     }
   },
   mounted() {
@@ -193,10 +197,29 @@ export default {
         axiosModule: this.$axios
       })
       this.agreementFoundationsOptions = response.filter((item) => {
-        if (item.id === 5 || item.id === 6) {
-          return this.request.typeId === 10 && this.request.regPlaceId === 1
+        switch (item.id) {
+          case 1: {
+            return this.request.typeId !== 11
+          }
+          case 2: {
+            return this.request.typeId !== 11 && this.request.isTsgRepr !== 'Y'
+          }
+          case 3: {
+            return this.request.typeId === 11
+          }
+          case 4: {
+            return this.request.typeId === 8
+          }
+          case 5: {
+            return this.request.typeId === 10
+          }
+          case 6: {
+            return this.request.typeId === 10 && this.request.regPlaceId === 1
+          }
+          default: {
+            return true
+          }
         }
-        return true
       })
     },
 
