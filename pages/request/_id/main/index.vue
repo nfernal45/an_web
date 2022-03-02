@@ -16,6 +16,10 @@
       el-row
         request-main-building-info(:disabledEditing='disabledEditing')
 
+      // Сведения о разрешении на ввод объекта в эксплуатацию
+      el-row
+        request-main-permission-facility-info(:disabledEditing='disabledEditing')
+
       // Дополнительные сведения
       el-row
         request-main-extra-info(:disabledEditing='disabledEditing')
@@ -27,6 +31,7 @@ import requestMainGeneralInfo from '@/components/request/requestMain/requestMain
 import requestMainLicensee from '@/components/request/requestMain/requestMainLicensee'
 import requestMainLicenseeRepresentative from '@/components/request/requestMain/requestMainLicenseeRepresentative'
 import requestMainBuildingInfo from '@/components/request/requestMain/requestMainBuildingInfo'
+import requestMainPermissionFacilityInfo from '@/components/request/requestMain/requestMainPermissionFacilityInfo'
 import requestMainExtraInfo from '@/components/request/requestMain/requestMainExtraInfo'
 
 const requestModuleName = 'request'
@@ -38,6 +43,7 @@ export default {
     requestMainLicensee,
     requestMainLicenseeRepresentative,
     requestMainBuildingInfo,
+    requestMainPermissionFacilityInfo,
     requestMainExtraInfo
   },
   data() {

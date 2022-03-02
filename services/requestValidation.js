@@ -62,6 +62,31 @@ export const validation = function(request, rest) {
       )
     }
   }
+  if (request.agreementFoundationId === 4) {
+    if (!request.explMosGorOkrug) {
+      errors.push(
+        'Поле "Разрешение на ввод в эксплуатацию выдано Мосгосстройнадзором или Администрацией городского округа Троицк/Щербинка?" в блоке "Сведения о разрешении на ввод объекта в эксплуатацию" обязательно для ввода'
+      )
+    }
+    if (!request.infInExplDatePermission) {
+      errors.push(
+        'Поле "Дата разрешения на ввод объекта в эксплуатацию" обязательно для ввода'
+      )
+    }
+    if (request.explMosGorOkrug && request.explMosGorOkrug.codeChar === 'Y') {
+      const value = request.infInExplNumPermission
+      const regExp = new RegExp('^77-[0-9]{6}-[0-9]{6}-20[0-9]{2}$')
+      if (!regExp.test(value)) {
+        errors.push(
+          'Поле "Номер разрешения на ввод в эксплуатацию" должно иметь формат 77-XXXXXX-XXXXXX-20XX, где X=цифра'
+        )
+      }
+    } else if (!request.infInExplNumPermission) {
+      errors.push(
+        'Поле "Номер разрешения на ввод в эксплуатацию" обязательно для ввода'
+      )
+    }
+  }
 
   if (request.licenseeType === 'L') {
     if (String(request.licenseeInn).length !== 10)
