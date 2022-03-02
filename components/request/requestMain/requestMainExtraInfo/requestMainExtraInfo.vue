@@ -19,6 +19,81 @@
                   :label='item.name'
                   :value='item.id')
 
+          el-col
+            el-form-item(label='Номер')
+              el-input(
+                v-model='agreementDocNum'
+                maxlength="250"
+              )
+
+          el-col
+            el-form-item(label='Дата')
+              el-date-picker(
+                v-model='agreementDocDate'
+                placeholder='Укажите дату'
+                format='dd.MM.yyyy'
+                value-format='dd.MM.yyyy'
+                :picker-options='{ firstDayOfWeek: 1 }'
+              )
+
+          el-col(v-if='isVisibleAgreementRequestNum(request)')
+            el-form-item(label='Номер Заявки размещения решения (протокола) в ГИС ЖКХ')
+              el-input(
+                @keypress.native="isNumber($event)"
+                v-model='agreementRequestNum'
+                :maxlength='9'
+              )
+
+          el-col(v-if='isVisibleTransferFields(request)')
+            el-form-item(label='Дата передачи')
+              el-date-picker(
+                v-model='agreementTransferDate'
+                placeholder='Укажите дату передачи'
+                format='dd.MM.yyyy'
+                value-format='dd.MM.yyyy'
+                :picker-options='{ firstDayOfWeek: 1 }'
+              )
+
+          el-col(
+            v-if='isVisibleTransferFields(request)'
+            :span="14"
+          )
+            el-form-item(label='Способ передачи')
+              el-select.width-100(
+                v-model='transferMethod'
+                size='small'
+                placeholder='Укажите способ передачи'
+                value-key="id"
+              )
+                el-option(v-for='item in transferMethodOptions'
+                  :key='item.id'
+                  :label='item.name'
+                  :value='item')
+
+          el-col
+            el-form-item(
+              label='Заключен договор УК с ТСЖ'
+            )
+              el-radio-group(v-model='agreementConcludedId')
+                el-radio(
+                  v-for='item in refYesNoOptions'
+                  :key='item.id'
+                  :label='item.id'
+                  style='margin-bottom: 5px'
+                ) {{ item.name }}
+
+          el-col
+            el-form-item(
+              label='Инициатором расторжения договора является УК'
+            )
+              el-radio-group(v-model='ukInitiatorId')
+                el-radio(
+                  v-for='item in refYesNoOptions'
+                  :key='item.id'
+                  :label='item.id'
+                  style='margin-bottom: 5px'
+                ) {{ item.name }}
+
           el-col(v-if='request.typeId === 9 && request.licenseeType === "L"')
             el-form-item(
               label='У организации происходит реорганизация'
@@ -73,6 +148,8 @@ import { mapState, mapMutations } from 'vuex'
 import { mutationTypes } from '@/store/types/request'
 import fetchAgreementFoundations from '@/services/api/references/fetchAgreementFoundations'
 import fetchReorganizationForms from '@/services/api/references/fetchReorganizationForms'
+import fetchTransferMethods from '@/services/api/references/fetchTransferMethods'
+import fetchYesNoValues from '@/services/api/references/fetchYesNoValues'
 const moduleName = 'request'
 export default {
   name: 'RequestMainExtraInfo',
@@ -86,6 +163,9 @@ export default {
     return {
       agreementFoundationsOptions: [],
       reorganizationFormsOptions: [],
+      transferMethodOptions: [],
+      // В базе заведён отдельный спарвочник
+      refYesNoOptions: [],
       yesNoOptions: [
         {
           id: 'Y',
@@ -121,6 +201,49 @@ export default {
       },
       set(value) {
         this.set({ propName: 'agreementFoundationId', propValue: value })
+      }
+    },
+
+    transferMethod: {
+      get() {
+        return this.request.transferMethod
+      },
+      set(value) {
+        this.set({ propName: 'transferMethod', propValue: value })
+      }
+    },
+
+    agreementConcludedId: {
+      get() {
+        const item = this.request.agreementConcluded
+        if (typeof item !== 'undefined' && item !== null) {
+          return this.request.agreementConcluded.id
+        } else {
+          return null
+        }
+      },
+      set(value) {
+        const selectedItem = this.refYesNoOptions.find((item) => {
+          return item.id === value
+        })
+        this.set({ propName: 'agreementConcluded', propValue: selectedItem })
+      }
+    },
+
+    ukInitiatorId: {
+      get() {
+        const item = this.request.ukInitiator
+        if (typeof item !== 'undefined' && item !== null) {
+          return this.request.ukInitiator.id
+        } else {
+          return null
+        }
+      },
+      set(value) {
+        const selectedItem = this.refYesNoOptions.find((item) => {
+          return item.id === value
+        })
+        this.set({ propName: 'ukInitiator', propValue: selectedItem })
       }
     },
 
@@ -167,6 +290,42 @@ export default {
       set(value) {
         this.set({ propName: 'currentLicenseDate', propValue: value })
       }
+    },
+
+    agreementDocNum: {
+      get() {
+        return this.request.agreementDocNum
+      },
+      set(value) {
+        this.set({ propName: 'agreementDocNum', propValue: value })
+      }
+    },
+
+    agreementDocDate: {
+      get() {
+        return this.request.agreementDocDate
+      },
+      set(value) {
+        this.set({ propName: 'agreementDocDate', propValue: value })
+      }
+    },
+
+    agreementRequestNum: {
+      get() {
+        return this.request.agreementRequestNum
+      },
+      set(value) {
+        this.set({ propName: 'agreementRequestNum', propValue: value })
+      }
+    },
+
+    agreementTransferDate: {
+      get() {
+        return this.request.agreementTransferDate
+      },
+      set(value) {
+        this.set({ propName: 'agreementTransferDate', propValue: value })
+      }
     }
   },
   watch: {
@@ -177,26 +336,68 @@ export default {
     async regPlaceId() {
       this.agreementFoundationId = null
       await this.fetchAgreementFoundations()
+    },
+    async isTsgRepr() {
+      this.agreementFoundationId = null
+      await this.fetchAgreementFoundations()
+    },
+    agreementFoundationId() {
+      this.agreementRequestNum = null
+      this.agreementTransferDate = null
+      this.transferMethod = null
     }
   },
   mounted() {
     this.fetchAgreementFoundations()
     this.fetchReorganizationForms()
+    this.fetchTransferMethodOptions()
+    this.fetchYesNoOptions()
   },
   methods: {
     ...mapMutations(moduleName, {
       set: mutationTypes.SET_PROP
     }),
 
+    async fetchTransferMethodOptions() {
+      this.transferMethodOptions = await fetchTransferMethods({
+        axiosModule: this.$axios
+      })
+    },
+
+    async fetchYesNoOptions() {
+      this.refYesNoOptions = await fetchYesNoValues({
+        axiosModule: this.$axios
+      })
+    },
+
     async fetchAgreementFoundations() {
       const response = await fetchAgreementFoundations({
         axiosModule: this.$axios
       })
       this.agreementFoundationsOptions = response.filter((item) => {
-        if (item.id === 5 || item.id === 6) {
-          return this.request.typeId === 10 && this.request.regPlaceId === 1
+        switch (item.id) {
+          case 1: {
+            return this.request.typeId !== 11
+          }
+          case 2: {
+            return this.request.typeId !== 11 && this.request.isTsgRepr !== 'Y'
+          }
+          case 3: {
+            return this.request.typeId === 11
+          }
+          case 4: {
+            return this.request.typeId === 8
+          }
+          case 5: {
+            return this.request.typeId === 10
+          }
+          case 6: {
+            return this.request.typeId === 10 && this.request.regPlaceId === 1
+          }
+          default: {
+            return true
+          }
         }
-        return true
       })
     },
 
@@ -204,6 +405,35 @@ export default {
       this.reorganizationFormsOptions = await fetchReorganizationForms({
         axiosModule: this.$axios
       })
+    },
+
+    isNumber(event) {
+      if (!/\d/.test(event.key) && event.key !== '.') {
+        return event.preventDefault()
+      }
+    },
+
+    isVisibleAgreementRequestNum(request) {
+      if (
+        (request.typeId === 8 || request.typeId === 9) &&
+        (request.agreementFoundationId === 2 ||
+          request.agreementFoundationId === 1)
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
+
+    isVisibleTransferFields(request) {
+      if (
+        (request.typeId === 8 ||
+          request.typeId === 9 ||
+          request.typeId === 10) &&
+        request.agreementFoundationId === 1
+      ) {
+        return true
+      }
     }
   }
 }
