@@ -14,6 +14,54 @@ export const validation = function(request, rest) {
 
   if (!request.typeId) errors.push('Укажите цель обращения.')
   if (!request.regPlaceId) errors.push('Укажите место подачи документов.')
+  if (!request.agreementDocNum) {
+    errors.push(
+      'Поле "Номер" в блоке "Дополнительные сведения" обязательно для ввода'
+    )
+  }
+  if (!request.agreementDocDate) {
+    errors.push(
+      'Поле "Дата" в блоке "Дополнительные сведения" обязательно для ввода'
+    )
+  }
+  if (!request.agreementConcluded) {
+    errors.push(
+      'Поле "Заключен договор УК с ТСЖ" в блоке "Дополнительные сведения" обязательно для ввода'
+    )
+  }
+  if (!request.ukInitiator) {
+    errors.push(
+      'Поле "Инициатором расторжения договора является УК" в блоке "Дополнительные сведения" обязательно для ввода'
+    )
+  }
+
+  if (request.typeId === 8 || request.typeId === 9) {
+    if (
+      (request.agreementFoundationId === 2 ||
+        request.agreementFoundationId === 1) &&
+      (!request.agreementRequestNum ||
+        String(request.agreementRequestNum).length !== 9)
+    ) {
+      errors.push(
+        'Поле "Номер Заявки размещения решения (протокола) в ГИС ЖКХ" в блоке "Дополнительные сведения" обязательно для ввода и имеет формат XXXXXXXXX, где X=цифра'
+      )
+    }
+  }
+  if (
+    (request.typeId === 8 || request.typeId === 9 || request.typeId === 10) &&
+    request.agreementFoundationId === 1
+  ) {
+    if (!request.agreementTransferDate) {
+      errors.push(
+        'Поле "Дата передачи" в блоке "Дополнительные сведения" обязательно для ввода'
+      )
+    }
+    if (!request.transferMethod) {
+      errors.push(
+        'Поле "Способ передачи" в блоке "Дополнительные сведения" обязательно для ввода'
+      )
+    }
+  }
 
   if (request.licenseeType === 'L') {
     if (String(request.licenseeInn).length !== 10)

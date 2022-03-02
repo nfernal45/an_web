@@ -221,9 +221,9 @@ export default {
           if (
             (violation.refViolationGroupByGroupId.id === 6 ||
               violation.refViolationGroupByGroupId.id === 7) &&
-            (this.request.typeId === 8 &&
-              (this.request.agreementFoundationId === 2 ||
-                this.request.agreementFoundationId === 4))
+            this.request.typeId === 8 &&
+            (this.request.agreementFoundationId === 2 ||
+              this.request.agreementFoundationId === 4)
           ) {
             this.changePrimaryInspectionResult({
               value: 3,
