@@ -59,7 +59,8 @@ export default {
   },
   computed: {
     ...mapState({
-      request: (state) => state.request.request
+      request: (state) => state.request.request,
+      licenseeAttachedDocs: (state) => state.request.licenseeAttachedDocs
     }),
 
     explMosGorOkrugId: {
@@ -85,6 +86,22 @@ export default {
       },
       set(value) {
         this.set({ propName: 'infInExplDatePermission', propValue: value })
+
+        /* Значение нужно продублировать в блоке "Документы заявителя" */
+        const component = this
+        this.licenseeAttachedDocs.forEach(function(doc, index) {
+          if (
+            doc.refDocTypeByDocTypeId &&
+            doc.refDocTypeByDocTypeId.typeId === 45
+          ) {
+            component.setArrayObjectProp({
+              arrayName: 'licenseeAttachedDocs',
+              propName: 'docDate',
+              propValue: value,
+              propIndex: index
+            })
+          }
+        })
       }
     },
 
@@ -94,6 +111,22 @@ export default {
       },
       set(value) {
         this.set({ propName: 'infInExplNumPermission', propValue: value })
+
+        /* Значение нужно продублировать в блоке "Документы заявителя" */
+        const component = this
+        this.licenseeAttachedDocs.forEach(function(doc, index) {
+          if (
+            doc.refDocTypeByDocTypeId &&
+            doc.refDocTypeByDocTypeId.typeId === 45
+          ) {
+            component.setArrayObjectProp({
+              arrayName: 'licenseeAttachedDocs',
+              propName: 'docNum',
+              propValue: value,
+              propIndex: index
+            })
+          }
+        })
       }
     },
 
@@ -115,7 +148,8 @@ export default {
   },
   methods: {
     ...mapMutations(moduleName, {
-      set: mutationTypes.SET_PROP
+      set: mutationTypes.SET_PROP,
+      setArrayObjectProp: mutationTypes.SET_ARRAY_OBJECT_PROP
     }),
 
     async fetchYesNoOptions() {
