@@ -180,7 +180,8 @@ export default {
   },
   computed: {
     ...mapState(moduleName, {
-      request: (state) => state.request
+      request: (state) => state.request,
+      licenseeAttachedDocs: (state) => state.licenseeAttachedDocs
     }),
 
     requestTypeId: {
@@ -298,6 +299,22 @@ export default {
       },
       set(value) {
         this.set({ propName: 'agreementDocNum', propValue: value })
+
+        /* Значение нужно продублировать в блоке "Документы заявителя" */
+        const component = this
+        this.licenseeAttachedDocs.forEach(function(doc, index) {
+          if (
+            doc.refDocTypeByDocTypeId &&
+            doc.refDocTypeByDocTypeId.typeId === 75
+          ) {
+            component.setArrayObjectProp({
+              arrayName: 'licenseeAttachedDocs',
+              propName: 'docNum',
+              propValue: value,
+              propIndex: index
+            })
+          }
+        })
       }
     },
 
@@ -307,6 +324,22 @@ export default {
       },
       set(value) {
         this.set({ propName: 'agreementDocDate', propValue: value })
+
+        /* Значение нужно продублировать в блоке "Документы заявителя" */
+        const component = this
+        this.licenseeAttachedDocs.forEach(function(doc, index) {
+          if (
+            doc.refDocTypeByDocTypeId &&
+            doc.refDocTypeByDocTypeId.typeId === 75
+          ) {
+            component.setArrayObjectProp({
+              arrayName: 'licenseeAttachedDocs',
+              propName: 'docDate',
+              propValue: value,
+              propIndex: index
+            })
+          }
+        })
       }
     },
 
@@ -355,7 +388,8 @@ export default {
   },
   methods: {
     ...mapMutations(moduleName, {
-      set: mutationTypes.SET_PROP
+      set: mutationTypes.SET_PROP,
+      setArrayObjectProp: mutationTypes.SET_ARRAY_OBJECT_PROP
     }),
 
     async fetchTransferMethodOptions() {
