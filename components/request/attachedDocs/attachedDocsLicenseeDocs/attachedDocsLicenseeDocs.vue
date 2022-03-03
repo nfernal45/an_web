@@ -47,7 +47,7 @@
                     el-input(
                       :value='doc.docNum'
                       :maxlength='50'
-                      @input='setArrayObjectProp({ arrayName: "licenseeAttachedDocs", propName: "docNum", propValue: $event, propIndex: index })'
+                      @input='setArrayObjectProperties(doc.refDocTypeByDocTypeId, { arrayName: "licenseeAttachedDocs", propName: "docNum", propValue: $event, propIndex: index })'
                     )
                 el-col(:span='7')
                   el-form-item(label='Дата')
@@ -57,7 +57,7 @@
                       format="dd.MM.yyyy"
                       value-format="dd.MM.yyyy"
                       :picker-options='{ firstDayOfWeek: 1 }'
-                      @input='setArrayObjectProp({ arrayName: "licenseeAttachedDocs", propName: "docDate", propValue: $event, propIndex: index })'
+                      @input='setArrayObjectProperties(doc.refDocTypeByDocTypeId, { arrayName: "licenseeAttachedDocs", propName: "docDate", propValue: $event, propIndex: index })'
                     )
                 el-col(:span='7' v-show='doc.docFileName')
                   el-form-item(label=' ')
@@ -103,7 +103,9 @@ export default {
   },
   computed: {
     ...mapState(moduleName, {
-      licenseeAttachedDocs: (state) => state.licenseeAttachedDocs
+      licenseeAttachedDocs: (state) => state.licenseeAttachedDocs,
+      infInExplDatePermission: (state) => state.infInExplDatePermission,
+      infInExplNumPermission: (state) => state.infInExplNumPermission
     }),
     licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
@@ -131,10 +133,27 @@ export default {
 
         return Object.assign(doc, { fileLink })
       })
+    },
+    infInExplDatePermission: {
+      get() {
+        return this.request.infInExplDatePermission
+      },
+      set(value) {
+        this.set({ propName: 'infInExplDatePermission', propValue: value })
+      }
+    },
+    infInExplNumPermission: {
+      get() {
+        return this.request.infInExplNumPermission
+      },
+      set(value) {
+        this.set({ propName: 'infInExplNumPermission', propValue: value })
+      }
     }
   },
   methods: {
     ...mapMutations(moduleName, {
+      set: requestMutationTypes.SET_PROP,
       setArrayObjectProp: requestMutationTypes.SET_ARRAY_OBJECT_PROP,
       setLicenseeAttachedDocs: requestMutationTypes.SET_LICENSEE_ATTAHCHED_DOCS
     }),
@@ -150,6 +169,21 @@ export default {
 
       this.isAddDocumentPopoverVisible = false
       this.additionalDocumentTypeId = null
+    },
+    setArrayObjectProperties(
+      docType,
+      { arrayName, propName, propValue, propIndex }
+    ) {
+      this.setArrayObjectProp({ arrayName, propName, propValue, propIndex })
+
+      /* Значение нужно продублировать в отдельном поле на форме */
+      if (docType && docType.typeId === 45) {
+        if (propName === 'docNum') {
+          this.infInExplNumPermission = propValue
+        } else if (propName === 'docDate') {
+          this.infInExplDatePermission = propValue
+        }
+      }
     }
   }
 }
