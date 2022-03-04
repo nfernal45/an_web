@@ -23,6 +23,17 @@
                   el-input(v-model='licenseeFullname')
                 el-form-item(label='Сокращенное наименование')
                   el-input(v-model='licenseeShortname')
+                el-form-item(
+                  v-if='request.typeId === 10'
+                  label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ'
+                )
+                  el-radio-group(v-model='isTsgRepr')
+                    el-radio(
+                      v-for='item in yesNoOptions'
+                      :key='item.id'
+                      :label='item.id'
+                      style='margin-bottom: 5px'
+                    ) {{ item.name }}
 
             el-row(v-show='licenseeType === "I"' :gutter='20')
               el-col(:span='8')
@@ -73,7 +84,17 @@ export default {
         }
       ],
       onlyNumbers: /^[-+]?[0-9]+$/,
-      numbersWithLeadingZero: /^([0-9]+)$/
+      numbersWithLeadingZero: /^([0-9]+)$/,
+      yesNoOptions: [
+        {
+          id: 'Y',
+          name: 'Да'
+        },
+        {
+          id: 'N',
+          name: 'Нет'
+        }
+      ]
     }
   },
   computed: {
@@ -87,6 +108,21 @@ export default {
       },
       set(value) {
         this.set({ propName: 'licenseeType', propValue: value })
+      }
+    },
+
+    requestTypeId: {
+      get() {
+        return this.request.typeId
+      }
+    },
+
+    isTsgRepr: {
+      get() {
+        return this.request.isTsgRepr
+      },
+      set(value) {
+        this.set({ propName: 'isTsgRepr', propValue: value })
       }
     },
 
@@ -177,6 +213,11 @@ export default {
       set(value) {
         this.set({ propName: 'licenseeFSecondName', propValue: value })
       }
+    }
+  },
+  watch: {
+    requestTypeId() {
+      this.isTsgRepr = null
     }
   },
   methods: {

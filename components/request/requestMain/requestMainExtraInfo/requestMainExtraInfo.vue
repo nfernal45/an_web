@@ -106,24 +106,17 @@
                   style='margin-bottom: 5px'
                 ) {{ item.name }}
 
-        el-row(:gutter='20' v-if='request.typeId === 10')
-          el-col
-            el-form-item(
-              label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ'
-            )
-              el-radio-group(v-model='isTsgRepr')
-                el-radio(
-                  v-for='item in yesNoOptions'
-                  :key='item.id'
-                  :label='item.id'
-                  style='margin-bottom: 5px'
-                ) {{ item.name }}
-
-          el-col(:span='12')
+          el-col(
+            v-if='request.isTsgRepr === "N"'
+            :span='12'
+          )
             el-form-item(label='Серия и номер действующей лицензии')
               el-input(v-model='currentLicenseSerNum')
 
-          el-col(:span='12')
+          el-col(
+            v-if='request.isTsgRepr === "N"'
+            :span='12'
+          )
             el-form-item(label='Дата выдачи действующей лицензии')
               el-date-picker(
                 :picker-options='{ firstDayOfWeek: 1 }'
@@ -260,9 +253,6 @@ export default {
     isTsgRepr: {
       get() {
         return this.request.isTsgRepr
-      },
-      set(value) {
-        this.set({ propName: 'isTsgRepr', propValue: value })
       }
     },
 
@@ -372,6 +362,8 @@ export default {
     },
     async isTsgRepr() {
       this.agreementFoundationId = null
+      this.currentLicenseSerNum = null
+      this.currentLicenseDate = null
       await this.fetchAgreementFoundations()
     },
     agreementFoundationId() {
