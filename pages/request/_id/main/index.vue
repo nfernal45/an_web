@@ -16,6 +16,10 @@
       el-row
         request-main-building-info(:disabledEditing='disabledEditing')
 
+      // Сведения о договоре управления многоквартирным домом
+      el-row
+        request-main-building-contract(:disabledEditing='disabledEditing')
+
       // Сведения о разрешении на ввод объекта в эксплуатацию
       el-row
         request-main-permission-facility-info(:disabledEditing='disabledEditing')
@@ -31,6 +35,7 @@ import requestMainGeneralInfo from '@/components/request/requestMain/requestMain
 import requestMainLicensee from '@/components/request/requestMain/requestMainLicensee'
 import requestMainLicenseeRepresentative from '@/components/request/requestMain/requestMainLicenseeRepresentative'
 import requestMainBuildingInfo from '@/components/request/requestMain/requestMainBuildingInfo'
+import requestMainBuildingContract from '@/components/request/requestMain/requestMainBuildingContract'
 import requestMainPermissionFacilityInfo from '@/components/request/requestMain/requestMainPermissionFacilityInfo'
 import requestMainExtraInfo from '@/components/request/requestMain/requestMainExtraInfo'
 
@@ -43,6 +48,7 @@ export default {
     requestMainLicensee,
     requestMainLicenseeRepresentative,
     requestMainBuildingInfo,
+    requestMainBuildingContract,
     requestMainPermissionFacilityInfo,
     requestMainExtraInfo
   },
@@ -60,13 +66,10 @@ export default {
     },
     // false - will not disable, true - will be disable
     disabledEditing() {
-      if (
+      return !(
         this.canAny(['RL_GF_REQUEST_CREATE', 'RL_GF_REQUEST_REGISTER']) &&
         !this.isRequestSaving
       )
-        return false
-
-      return true
     }
   },
   methods: {
