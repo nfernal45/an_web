@@ -22,10 +22,14 @@ export const validation = function(request, rest) {
 
   if (request.isTsgRepr === 'N') {
     if (!request.currentLicenseSerNum) {
-      errors.push('Поле "Серия и номер действующей лицензии" обязательно для ввода')
+      errors.push(
+        'Поле "Серия и номер действующей лицензии" обязательно для ввода'
+      )
     }
     if (!request.currentLicenseDate) {
-      errors.push('Поле "Дата выдачи действующей лицензии" обязательно для ввода')
+      errors.push(
+        'Поле "Дата выдачи действующей лицензии" обязательно для ввода'
+      )
     }
   }
 

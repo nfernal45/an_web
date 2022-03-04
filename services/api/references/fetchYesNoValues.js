@@ -10,7 +10,10 @@ export default async function({ axiosModule }) {
 
   try {
     const { data } = await axiosModule.$get(restApiGfRef.gfRefYesNoValues.list)
-    Vue.ls.set(refName, data.sort((a, b) => (a.id < b.id ? 1 : -1)))
+    Vue.ls.set(
+      refName,
+      data.sort((a, b) => (a.id < b.id ? 1 : -1))
+    )
     return data
   } catch (error) {
     throw error
