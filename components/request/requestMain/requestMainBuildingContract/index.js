@@ -1,0 +1,2 @@
+import requestMainBuildingContract from './requestMainBuildingContract'
+export default requestMainBuildingContract
