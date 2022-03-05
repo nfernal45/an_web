@@ -23,17 +23,6 @@
                   el-input(v-model='licenseeFullname')
                 el-form-item(label='Сокращенное наименование')
                   el-input(v-model='licenseeShortname')
-                el-form-item(
-                  v-if='request.typeId === 10'
-                  label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ'
-                )
-                  el-radio-group(v-model='isTsgRepr')
-                    el-radio(
-                      v-for='item in yesNoOptions'
-                      :key='item.id'
-                      :label='item.id'
-                      style='margin-bottom: 5px'
-                    ) {{ item.name }}
 
             el-row(v-show='licenseeType === "I"' :gutter='20')
               el-col(:span='8')
@@ -45,6 +34,16 @@
               el-col(:span='8')
                 el-form-item(label='Отчество')
                   el-input(v-model='licenseeFSecondName')
+            
+            el-row(v-if='request.typeId === 10')
+              el-form-item(label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ')
+                el-radio-group(v-model='isTsgRepr')
+                  el-radio(
+                    v-for='item in yesNoOptions'
+                    :key='item.id'
+                    :label='item.id'
+                    style='margin-bottom: 5px'
+                  ) {{ item.name }}
 
           el-col(:span='8')
             el-form-item(label='ИНН')
