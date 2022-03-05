@@ -37,6 +37,8 @@
             el-form-item(label='Номер разрешения на ввод в эксплуатацию')
               el-input(
                 v-model='infInExplNumPermission'
+                v-mask="getInfInExplNumPermissionMask(request)"
+                :placeholder="getInfInExplNumPermissionMask(request)"
               )
 </template>
 <script>
@@ -160,6 +162,14 @@ export default {
 
     isVisibleTemplate(request) {
       return request.agreementFoundationId === 4
+    },
+
+    getInfInExplNumPermissionMask(request) {
+      if (request.explMosGorOkrug && request.explMosGorOkrug.codeChar === 'Y') {
+        return '77-XXXXXX-XXXXXX-20XX'
+      } else {
+        return ''
+      }
     }
   }
 }
