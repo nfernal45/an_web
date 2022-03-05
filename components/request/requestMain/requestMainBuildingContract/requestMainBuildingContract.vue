@@ -40,6 +40,11 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      numbersWithLeadingZero: /^([0-9]+)$/
+    }
+  },
   computed: {
     ...mapState({
       request: (state) => state.request.request
@@ -68,7 +73,9 @@ export default {
         return this.request.infMkbRequestNum
       },
       set(value) {
-        this.set({ propName: 'infMkbRequestNum', propValue: value })
+        if (value.match(this.numbersWithLeadingZero) || !value.length) {
+          this.set({ propName: 'infMkbRequestNum', propValue: value })
+        }
       }
     }
   },
