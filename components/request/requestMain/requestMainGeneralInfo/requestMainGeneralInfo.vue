@@ -43,7 +43,7 @@
                 v-for='item in regPlaceOptions'
                 :key='item.regPlaceId'
                 :label='item.regPlaceId'
-                :disabled='request.requestId && item.regPlaceId !== regPlaceId'
+                :disabled='item.regPlaceId !== regPlaceId'
               ) {{ item.regPlaceName }}
 
           el-col(:span='12')

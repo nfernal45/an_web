@@ -109,7 +109,9 @@ export default {
     licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
         return (
-          item.refDocTypeGroupByGroupId.groupId === 1 && item.isActive === 'Y'
+          item.refDocTypeGroupByGroupId.groupId === 1 &&
+          item.isActive === 'Y' &&
+          this.isNotSelectedType(item)
         )
       })
     },
@@ -229,6 +231,19 @@ export default {
         } else if (propName === 'docDate') {
           this.agreementDocDate = propValue
         }
+      }
+    },
+    /* Каждый тип документа можно выбрать 1 раз, кроме TYPE_ID= 82 TYPE_ID=1000 */
+    isNotSelectedType(type) {
+      if (type.typeId === 82 || type.typeId === 1000) {
+        return true
+      } else {
+        const findItem = this.licenseeAttachedDocs.find(
+          (doc) =>
+            doc.refDocTypeByDocTypeId &&
+            type.typeId === doc.refDocTypeByDocTypeId.typeId
+        )
+        return !findItem
       }
     }
   }
