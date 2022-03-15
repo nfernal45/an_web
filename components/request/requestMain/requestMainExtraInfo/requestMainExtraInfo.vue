@@ -4,7 +4,7 @@
       el-form(
         label-position='top'
         size='small'
-        :disabled='disabledEditing'
+        :disabled='disabledEditing || regPlaceId === 2'
       )
         el-row
           el-col(:span="14")
@@ -70,7 +70,9 @@
                   :label='item.name'
                   :value='item')
 
-          el-col
+          el-col(
+            v-if='ifVisibleAgreementConcludedField(request)'
+          )
             el-form-item(
               label='Заключен договор УК с ТСЖ'
             )
@@ -82,7 +84,9 @@
                   style='margin-bottom: 5px'
                 ) {{ item.name }}
 
-          el-col
+          el-col(
+            v-if='ifVisibleUkInitiatorField(request)'
+          )
             el-form-item(
               label='Инициатором расторжения договора является УК'
             )
@@ -354,6 +358,8 @@ export default {
   watch: {
     async requestTypeId() {
       this.agreementFoundationId = null
+      this.agreementConcludedId = null
+      this.ukInitiatorId = null
       await this.fetchAgreementFoundations()
     },
     async regPlaceId() {
@@ -364,6 +370,7 @@ export default {
       this.agreementFoundationId = null
       this.currentLicenseSerNum = null
       this.currentLicenseDate = null
+      this.ukInitiatorId = null
       await this.fetchAgreementFoundations()
     },
     agreementFoundationId() {
@@ -460,6 +467,16 @@ export default {
       ) {
         return true
       }
+    },
+
+    ifVisibleAgreementConcludedField(request) {
+      return (
+        request.typeId === 8 || request.typeId === 9 || request.typeId === 10
+      )
+    },
+
+    ifVisibleUkInitiatorField(request) {
+      return request.typeId === 10 && request.isTsgRepr === 'N'
     }
   }
 }
