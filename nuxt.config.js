@@ -47,6 +47,7 @@ export default {
     '@/plugins/element-ui',
     '@/plugins/global-elements',
     '@/plugins/font-awesome',
+    '@/plugins/v-mask',
     { src: '@/plugins/vue-ls', mode: 'client' }
   ],
   /*
@@ -79,8 +80,8 @@ export default {
   build: {
     transpile: [/^element-ui/],
     /*
-     ** You can extend webpack config here
-     */
+   ** You can extend webpack config here
+   */
     extend(config, ctx) {}
   },
   router: {
