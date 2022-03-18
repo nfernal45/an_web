@@ -111,14 +111,14 @@
                 ) {{ item.name }}
 
           el-col(
-            v-if='request.isTsgRepr === "N"'
+            v-if='request.isTsgRepr === "N" || request.typeId === 11'
             :span='12'
           )
             el-form-item(label='Серия и номер действующей лицензии')
               el-input(v-model='currentLicenseSerNum')
 
           el-col(
-            v-if='request.isTsgRepr === "N"'
+            v-if='request.isTsgRepr === "N" || request.typeId === 11'
             :span='12'
           )
             el-form-item(label='Дата выдачи действующей лицензии')
@@ -413,7 +413,7 @@ export default {
             return this.request.typeId !== 11
           }
           case 2: {
-            return this.request.typeId !== 11 && this.request.isTsgRepr !== 'Y'
+            return this.request.typeId !== 11 && this.request.isTsgRepr === 'Y'
           }
           case 3: {
             return this.request.typeId === 11
