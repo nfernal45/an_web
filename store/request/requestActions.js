@@ -279,6 +279,11 @@ export default {
           propName: 'decisionType',
           propValue: 'D'
         })
+        /* Свойство необходимо только для UI при описание ситуации автоопределения поля типа решения */
+        commit(mutationTypes.SET_PROP, {
+          propName: 'decisionTypeNotAutoConfigured',
+          propValue: 'N'
+        })
         return
       }
 
@@ -308,6 +313,10 @@ export default {
             propName: 'decisionType',
             propValue: 'R'
           })
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionTypeNotAutoConfigured',
+            propValue: 'N'
+          })
 
           if (
             !state.request.gfRefusalReasonRequestId.find(
@@ -326,8 +335,8 @@ export default {
           return
         } else {
           commit(mutationTypes.SET_PROP, {
-            propName: 'decisionType',
-            propValue: null
+            propName: 'decisionTypeNotAutoConfigured',
+            propValue: 'Y'
           })
 
           const filteredRefusalReasons = state.request.gfRefusalReasonRequestId.filter(
@@ -364,6 +373,10 @@ export default {
           commit(mutationTypes.SET_PROP, {
             propName: 'decisionType',
             propValue: 'D'
+          })
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionTypeNotAutoConfigured',
+            propValue: 'N'
           })
           return
         }
@@ -421,6 +434,10 @@ export default {
           commit(mutationTypes.SET_PROP, {
             propName: 'decisionType',
             propValue: 'R'
+          })
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionTypeNotAutoConfigured',
+            propValue: 'N'
           })
           return
         }
