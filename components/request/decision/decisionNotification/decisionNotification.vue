@@ -138,7 +138,10 @@ export default {
       }
     },
     isDecisionTypeRadioGroupDisabled() {
-      return this.decisionType !== null
+      return !(
+        this.decisionType === null ||
+        this.request.decisionTypeNotAutoConfigured === 'Y'
+      )
     }
   },
   async mounted() {
