@@ -279,7 +279,7 @@ export default {
           propName: 'decisionType',
           propValue: 'D'
         })
-        /* - Свойство необходимо только для UI при описание ситациции автоопределения поля "Тип решения" */
+        /* Свойство необходимо только для UI при описание ситуации автоопределения поля типа решения */
         commit(mutationTypes.SET_PROP, {
           propName: 'decisionTypeNotAutoConfigured',
           propValue: 'N'
