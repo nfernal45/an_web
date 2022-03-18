@@ -75,13 +75,6 @@ export const validation = function(request, rest) {
       'Поле "Дата" в блоке "Дополнительные сведения" обязательно для ввода'
     )
   }
-  if (request.typeId === 8 || request.typeId === 9 || request.typeId === 10) {
-    if (!request.agreementConcluded) {
-      errors.push(
-        'Поле "Заключен договор УК с ТСЖ" в блоке "Дополнительные сведения" обязательно для ввода'
-      )
-    }
-  }
   if (request.typeId === 10 && request.isTsgRepr === 'N') {
     if (!request.ukInitiator) {
       errors.push(
