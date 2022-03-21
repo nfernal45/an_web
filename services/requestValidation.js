@@ -20,7 +20,7 @@ export const validation = function(request, rest) {
     errors.push('Укажите место подачи документов.')
   }
 
-  if (request.isTsgRepr === 'N') {
+  if (request.isTsgRepr === 'N' || request.typeId === 11) {
     if (!request.currentLicenseSerNum) {
       errors.push(
         'Поле "Серия и номер действующей лицензии" обязательно для ввода'
@@ -74,13 +74,6 @@ export const validation = function(request, rest) {
     errors.push(
       'Поле "Дата" в блоке "Дополнительные сведения" обязательно для ввода'
     )
-  }
-  if (request.typeId === 8 || request.typeId === 9 || request.typeId === 10) {
-    if (!request.agreementConcluded) {
-      errors.push(
-        'Поле "Заключен договор УК с ТСЖ" в блоке "Дополнительные сведения" обязательно для ввода'
-      )
-    }
   }
   if (request.typeId === 10 && request.isTsgRepr === 'N') {
     if (!request.ukInitiator) {

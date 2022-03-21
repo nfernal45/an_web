@@ -35,7 +35,7 @@
                 el-form-item(label='Отчество')
                   el-input(v-model='licenseeFSecondName')
             
-            el-row(v-if='request.typeId === 10')
+            el-row(v-if='request.typeId === 8 || request.typeId === 9 || request.typeId === 10')
               el-form-item(label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ')
                 el-radio-group(v-model='isTsgRepr')
                   el-radio(
