@@ -19,14 +19,15 @@
                   :label='item.name'
                   :value='item.id')
 
-          el-col
+        el-row(:gutter='20')
+          el-col(:span='6')
             el-form-item(label='Номер')
               el-input(
                 v-model='agreementDocNum'
                 maxlength="250"
               )
 
-          el-col
+          el-col(:span='6')
             el-form-item(label='Дата')
               el-date-picker(
                 v-model='agreementDocDate'
@@ -36,27 +37,10 @@
                 :picker-options='{ firstDayOfWeek: 1 }'
               )
 
-          el-col(v-if='isVisibleAgreementRequestNum(request)')
-            el-form-item(label='Номер Заявки размещения решения (протокола) в ГИС ЖКХ')
-              el-input(
-                @keypress.native="isNumber($event)"
-                v-model='agreementRequestNum'
-                :maxlength='9'
-              )
-
-          el-col(v-if='isVisibleTransferFields(request)')
-            el-form-item(label='Дата передачи')
-              el-date-picker(
-                v-model='agreementTransferDate'
-                placeholder='Укажите дату передачи'
-                format='dd.MM.yyyy'
-                value-format='dd.MM.yyyy'
-                :picker-options='{ firstDayOfWeek: 1 }'
-              )
-
+        el-row(:gutter='20')
           el-col(
             v-if='isVisibleTransferFields(request)'
-            :span="14"
+            :span="6"
           )
             el-form-item(label='Способ передачи')
               el-select.width-100(
@@ -70,6 +54,31 @@
                   :label='item.name'
                   :value='item')
 
+          el-col(
+            v-if='isVisibleTransferFields(request)'
+            :span="6"
+          )
+            el-form-item(label='Дата передачи')
+              el-date-picker(
+                v-model='agreementTransferDate'
+                placeholder='Укажите дату передачи'
+                format='dd.MM.yyyy'
+                value-format='dd.MM.yyyy'
+                :picker-options='{ firstDayOfWeek: 1 }'
+              )
+
+          el-col(
+            v-if='isVisibleAgreementRequestNum(request)'
+            :span="12"
+          )
+            el-form-item(label='Номер Заявки размещения решения (протокола) в ГИС ЖКХ')
+              el-input(
+                @keypress.native="isNumber($event)"
+                v-model='agreementRequestNum'
+                :maxlength='9'
+              )
+
+        el-row
           el-col(
             v-if='ifVisibleAgreementConcludedField(request)'
           )
@@ -110,6 +119,7 @@
                   style='margin-bottom: 5px'
                 ) {{ item.name }}
 
+        el-row(:gutter='20')
           el-col(
             v-if='request.isTsgRepr === "N" || request.typeId === 11'
             :span='12'
