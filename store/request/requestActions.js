@@ -458,6 +458,10 @@ export default {
             propName: 'decisionType',
             propValue: 'R'
           })
+          commit(mutationTypes.SET_PROP, {
+            propName: 'decisionTypeNotAutoConfigured',
+            propValue: 'N'
+          })
         }
       }
     }
