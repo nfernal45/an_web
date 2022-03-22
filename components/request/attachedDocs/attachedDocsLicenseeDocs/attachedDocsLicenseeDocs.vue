@@ -104,13 +104,14 @@ export default {
   computed: {
     ...mapState(moduleName, {
       licenseeAttachedDocs: (state) => state.licenseeAttachedDocs,
-      infInExplDatePermission: (state) => state.infInExplDatePermission,
-      infInExplNumPermission: (state) => state.infInExplNumPermission
+      request: (state) => state.request
     }),
     licenseeDocTypesOptions() {
       return this.refDocTypes.filter((item) => {
         return (
-          item.refDocTypeGroupByGroupId.groupId === 1 && item.isActive === 'Y'
+          item.refDocTypeGroupByGroupId.groupId === 1 &&
+          item.isActive === 'Y' &&
+          this.isNotSelectedType(item)
         )
       })
     },
@@ -149,6 +150,22 @@ export default {
       set(value) {
         this.set({ propName: 'infInExplNumPermission', propValue: value })
       }
+    },
+    agreementDocNum: {
+      get() {
+        return this.request.agreementDocNum
+      },
+      set(value) {
+        this.set({ propName: 'agreementDocNum', propValue: value })
+      }
+    },
+    agreementDocDate: {
+      get() {
+        return this.request.agreementDocDate
+      },
+      set(value) {
+        this.set({ propName: 'agreementDocDate', propValue: value })
+      }
     }
   },
   methods: {
@@ -163,7 +180,31 @@ export default {
         (el) => el.typeId === additionalDocumentTypeId
       )
 
-      array.push(Object.assign({}, { refDocTypeByDocTypeId: item }))
+      if (item.typeId === 45) {
+        array.push(
+          Object.assign(
+            {},
+            {
+              refDocTypeByDocTypeId: item,
+              docNum: this.infInExplNumPermission,
+              docDate: this.infInExplDatePermission
+            }
+          )
+        )
+      } else if (item.typeId === 75) {
+        array.push(
+          Object.assign(
+            {},
+            {
+              refDocTypeByDocTypeId: item,
+              docNum: this.agreementDocNum,
+              docDate: this.agreementDocDate
+            }
+          )
+        )
+      } else {
+        array.push(Object.assign({}, { refDocTypeByDocTypeId: item }))
+      }
 
       this.setLicenseeAttachedDocs(array)
 
@@ -183,6 +224,26 @@ export default {
         } else if (propName === 'docDate') {
           this.infInExplDatePermission = propValue
         }
+      }
+      if (docType && docType.typeId === 75) {
+        if (propName === 'docNum') {
+          this.agreementDocNum = propValue
+        } else if (propName === 'docDate') {
+          this.agreementDocDate = propValue
+        }
+      }
+    },
+    /* Каждый тип документа можно выбрать 1 раз, кроме TYPE_ID= 82 TYPE_ID=1000 */
+    isNotSelectedType(type) {
+      if (type.typeId === 82 || type.typeId === 1000) {
+        return true
+      } else {
+        const findItem = this.licenseeAttachedDocs.find(
+          (doc) =>
+            doc.refDocTypeByDocTypeId &&
+            type.typeId === doc.refDocTypeByDocTypeId.typeId
+        )
+        return !findItem
       }
     }
   }

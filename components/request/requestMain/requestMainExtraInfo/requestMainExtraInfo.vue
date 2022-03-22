@@ -4,7 +4,7 @@
       el-form(
         label-position='top'
         size='small'
-        :disabled='disabledEditing'
+        :disabled='disabledEditing || regPlaceId === 2'
       )
         el-row
           el-col(:span="14")
@@ -19,14 +19,15 @@
                   :label='item.name'
                   :value='item.id')
 
-          el-col
+        el-row(:gutter='20')
+          el-col(:span='6')
             el-form-item(label='Номер')
               el-input(
                 v-model='agreementDocNum'
                 maxlength="250"
               )
 
-          el-col
+          el-col(:span='6')
             el-form-item(label='Дата')
               el-date-picker(
                 v-model='agreementDocDate'
@@ -36,27 +37,10 @@
                 :picker-options='{ firstDayOfWeek: 1 }'
               )
 
-          el-col(v-if='isVisibleAgreementRequestNum(request)')
-            el-form-item(label='Номер Заявки размещения решения (протокола) в ГИС ЖКХ')
-              el-input(
-                @keypress.native="isNumber($event)"
-                v-model='agreementRequestNum'
-                :maxlength='9'
-              )
-
-          el-col(v-if='isVisibleTransferFields(request)')
-            el-form-item(label='Дата передачи')
-              el-date-picker(
-                v-model='agreementTransferDate'
-                placeholder='Укажите дату передачи'
-                format='dd.MM.yyyy'
-                value-format='dd.MM.yyyy'
-                :picker-options='{ firstDayOfWeek: 1 }'
-              )
-
+        el-row(:gutter='20')
           el-col(
             v-if='isVisibleTransferFields(request)'
-            :span="14"
+            :span="6"
           )
             el-form-item(label='Способ передачи')
               el-select.width-100(
@@ -70,7 +54,34 @@
                   :label='item.name'
                   :value='item')
 
-          el-col
+          el-col(
+            v-if='isVisibleTransferFields(request)'
+            :span="6"
+          )
+            el-form-item(label='Дата передачи')
+              el-date-picker(
+                v-model='agreementTransferDate'
+                placeholder='Укажите дату передачи'
+                format='dd.MM.yyyy'
+                value-format='dd.MM.yyyy'
+                :picker-options='{ firstDayOfWeek: 1 }'
+              )
+
+          el-col(
+            v-if='isVisibleAgreementRequestNum(request)'
+            :span="12"
+          )
+            el-form-item(label='Номер Заявки размещения решения (протокола) в ГИС ЖКХ')
+              el-input(
+                @keypress.native="isNumber($event)"
+                v-model='agreementRequestNum'
+                :maxlength='9'
+              )
+
+        el-row
+          el-col(
+            v-if='ifVisibleAgreementConcludedField(request)'
+          )
             el-form-item(
               label='Заключен договор УК с ТСЖ'
             )
@@ -82,7 +93,9 @@
                   style='margin-bottom: 5px'
                 ) {{ item.name }}
 
-          el-col
+          el-col(
+            v-if='ifVisibleUkInitiatorField(request)'
+          )
             el-form-item(
               label='Инициатором расторжения договора является УК'
             )
@@ -106,24 +119,18 @@
                   style='margin-bottom: 5px'
                 ) {{ item.name }}
 
-        el-row(:gutter='20' v-if='request.typeId === 10')
-          el-col
-            el-form-item(
-              label='Заявитель является представителем ТСЖ, ЖСК, ОСЖ'
-            )
-              el-radio-group(v-model='isTsgRepr')
-                el-radio(
-                  v-for='item in yesNoOptions'
-                  :key='item.id'
-                  :label='item.id'
-                  style='margin-bottom: 5px'
-                ) {{ item.name }}
-
-          el-col(:span='12')
+        el-row(:gutter='20')
+          el-col(
+            v-if='request.isTsgRepr === "N" || request.typeId === 11'
+            :span='12'
+          )
             el-form-item(label='Серия и номер действующей лицензии')
               el-input(v-model='currentLicenseSerNum')
 
-          el-col(:span='12')
+          el-col(
+            v-if='request.isTsgRepr === "N" || request.typeId === 11'
+            :span='12'
+          )
             el-form-item(label='Дата выдачи действующей лицензии')
               el-date-picker(
                 :picker-options='{ firstDayOfWeek: 1 }'
@@ -180,7 +187,8 @@ export default {
   },
   computed: {
     ...mapState(moduleName, {
-      request: (state) => state.request
+      request: (state) => state.request,
+      licenseeAttachedDocs: (state) => state.licenseeAttachedDocs
     }),
 
     requestTypeId: {
@@ -259,9 +267,6 @@ export default {
     isTsgRepr: {
       get() {
         return this.request.isTsgRepr
-      },
-      set(value) {
-        this.set({ propName: 'isTsgRepr', propValue: value })
       }
     },
 
@@ -298,6 +303,22 @@ export default {
       },
       set(value) {
         this.set({ propName: 'agreementDocNum', propValue: value })
+
+        /* Значение нужно продублировать в блоке "Документы заявителя" */
+        const component = this
+        this.licenseeAttachedDocs.forEach(function(doc, index) {
+          if (
+            doc.refDocTypeByDocTypeId &&
+            doc.refDocTypeByDocTypeId.typeId === 75
+          ) {
+            component.setArrayObjectProp({
+              arrayName: 'licenseeAttachedDocs',
+              propName: 'docNum',
+              propValue: value,
+              propIndex: index
+            })
+          }
+        })
       }
     },
 
@@ -307,6 +328,22 @@ export default {
       },
       set(value) {
         this.set({ propName: 'agreementDocDate', propValue: value })
+
+        /* Значение нужно продублировать в блоке "Документы заявителя" */
+        const component = this
+        this.licenseeAttachedDocs.forEach(function(doc, index) {
+          if (
+            doc.refDocTypeByDocTypeId &&
+            doc.refDocTypeByDocTypeId.typeId === 75
+          ) {
+            component.setArrayObjectProp({
+              arrayName: 'licenseeAttachedDocs',
+              propName: 'docDate',
+              propValue: value,
+              propIndex: index
+            })
+          }
+        })
       }
     },
 
@@ -331,6 +368,8 @@ export default {
   watch: {
     async requestTypeId() {
       this.agreementFoundationId = null
+      this.agreementConcludedId = null
+      this.ukInitiatorId = null
       await this.fetchAgreementFoundations()
     },
     async regPlaceId() {
@@ -339,6 +378,9 @@ export default {
     },
     async isTsgRepr() {
       this.agreementFoundationId = null
+      this.currentLicenseSerNum = null
+      this.currentLicenseDate = null
+      this.ukInitiatorId = null
       await this.fetchAgreementFoundations()
     },
     agreementFoundationId() {
@@ -355,7 +397,8 @@ export default {
   },
   methods: {
     ...mapMutations(moduleName, {
-      set: mutationTypes.SET_PROP
+      set: mutationTypes.SET_PROP,
+      setArrayObjectProp: mutationTypes.SET_ARRAY_OBJECT_PROP
     }),
 
     async fetchTransferMethodOptions() {
@@ -380,7 +423,7 @@ export default {
             return this.request.typeId !== 11
           }
           case 2: {
-            return this.request.typeId !== 11 && this.request.isTsgRepr !== 'Y'
+            return this.request.typeId !== 11 && this.request.isTsgRepr === 'Y'
           }
           case 3: {
             return this.request.typeId === 11
@@ -434,6 +477,16 @@ export default {
       ) {
         return true
       }
+    },
+
+    ifVisibleAgreementConcludedField(request) {
+      return (
+        request.typeId === 8 || request.typeId === 9 || request.typeId === 10
+      )
+    },
+
+    ifVisibleUkInitiatorField(request) {
+      return request.typeId === 10 && request.isTsgRepr === 'N'
     }
   }
 }

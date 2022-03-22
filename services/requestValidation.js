@@ -12,8 +12,59 @@ const isNeedCheckViolationsErrors = (array) =>
 export const validation = function(request, rest) {
   const errors = []
 
-  if (!request.typeId) errors.push('Укажите цель обращения.')
-  if (!request.regPlaceId) errors.push('Укажите место подачи документов.')
+  if (!request.typeId) {
+    errors.push('Укажите цель обращения.')
+  }
+
+  if (!request.regPlaceId) {
+    errors.push('Укажите место подачи документов.')
+  }
+
+  if (request.isTsgRepr === 'N' || request.typeId === 11) {
+    if (!request.currentLicenseSerNum) {
+      errors.push(
+        'Поле "Серия и номер действующей лицензии" обязательно для ввода'
+      )
+    }
+    if (!request.currentLicenseDate) {
+      errors.push(
+        'Поле "Дата выдачи действующей лицензии" обязательно для ввода'
+      )
+    }
+  }
+
+  if (
+    !(request.typeId === 10 && request.isTsgRepr === 'Y') &&
+    request.regPlaceId !== 2
+  ) {
+    if (!request.infMkbNum) {
+      errors.push(
+        'Поле "Номер" в блоке "Сведения о договоре управления многоквартирным домом" обязательно для ввода'
+      )
+    }
+
+    if (!request.infMkbDate) {
+      errors.push(
+        'Поле "Дата" в блоке "Сведения о договоре управления многоквартирным домом" обязательно для ввода'
+      )
+    }
+
+    if (!request.infMkbRequestNum) {
+      errors.push(
+        'Поле "Номер Заявки размещения договора управления в ГИС ЖКХ" в блоке ' +
+          '"Сведения о договоре управления многоквартирным домом" обязательно для ввода'
+      )
+    } else {
+      const regExp = new RegExp('^[0-9]{9}$')
+
+      if (!regExp.test(request.infMkbRequestNum)) {
+        errors.push(
+          'Поле "Номер Заявки размещения договора управления в ГИС ЖКХ" должно состоять из 9 цифр'
+        )
+      }
+    }
+  }
+
   if (!request.agreementDocNum) {
     errors.push(
       'Поле "Номер" в блоке "Дополнительные сведения" обязательно для ввода'
@@ -24,15 +75,12 @@ export const validation = function(request, rest) {
       'Поле "Дата" в блоке "Дополнительные сведения" обязательно для ввода'
     )
   }
-  if (!request.agreementConcluded) {
-    errors.push(
-      'Поле "Заключен договор УК с ТСЖ" в блоке "Дополнительные сведения" обязательно для ввода'
-    )
-  }
-  if (!request.ukInitiator) {
-    errors.push(
-      'Поле "Инициатором расторжения договора является УК" в блоке "Дополнительные сведения" обязательно для ввода'
-    )
+  if (request.typeId === 10 && request.isTsgRepr === 'N') {
+    if (!request.ukInitiator) {
+      errors.push(
+        'Поле "Инициатором расторжения договора является УК" в блоке "Дополнительные сведения" обязательно для ввода'
+      )
+    }
   }
 
   if (request.typeId === 8 || request.typeId === 9) {
@@ -47,6 +95,7 @@ export const validation = function(request, rest) {
       )
     }
   }
+
   if (
     (request.typeId === 8 || request.typeId === 9 || request.typeId === 10) &&
     request.agreementFoundationId === 1
@@ -62,6 +111,7 @@ export const validation = function(request, rest) {
       )
     }
   }
+
   if (request.agreementFoundationId === 4) {
     if (!request.explMosGorOkrug) {
       errors.push(
@@ -219,6 +269,7 @@ export const validation = function(request, rest) {
               ) {
                 return true
               }
+              // noinspection RedundantIfStatementJS
               if (
                 item.primaryInspResultId === 4 &&
                 item.abeyanceInspResultId === 2 &&
