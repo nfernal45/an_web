@@ -10,7 +10,6 @@
         :disabled='disabledEditing || request.regPlaceId === 2'
       )
         el-row(:gutter='20')
-
           el-col
             el-form-item(
               label='Разрешение на ввод в эксплуатацию выдано Мосгосстройнадзором или Администрацией городского округа Троицк/Щербинка?'
@@ -23,8 +22,26 @@
                   style='margin-bottom: 5px'
                 ) {{ item.name }}
 
-          el-col
-            el-form-item(label='Дата разрешения на ввод объекта в эксплуатацию')
+        el-row(:gutter='20')
+          el-col(:span="12")
+            el-form-item(
+              label='Номер разрешения на ввод в эксплуатацию'
+            )
+              el-col(
+                :span="12"
+                :style="`padding-left: 0px`"
+              )
+                el-input(
+                  v-model='infInExplNumPermission'
+                  v-mask="getInfInExplNumPermissionMask(request)"
+                  :placeholder="getInfInExpNumPermissionPlaceholder(request)"
+                  :span="6"
+                )
+
+          el-col(:span="12")
+            el-form-item(
+              label='Дата разрешения на ввод объекта в эксплуатацию'
+            )
               el-date-picker(
                 v-model='infInExplDatePermission'
                 placeholder='Укажите дату разрешения на ввод объекта в эксплуатацию'
@@ -32,14 +49,7 @@
                 value-format='dd.MM.yyyy'
                 :picker-options='{ firstDayOfWeek: 1 }'
               )
-          
-          el-col
-            el-form-item(label='Номер разрешения на ввод в эксплуатацию')
-              el-input(
-                v-model='infInExplNumPermission'
-                v-mask="getInfInExplNumPermissionMask(request)"
-                :placeholder="getInfInExpNumPermissionPlaceholder(request)"
-              )
+
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
