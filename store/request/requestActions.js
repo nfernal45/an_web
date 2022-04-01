@@ -350,18 +350,20 @@ export default {
 
         // Если в Заявлении все записи с проверками нарушений Требований
         // GF_CHECK_VIOLATION.ID с "Результат проверки по первичному осмотру"
-        // = Соответствует //PRIMARY_INSP_RESULT_ID=1 или с "Результат проверки по
-        // осмотру после приостановки" = Соответствует
-        // ABEYANCE_INSP_RESULT_ID=1
+        // = Соответствует или Не требуется //PRIMARY_INSP_RESULT_ID=(1 или 3) или с "Результат проверки по
+        // осмотру после приостановки" = Соответствует или Не требуется
+        // ABEYANCE_INSP_RESULT_ID=(1 или 3)
         // то "Тип уведомления" = Распоряжение (GF_REQUEST.DECISION_TYPE=D)
         // и радиогруппа заблокирована
 
         const allPrimaryViolationDecided = state.docCheck.gfCheckViolationsByCheckId.filter(
-          (item) => item.primaryInspResultId === 1
+          (item) =>
+            item.primaryInspResultId === 1 || item.primaryInspResultId === 3
         )
 
         const allAbeyanceViolationDecided = state.docCheck.gfCheckViolationsByCheckId.filter(
-          (item) => item.abeyanceInspResultId === 1
+          (item) =>
+            item.abeyanceInspResultId === 1 || item.primaryInspResultId === 3
         )
 
         if (
