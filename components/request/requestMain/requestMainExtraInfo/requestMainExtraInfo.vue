@@ -93,20 +93,6 @@
                   style='margin-bottom: 5px'
                 ) {{ item.name }}
 
-          el-col(
-            v-if='ifVisibleUkInitiatorField(request)'
-          )
-            el-form-item(
-              label='Инициатором расторжения договора является УК'
-            )
-              el-radio-group(v-model='ukInitiatorId')
-                el-radio(
-                  v-for='item in refYesNoOptions'
-                  :key='item.id'
-                  :label='item.id'
-                  style='margin-bottom: 5px'
-                ) {{ item.name }}
-
           el-col(v-if='request.typeId === 9 && request.licenseeType === "L"')
             el-form-item(
               label='У организации происходит реорганизация'
@@ -238,23 +224,6 @@ export default {
       }
     },
 
-    ukInitiatorId: {
-      get() {
-        const item = this.request.ukInitiator
-        if (typeof item !== 'undefined' && item !== null) {
-          return this.request.ukInitiator.id
-        } else {
-          return null
-        }
-      },
-      set(value) {
-        const selectedItem = this.refYesNoOptions.find((item) => {
-          return item.id === value
-        })
-        this.set({ propName: 'ukInitiator', propValue: selectedItem })
-      }
-    },
-
     isReorg: {
       get() {
         return this.request.isReorg
@@ -369,7 +338,6 @@ export default {
     async requestTypeId() {
       this.agreementFoundationId = null
       this.agreementConcludedId = null
-      this.ukInitiatorId = null
       await this.fetchAgreementFoundations()
     },
     async regPlaceId() {
@@ -380,7 +348,6 @@ export default {
       this.agreementFoundationId = null
       this.currentLicenseSerNum = null
       this.currentLicenseDate = null
-      this.ukInitiatorId = null
       await this.fetchAgreementFoundations()
     },
     agreementFoundationId() {
@@ -483,10 +450,6 @@ export default {
       return (
         request.typeId === 8 || request.typeId === 9 || request.typeId === 10
       )
-    },
-
-    ifVisibleUkInitiatorField(request) {
-      return request.typeId === 10 && request.isTsgRepr === 'N'
     }
   }
 }
