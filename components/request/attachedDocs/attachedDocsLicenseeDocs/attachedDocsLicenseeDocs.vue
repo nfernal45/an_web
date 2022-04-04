@@ -191,7 +191,14 @@ export default {
             }
           )
         )
-      } else if (item.typeId === 75) {
+      } else if (
+        // TYPE_ID=75 - Решение суда
+        // agreementFoundationId === 5 - основание Решение суда
+        (item.typeId === 75 && this.request.agreementFoundationId === 5) ||
+        // TYPE_ID=58 - Распорядительный документ органа исполнительной власти (о временном управлении)
+        // agreementFoundationId === 3 - основание Распорядительный документ ОИВ
+        (item.typeId === 58 && this.request.agreementFoundationId === 3)
+      ) {
         array.push(
           Object.assign(
             {},
