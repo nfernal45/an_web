@@ -393,7 +393,7 @@ export default {
           this.isDisablePanelFields() &&
           item.id === this.agreementFoundationId
         ) {
-          /* Необходимо всегда выводить текстового значение элемента по id */
+          /* Необходимо всегда выводить текстовое значение элемента по его id */
           return true
         }
 
