@@ -274,20 +274,29 @@ export default {
         this.set({ propName: 'agreementDocNum', propValue: value })
 
         /* Значение нужно продублировать в блоке "Документы заявителя" */
-        const component = this
-        this.licenseeAttachedDocs.forEach(function(doc, index) {
-          if (
-            doc.refDocTypeByDocTypeId &&
-            doc.refDocTypeByDocTypeId.typeId === 75
-          ) {
-            component.setArrayObjectProp({
-              arrayName: 'licenseeAttachedDocs',
-              propName: 'docNum',
-              propValue: value,
-              propIndex: index
-            })
-          }
-        })
+        if (
+          this.request.agreementFoundationId === 5 ||
+          this.request.agreementFoundationId === 3
+        ) {
+          const component = this
+          this.licenseeAttachedDocs.forEach(function(doc, index) {
+            if (
+              (doc.refDocTypeByDocTypeId &&
+                doc.refDocTypeByDocTypeId.typeId === 75 &&
+                this.request.agreementFoundationId === 5) ||
+              (doc.refDocTypeByDocTypeId &&
+                doc.refDocTypeByDocTypeId.typeId === 58 &&
+                this.request.agreementFoundationId === 3)
+            ) {
+              component.setArrayObjectProp({
+                arrayName: 'licenseeAttachedDocs',
+                propName: 'docNum',
+                propValue: value,
+                propIndex: index
+              })
+            }
+          })
+        }
       }
     },
 
@@ -299,20 +308,22 @@ export default {
         this.set({ propName: 'agreementDocDate', propValue: value })
 
         /* Значение нужно продублировать в блоке "Документы заявителя" */
-        const component = this
-        this.licenseeAttachedDocs.forEach(function(doc, index) {
-          if (
-            doc.refDocTypeByDocTypeId &&
-            doc.refDocTypeByDocTypeId.typeId === 75
-          ) {
-            component.setArrayObjectProp({
-              arrayName: 'licenseeAttachedDocs',
-              propName: 'docDate',
-              propValue: value,
-              propIndex: index
-            })
-          }
-        })
+        if (this.request.agreementFoundationId === 5) {
+          const component = this
+          this.licenseeAttachedDocs.forEach(function(doc, index) {
+            if (
+              doc.refDocTypeByDocTypeId &&
+              doc.refDocTypeByDocTypeId.typeId === 75
+            ) {
+              component.setArrayObjectProp({
+                arrayName: 'licenseeAttachedDocs',
+                propName: 'docDate',
+                propValue: value,
+                propIndex: index
+              })
+            }
+          })
+        }
       }
     },
 
