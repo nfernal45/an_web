@@ -178,10 +178,36 @@ export default {
       }
     },
     computedRerDocTypes() {
-      return this.refDocTypes.filter(
-        (item) =>
-          item.interdepRequest === 'Y' && item.isGf && item.isActive === 'Y'
-      )
+      const currentRequest = this.request
+      return this.refDocTypes.filter((item) => {
+        if (
+          item.interdepRequest === 'Y' &&
+          item.isGf &&
+          item.isActive === 'Y'
+        ) {
+          if (item.typeId === 83 || item.typeId === 45) {
+            if (
+              item.typeId === 83 &&
+              currentRequest.explMosGorOkrug &&
+              currentRequest.explMosGorOkrug.codeChar === 'Y'
+            ) {
+              return true
+            }
+            if (
+              item.typeId === 45 &&
+              (!currentRequest.explMosGorOkrug ||
+                currentRequest.explMosGorOkrug.codeChar !== 'Y')
+            ) {
+              return true
+            }
+            return false
+          } else {
+            return true
+          }
+        } else {
+          return false
+        }
+      })
     },
     isUpdateRequiredParamsButtonDisabled() {
       return !this.requiredInterParamsData.every((item) => {
