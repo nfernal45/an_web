@@ -4,7 +4,7 @@
       el-form(
         label-position='top'
         size='small'
-        :disabled='disabledEditing || regPlaceId === 2'
+        :disabled='isDisablePanelFields()'
       )
         el-row
           el-col(:span="14")
@@ -391,11 +391,23 @@ export default {
       })
     },
 
+    isDisablePanelFields() {
+      return this.disabledEditing || this.regPlaceId === 2
+    },
+
     async fetchAgreementFoundations() {
       const response = await fetchAgreementFoundations({
         axiosModule: this.$axios
       })
       this.agreementFoundationsOptions = response.filter((item) => {
+        if (
+          this.isDisablePanelFields() &&
+          item.id === this.agreementFoundationId
+        ) {
+          /* Необходимо всегда выводить текстовое значение элемента по его id */
+          return true
+        }
+
         switch (item.id) {
           case 1: {
             return this.request.typeId !== 11
