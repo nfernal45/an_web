@@ -274,12 +274,19 @@ export default {
         this.set({ propName: 'agreementDocNum', propValue: value })
 
         /* Значение нужно продублировать в блоке "Документы заявителя" */
-        if (this.request.agreementFoundationId === 5) {
+        if (
+          this.request.agreementFoundationId === 5 ||
+          this.request.agreementFoundationId === 3
+        ) {
           const component = this
           this.licenseeAttachedDocs.forEach(function(doc, index) {
             if (
-              doc.refDocTypeByDocTypeId &&
-              doc.refDocTypeByDocTypeId.typeId === 75
+              (doc.refDocTypeByDocTypeId &&
+                doc.refDocTypeByDocTypeId.typeId === 75 &&
+                this.request.agreementFoundationId === 5) ||
+              (doc.refDocTypeByDocTypeId &&
+                doc.refDocTypeByDocTypeId.typeId === 58 &&
+                this.request.agreementFoundationId === 3)
             ) {
               component.setArrayObjectProp({
                 arrayName: 'licenseeAttachedDocs',
