@@ -4,7 +4,7 @@
     el-container.flex-wrap(style="position: relative;")
       the-tabs(style="flex-basis: 100%;")
       div.flex.width-100
-        the-aside.sticky(style="flex-basis: 200px; position: sticky; top: 100px; align-self: flex-start;")
+        the-aside.sticky
         el-main(style="flex: 1 0 0;")
           nuxt
     develop-permissions
