@@ -185,10 +185,10 @@ export const validation = function(request, rest, requestPagesActiveStatuses) {
   }
 
   /* true - вкладка 'Ход рассмотрения' видна в интерфейсе */
-  const hasVisibleDockCheck = requestPagesActiveStatuses['doc-check'].includes(
+  const hasVisibleDocCheck = requestPagesActiveStatuses['doc-check'].includes(
     request.requestStatusId
   )
-  if (hasVisibleDockCheck && !rest.docCheck.performerId) {
+  if (hasVisibleDocCheck && !rest.docCheck.performerId) {
     errors.push(
       'Необходимо заполнить поле "Ответственный исполнитель", вкладка "Ход рассмотрения".'
     )
