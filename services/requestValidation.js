@@ -9,7 +9,7 @@ const isNeedCheckViolationsErrors = (array) =>
   array.docCheck.gfCheckViolationsByCheckId &&
   array.docCheck.gfCheckViolationsByCheckId.length
 
-export const validation = function(request, rest) {
+export const validation = function(request, rest, requestPagesActiveStatuses) {
   const errors = []
 
   if (!request.typeId) {
@@ -182,6 +182,16 @@ export const validation = function(request, rest) {
     } else {
       errors.push('Необходимо выбрать тип представителя заявителя.')
     }
+  }
+
+  /* true - вкладка 'Ход рассмотрения' видна в интерфейсе */
+  const hasVisibleDockCheck = requestPagesActiveStatuses['doc-check'].includes(
+    request.requestStatusId
+  )
+  if (hasVisibleDockCheck && !rest.docCheck.performerId) {
+    errors.push(
+      'Необходимо заполнить поле "Ответственный исполнитель", вкладка "Ход рассмотрения".'
+    )
   }
 
   // Оформляется решение === 6 (без приостановки)
