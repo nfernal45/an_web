@@ -53,7 +53,10 @@
         el-row(:gutter='20')
           el-col(:span='6')
             el-form-item(label='Рег.№')
-              el-input(v-model='regnum')
+              el-input(
+                v-model='regnum'
+                :disabled='isDisableRegNumField()'
+              )
 
           el-col(:span='6')
             el-form-item(v-if='regPlaceId === 1' label='Дата подачи заявления')
@@ -244,6 +247,10 @@ export default {
     ...mapMutations(moduleName, {
       set: mutationTypes.SET_PROP
     }),
+    isDisableRegNumField() {
+      /* Недоступно во всех статусах, отличных от "Новый" */
+      return this.request.requestStatusId && this.request.requestStatusId !== 1
+    },
     async fetchRequestTypesOptions() {
       this.requestTypesOptions = await fetchRequestTypesOptions({
         axiosModule: this.$axios
