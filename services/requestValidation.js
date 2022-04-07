@@ -194,6 +194,15 @@ export const validation = function(request, rest, requestPagesActiveStatuses) {
     )
   }
 
+  if (
+    rest.nextStatusId === 2 ||
+    (request.requestStatusId && request.requestStatusId !== 1)
+  ) {
+    if (!request.regnum) {
+      errors.push('Поле "Рег.№" обязательно для ввода')
+    }
+  }
+
   // Оформляется решение === 6 (без приостановки)
   if (rest.nextStatusId === 6) {
     if (
