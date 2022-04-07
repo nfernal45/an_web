@@ -9,7 +9,7 @@ const isNeedCheckViolationsErrors = (array) =>
   array.docCheck.gfCheckViolationsByCheckId &&
   array.docCheck.gfCheckViolationsByCheckId.length
 
-export const validation = function(request, rest, requestPagesActiveStatuses) {
+export const validation = function(request, rest) {
   const errors = []
 
   if (!request.typeId) {
@@ -184,16 +184,6 @@ export const validation = function(request, rest, requestPagesActiveStatuses) {
     }
   }
 
-  /* true - вкладка 'Ход рассмотрения' видна в интерфейсе */
-  const hasVisibleDocCheck = requestPagesActiveStatuses['doc-check'].includes(
-    request.requestStatusId
-  )
-  if (hasVisibleDocCheck && !rest.docCheck.performerId) {
-    errors.push(
-      'Необходимо заполнить поле "Ответственный исполнитель", вкладка "Ход рассмотрения".'
-    )
-  }
-
   if (
     rest.nextStatusId === 2 ||
     (request.requestStatusId && request.requestStatusId !== 1)
@@ -205,6 +195,11 @@ export const validation = function(request, rest, requestPagesActiveStatuses) {
 
   // Оформляется решение === 6 (без приостановки)
   if (rest.nextStatusId === 6) {
+    if (!rest.docCheck.performerId) {
+      errors.push(
+        'Необходимо заполнить поле "Ответственный исполнитель", вкладка "Ход рассмотрения".'
+      )
+    }
     if (
       !(
         request.typeId === 10 &&
@@ -234,6 +229,11 @@ export const validation = function(request, rest, requestPagesActiveStatuses) {
   }
   // триггер "Оформить приостановление"
   if (rest.nextStatusId === 8) {
+    if (!rest.docCheck.performerId) {
+      errors.push(
+        'Необходимо заполнить поле "Ответственный исполнитель", вкладка "Ход рассмотрения".'
+      )
+    }
     if (isNeedCheckViolationsErrors(rest)) {
       const isPrimaryInspResultFilled = filterArrayByField(
         rest.docCheck.gfCheckViolationsByCheckId,
@@ -307,6 +307,11 @@ export const validation = function(request, rest, requestPagesActiveStatuses) {
 
       // Приостановление === 9
       case 9: {
+        if (!rest.docCheck.performerId) {
+          errors.push(
+            'Необходимо заполнить поле "Ответственный исполнитель", вкладка "Ход рассмотрения".'
+          )
+        }
         if (isNeedCheckViolationsErrors(rest)) {
           const isPrimaryInspResultFilled = filterArrayByField(
             rest.docCheck.gfCheckViolationsByCheckId,

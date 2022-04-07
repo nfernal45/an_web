@@ -22,7 +22,6 @@ import styles from './TheAsideStatusesButtons.module.sass?module'
 import { getterTypes as referencesGetterTypes } from '@/store/types/references'
 import {
   actionTypes as requestActionTypes,
-  getterTypes as requestGettersTypes,
   mutationTypes as requestMutationsTypes
 } from '@/store/types/request'
 import { validation } from '@/services/requestValidation'
@@ -169,11 +168,6 @@ export default {
       setIsRequestSaving: requestMutationsTypes.SET_IS_REQUEST_SAVING
     }),
 
-    ...mapGetters(requestModuleName, {
-      getRequestPagesActiveStatuses:
-        requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
-    }),
-
     checkRequestDecision(nextStatusId) {
       return this.request.requestStatusId === 6
         ? !!this.request.decisionType
@@ -258,14 +252,10 @@ export default {
         return
       }
 
-      const canChangeStatus = validation(
-        this.request,
-        {
-          nextStatusId,
-          docCheck: this.docCheck
-        },
-        this.getRequestPagesActiveStatuses()
-      )
+      const canChangeStatus = validation(this.request, {
+        nextStatusId,
+        docCheck: this.docCheck
+      })
 
       if (!canChangeStatus) return false
 
