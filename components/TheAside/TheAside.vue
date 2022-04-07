@@ -1,38 +1,58 @@
 <template lang="pug">
-  el-aside(width="200px" :class="styles.aside")
-    ul(:class="styles['list']")
-      li(:class="styles['list-item']")
-        nuxt-link(to="/registry")
-          el-button(
-            type="primary"
-            :class="styles['list-button']"
-            :disabled="isRequestSaving"
-            v-show='can("RL_GF_READONLY")')
-            font-awesome-icon(icon="reply")
-            span Назад к списку
-      li(:class="styles['list-item']")
+  div
+    div(style="flex-basis: 200px; top: 100px; position: sticky; align-self: flex-start;")
+      el-aside(width="200px" :class="styles.aside")
+        ul(:class="styles['list']")
+          li(:class="styles['list-item']")
+            el-button(
+              type="primary"
+              :class="styles['list-button']"
+              :disabled="isRequestSaving"
+              v-show='can("RL_GF_READONLY")'
+              @click="isNeedSaveRequestModalVisible = true"
+            )
+              font-awesome-icon(icon="reply")
+              span Назад к списку
+          li(:class="styles['list-item']")
+            el-button(
+              v-show="can('RL_GF_REQUEST_SAVE')"
+              type="success"
+              :class="styles['list-button']"
+              @click="onSave()" :loading='isRequestSaving')
+              font-awesome-icon(icon="save")
+              span Сохранить
+          li(:class="styles['list-item']")
+            el-button(
+              type="primary"
+              plain
+              :class="styles['list-button']"
+              :disabled="isRequestSaving"
+              @click="print()")
+              font-awesome-icon(icon="print")
+              span Печать
+
+        // Кнопки стасусов
+        the-aside-statuses-buttons
+
+        print-form-dialog(:isDialogVisible='isDialogVisible' @close='isDialogVisible = false')
+
+    el-dialog(
+      title='Сохранение заявления'
+      :visible.sync='isNeedSaveRequestModalVisible'
+      :close-on-click-modal='false'
+      width='40%'
+      destroy-on-close
+    )
+      div
+        span(
+          style="word-break: break-word;"
+        ) Все несохранённые данные будут потеряны. Вы уверены, что хотите покинуть форму заявления?
+      div(slot='footer' class='dialog-footer')
+        el-button(@click='isNeedSaveRequestModalVisible = false') Нет
         el-button(
-          v-show="can('RL_GF_REQUEST_SAVE')"
-          type="success"
-          :class="styles['list-button']"
-          @click="onSave()" :loading='isRequestSaving')
-          font-awesome-icon(icon="save")
-          span Сохранить
-      li(:class="styles['list-item']")
-        el-button(
-          type="primary"
-          plain
-          :class="styles['list-button']"
-          :disabled="isRequestSaving"
-          @click="print()")
-          font-awesome-icon(icon="print")
-          span Печать
-
-    // Кнопки стасусов
-    the-aside-statuses-buttons
-
-    print-form-dialog(:isDialogVisible='isDialogVisible' @close='isDialogVisible = false')
-
+          type='primary'
+          @click='openRegistryPage'
+        ) Да
 </template>
 <script>
 import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
@@ -56,7 +76,8 @@ export default {
   },
   data() {
     return {
-      isDialogVisible: false
+      isDialogVisible: false,
+      isNeedSaveRequestModalVisible: false
     }
   },
   computed: {
@@ -89,6 +110,9 @@ export default {
           params: { id: this.request.requestId }
         })
       }
+    },
+    openRegistryPage() {
+      this.$router.replace('/registry')
     },
     async onSave() {
       const canSave = validation(
