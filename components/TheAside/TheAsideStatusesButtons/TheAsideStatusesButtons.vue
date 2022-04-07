@@ -258,11 +258,14 @@ export default {
         return
       }
 
-      const canChangeStatus = validation(this.request, {
-        nextStatusId,
-        docCheck: this.docCheck,
-        requestPagesActiveStatuses: this.getRequestPagesActiveStatuses()
-      })
+      const canChangeStatus = validation(
+        this.request,
+        {
+          nextStatusId,
+          docCheck: this.docCheck
+        },
+        this.getRequestPagesActiveStatuses()
+      )
 
       if (!canChangeStatus) return false
 
