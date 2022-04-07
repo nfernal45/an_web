@@ -60,7 +60,6 @@ import TheAsideStatusesButtons from './TheAsideStatusesButtons'
 import styles from './TheAside.module.sass?module'
 import {
   actionTypes as requestActionTypes,
-  getterTypes as requestGettersTypes,
   mutationTypes as requestMutationsTypes
 } from '@/store/types/request'
 import isNumber from '@/services/helpers/isNumber'
@@ -99,10 +98,6 @@ export default {
     ...mapMutations(moduleName, {
       setIsRequestSaving: requestMutationsTypes.SET_IS_REQUEST_SAVING
     }),
-    ...mapGetters(moduleName, {
-      getRequestPagesActiveStatuses:
-        requestGettersTypes.GET_REQUEST_PAGES_ACTIVE_STATUSES
-    }),
     openNewCreatedRequestPage() {
       if (!isNumber(this.$route.params.id)) {
         this.$router.replace({
@@ -115,11 +110,7 @@ export default {
       this.$router.replace('/registry')
     },
     async onSave() {
-      const canSave = validation(
-        this.request,
-        { docCheck: this.docCheck },
-        this.getRequestPagesActiveStatuses()
-      )
+      const canSave = validation(this.request, { docCheck: this.docCheck })
 
       if (canSave) {
         this.setIsRequestSaving(true)
