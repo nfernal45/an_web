@@ -50,7 +50,7 @@
               el-input(
                 v-model='licenseeInn'
                 :maxlength='licenseeType === "L" ? 10 : 12')
-            el-form-item(label='ОГРН')
+            el-form-item(:label='licenseeType === "L" ? "ОГРН" : "ОГРНИП"')
               el-input(v-model='licenseeOgrn' :maxlength='licenseeType === "L" ? 13 : 15')
             el-form-item(label='Телефон')
               el-input(v-model='licenseePhone')
