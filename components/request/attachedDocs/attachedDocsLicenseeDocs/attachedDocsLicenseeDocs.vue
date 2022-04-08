@@ -110,6 +110,7 @@ export default {
       return this.refDocTypes.filter((item) => {
         return (
           item.refDocTypeGroupByGroupId.groupId === 1 &&
+          item.isGf === 'Y' &&
           item.isActive === 'Y' &&
           this.isNotSelectedType(item)
         )
