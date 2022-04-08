@@ -131,6 +131,17 @@ export const validation = function(request, rest) {
     }
   }
 
+  if (request.licenseeType) {
+    if (!request.licenseePhone) {
+      errors.push('Поле "Телефон" в блоке "Заявитель" обязательно для ввода')
+    }
+    if (!request.licenseeEmail) {
+      errors.push(
+        'Поле "Электронная почта" в блоке "Заявитель" обязательно для ввода'
+      )
+    }
+  }
+
   if (request.licenseeType === 'L') {
     if (String(request.licenseeInn).length !== 10)
       errors.push(
@@ -153,6 +164,54 @@ export const validation = function(request, rest) {
       )
   } else {
     errors.push('Необходимо выбрать тип заявителя.')
+  }
+
+  if (request.reprType) {
+    if (request.reprType === 'L' && !request.reprFullname) {
+      errors.push(
+        'Поле "Полное наименование" в блоке "Уполномоченная организация - ' +
+          'представитель заявителя" обязательно для ввода'
+      )
+    }
+    if (!request.reprShortname) {
+      errors.push(
+        'Поле "Сокращенное наименование" в блоке "Уполномоченная организация - ' +
+          'представитель заявителя" обязательно для ввода'
+      )
+    }
+
+    if (request.reprType === 'I') {
+      if (!request.reprLastName) {
+        errors.push(
+          'Поле "Фамилия" в блоке "Уполномоченная организация - ' +
+            'представитель заявителя" обязательно для ввода'
+        )
+      }
+      if (!request.reprFirstName) {
+        errors.push(
+          'Поле "Имя" в блоке "Уполномоченная организация - ' +
+            'представитель заявителя" обязательно для ввода'
+        )
+      }
+      if (!request.reprSecondName) {
+        errors.push(
+          'Поле "Отчество" в блоке "Уполномоченная организация - ' +
+            'представитель заявителя" обязательно для ввода'
+        )
+      }
+    }
+    if (!request.reprPhone) {
+      errors.push(
+        'Поле "Телефон" в блоке "Уполномоченная организация - представитель ' +
+          'заявителя" обязательно для ввода'
+      )
+    }
+    if (!request.reprEmail) {
+      errors.push(
+        'Поле "Электронная почта" в блоке "Уполномоченная организация - ' +
+          'представитель заявителя" обязательно для ввода'
+      )
+    }
   }
 
   if (
