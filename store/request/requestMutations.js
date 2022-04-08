@@ -31,6 +31,18 @@ export default {
     Vue.set(item, propName, propValue)
   },
 
+  [mutationTypes.SET_REQUEST_QUERIED_DOC_PROP_BY_QUERY_ID]: (
+    state,
+    { docQueryId, propName, propValue }
+  ) => {
+    const queriedDoc = state.request.gfQueriedDocsByRequestId.find(
+      (item) => item && item.queryId === docQueryId
+    )
+    if (queriedDoc) {
+      queriedDoc[propName] = propValue
+    }
+  },
+
   [mutationTypes.SET_DEFAULT_OBJECT]: (state, { objectName, objectValue }) => {
     state[objectName] = objectValue
   },
