@@ -75,7 +75,6 @@ export default {
             requestOptionsConstants.REVIEW,
             requestOptionsConstants.DECISIONPREPARING,
             requestOptionsConstants.DECISIONMADE,
-            requestOptionsConstants.NOTICEPREPARING,
             requestOptionsConstants.VIOLATIONELIMINATION,
             requestOptionsConstants.RESUMED,
             requestOptionsConstants.DOCSQUERIED2,
