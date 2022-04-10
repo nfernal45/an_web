@@ -68,7 +68,10 @@
               el-row
                 el-col(:span='14')
                   el-form-item(label='Примечание')
-                    el-input(v-model='doc.comments')
+                    el-input(
+                      v-model='doc.comments'
+                      @input='setQueriedDocPropValue(doc.queryId, "comments", $event)'
+                    )
               el-row
                 el-col
                   el-button(type='primary'
@@ -246,8 +249,17 @@ export default {
       saveRequest: actionTypes.SAVE_REQUEST
     }),
     ...mapMutations(moduleName, {
-      setProp: mutationTypes.SET_PROP
+      setProp: mutationTypes.SET_PROP,
+      setRequestQueriedDocPropByQueryId:
+        mutationTypes.SET_REQUEST_QUERIED_DOC_PROP_BY_QUERY_ID
     }),
+    setQueriedDocPropValue(docQueryId, propName, propValue) {
+      this.setRequestQueriedDocPropByQueryId({
+        docQueryId,
+        propName,
+        propValue
+      })
+    },
     async sendToEtp(documentQueryId, index) {
       const el = this.$refs[`etp${documentQueryId}`][0].$el
 
