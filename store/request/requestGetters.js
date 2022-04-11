@@ -74,8 +74,7 @@ export default {
           activeStatuses = [
             requestOptionsConstants.REVIEW,
             requestOptionsConstants.DECISIONPREPARING,
-            requestOptionsConstants.DECISIONMADE,
-            requestOptionsConstants.VIOLATIONELIMINATION
+            requestOptionsConstants.DECISIONMADE
           ]
           break
       }
