@@ -363,7 +363,7 @@ export default {
 
         const allAbeyanceViolationDecided = state.docCheck.gfCheckViolationsByCheckId.filter(
           (item) =>
-            item.abeyanceInspResultId === 1 || item.primaryInspResultId === 3
+            item.abeyanceInspResultId === 1 || item.abeyanceInspResultId === 3
         )
 
         if (
