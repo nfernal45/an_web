@@ -75,10 +75,7 @@ export default {
             requestOptionsConstants.REVIEW,
             requestOptionsConstants.DECISIONPREPARING,
             requestOptionsConstants.DECISIONMADE,
-            requestOptionsConstants.VIOLATIONELIMINATION,
-            requestOptionsConstants.RESUMED,
-            requestOptionsConstants.DOCSQUERIED2,
-            requestOptionsConstants.INFORMATIONRECEIVED2
+            requestOptionsConstants.VIOLATIONELIMINATION
           ]
           break
       }
