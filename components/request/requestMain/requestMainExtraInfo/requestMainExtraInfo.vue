@@ -424,15 +424,11 @@ export default {
     },
 
     isVisibleAgreementRequestNum(request) {
-      if (
+      return (
         (request.typeId === 8 || request.typeId === 9) &&
         (request.agreementFoundationId === 2 ||
-          request.agreementFoundationId === 1)
-      ) {
-        return true
-      } else {
-        return false
-      }
+          (request.agreementFoundationId === 1 && this.isTsgRepr === 'N'))
+      )
     },
 
     isVisibleTransferFields(request) {

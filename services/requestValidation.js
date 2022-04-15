@@ -79,7 +79,7 @@ export const validation = function(request, rest) {
   if (request.typeId === 8 || request.typeId === 9) {
     if (
       (request.agreementFoundationId === 2 ||
-        request.agreementFoundationId === 1) &&
+        (request.agreementFoundationId === 1 && request.isTsgRepr === 'N')) &&
       (!request.agreementRequestNum ||
         String(request.agreementRequestNum).length !== 9)
     ) {
