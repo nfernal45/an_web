@@ -116,6 +116,7 @@ import fetchRequiredInterParams from '@/services/api/request/fetchRequiredInterP
 import updateRequiredInterParams from '@/services/api/request/updateRequiredInterParams'
 import sendToEtp from '@/services/api/request/sendToEtp'
 import fetchSettings from '@/services/api/settings/fetchSettings'
+import { AUTH_USER_LOGIN_STORE_VALUE_NAME } from '@/store/auth/const'
 
 const moduleName = 'request'
 export default {
@@ -276,7 +277,10 @@ export default {
       if (!requiredInterParamsResponse.length) {
         await sendToEtp({
           axiosModule: this.$axios,
-          documentQueryId
+          documentQueryId,
+          userLogin: this.$auth.$storage.getState(
+            AUTH_USER_LOGIN_STORE_VALUE_NAME
+          )
         })
 
         await this.fetchRequest(this.request.requestId)
@@ -302,7 +306,10 @@ export default {
 
       await sendToEtp({
         axiosModule: this.$axios,
-        documentQueryId
+        documentQueryId,
+        userLogin: this.$auth.$storage.getState(
+          AUTH_USER_LOGIN_STORE_VALUE_NAME
+        )
       })
 
       await this.fetchRequest(this.request.requestId)

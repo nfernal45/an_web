@@ -1,12 +1,16 @@
 import Vue from 'vue'
+import qs from 'qs'
 import { restApiGfRabbitmq } from '@/services/api/endpoints'
 
-export default async function({ axiosModule, documentQueryId }) {
+export default async function({ axiosModule, documentQueryId, userLogin }) {
   const url = restApiGfRabbitmq.sendingToEtp.send
-  const data = `queriedDocId=${documentQueryId}`
+  const data = {
+    queriedDocId: documentQueryId,
+    userLogin
+  }
 
   try {
-    const response = await axiosModule.$post(url, data)
+    const response = await axiosModule.$post(url, qs.stringify(data))
     Vue.prototype.$notify.success({
       title: 'Внимание',
       message: 'Запрос успешно отправлен'

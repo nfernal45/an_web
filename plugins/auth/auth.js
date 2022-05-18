@@ -2,6 +2,7 @@ import checkToken from '@/services/api/auth/checkToken'
 import checkUser from '@/services/api/auth/checkUser'
 import resetPassword from '@/services/api/auth/resetPassword'
 import logout from '@/services/auth'
+import { AUTH_USER_LOGIN_STORE_VALUE_NAME } from '@/store/auth/const'
 
 export default function({ $axios, $auth, base, redirect, route }) {
   if (process.client) {
@@ -16,6 +17,7 @@ export default function({ $axios, $auth, base, redirect, route }) {
               .getItem('auth._token.oauth2')
               .split(' ')[1]
           })
+          $auth.$storage.setState(AUTH_USER_LOGIN_STORE_VALUE_NAME, user_name)
 
           const { isResetPassword } = await checkUser({
             axiosModule: $axios,
