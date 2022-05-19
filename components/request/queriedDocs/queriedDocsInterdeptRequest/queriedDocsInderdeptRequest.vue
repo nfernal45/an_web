@@ -91,21 +91,25 @@
                 el-form-item(v-for='item in requiredInterParamsData'
                             :key='item && item.paramId'
                             :label='item && item.paramCaption')
-                  el-input.mb-10(v-model='item.stringValue'
-                                 style='border-color: yellow !important')
-                  transition(name='fade')
-                    div(v-show='item.isRequired === "Y" && !item.stringValue'
+                  div(v-if='isInfInExplNumPermInterParam(item)')
+                    el-input.mb-10(v-model='item.stringValue'
+                      v-mask="'##.##.####'"
+                      :placeholder="'XX.XX.XXXX'"
+                      style='border-color: yellow !important')
+                    transition(name='fade')
+                      div(v-show='item.isRequired === "Y" && !isValidDateInterParamValue(item.stringValue)'
+                          style='position: absolute; color: tomato; font-size: 11px; transform: translateY(-15px)') Поле должно иметь формат XX.XX.XXXX
+                  div(v-else)
+                    el-input.mb-10(v-model='item.stringValue'
+                      style='border-color: yellow !important')
+                    transition(name='fade')
+                      div(v-show='item.isRequired === "Y" && !item.stringValue'
                         style='position: absolute; color: tomato; font-size: 11px; transform: translateY(-15px)') Обязательное поле должно быть заполнено
                 transition(name='fade')
                   el-button(@click='updateRequiredInterParams'
                             :loading='isRequiredInterParamsLoading'
                             :disabled='isUpdateRequiredParamsButtonDisabled'
                             type='primary') Отправить запрос
-     
-
-        
-          
-
 </template>
 <script>
 import { Loading } from 'element-ui'
@@ -117,6 +121,7 @@ import updateRequiredInterParams from '@/services/api/request/updateRequiredInte
 import sendToEtp from '@/services/api/request/sendToEtp'
 import fetchSettings from '@/services/api/settings/fetchSettings'
 import { AUTH_USER_LOGIN_STORE_VALUE_NAME } from '@/store/auth/const'
+import { INF_IN_EXPL_DATE_PERMISSION_INFER_PARAM_ID } from '@/services/api/const'
 
 const moduleName = 'request'
 export default {
@@ -214,9 +219,15 @@ export default {
       })
     },
     isUpdateRequiredParamsButtonDisabled() {
+      const currentComponent = this
       return !this.requiredInterParamsData.every((item) => {
-        if (item.isRequired === 'Y') return !!item.stringValue
-        else return true
+        if (item.isRequired === 'Y') {
+          if (item.paramId === INF_IN_EXPL_DATE_PERMISSION_INFER_PARAM_ID) {
+            return currentComponent.isValidDateInterParamValue(item.stringValue)
+          } else {
+            return !!item.stringValue
+          }
+        } else return true
       })
     },
     computedLicenseeAttachedDocs() {
@@ -254,6 +265,17 @@ export default {
       setRequestQueriedDocPropByQueryId:
         mutationTypes.SET_REQUEST_QUERIED_DOC_PROP_BY_QUERY_ID
     }),
+    isValidDateInterParamValue(value) {
+      if (!value) {
+        return false
+      } else {
+        const regExp = new RegExp('^[0-9]{2}.[0-9]{2}.[0-9]{4}$')
+        return regExp.test(value)
+      }
+    },
+    isInfInExplNumPermInterParam(param) {
+      return param.paramId === INF_IN_EXPL_DATE_PERMISSION_INFER_PARAM_ID
+    },
     setQueriedDocPropValue(docQueryId, propName, propValue) {
       this.setRequestQueriedDocPropByQueryId({
         docQueryId,
