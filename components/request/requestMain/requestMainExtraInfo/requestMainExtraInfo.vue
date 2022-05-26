@@ -412,8 +412,9 @@ export default {
           case 1: {
             return this.request.typeId !== 11
           }
+          // Конкурс
           case 2: {
-            return this.request.typeId !== 11 && this.request.isTsgRepr === 'Y'
+            return this.request.typeId !== 11 && this.request.isTsgRepr !== 'Y'
           }
           case 3: {
             return this.request.typeId === 11
