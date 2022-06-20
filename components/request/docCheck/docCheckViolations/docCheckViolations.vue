@@ -31,7 +31,7 @@
               )
                 el-option(
                   v-for='item in refInspectionResults'
-                  v-if="(item.id !== 4 && item.id !== 3) || (item.id === 4 && violationGroup.refViolationGroupByGroupId.id === 3) || (item.id === 3 && request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (item.id === 3 && request.typeId === 11)"
+                  v-if="isVisibleInitInspectionPrimaryResult(item, violationGroup, request)"
                   :key='item.id'
                   :label='item.name'
                   :value='item.id')
@@ -74,7 +74,7 @@
                 )
                   el-option(
                     v-for='item in refInspectionResultsAbeyance'
-                    v-if="(item.id !== 4 && item.id !== 3) || (item.id === 3 && request.typeId === 8 && (request.agreementFoundationId == 2 || request.agreementFoundationId == 4)) || (item.id === 3 && request.typeId === 11)"
+                    v-if="isVisibleInspAfterSuspPrimaryResult(item, violationGroup, request)"
                     :key='item.id'
                     :label='item.name'
                     :value='item.id')
@@ -371,6 +371,45 @@ export default {
         violationGroupId: this.violationDescriptionDialog.violationGroupId,
         inspectionType: this.violationDescriptionDialog.inspectionType
       })
+    },
+    isVisibleInitInspectionPrimaryResult(item, violationGroup, request) {
+      const isRefViolationGroupByGroup6or7 = this.isRefViolationGroupByGroup6or7(
+        violationGroup
+      )
+      return (
+        (item.id !== 4 && item.id !== 3) ||
+        (item.id === 4 && violationGroup.refViolationGroupByGroupId.id === 3) ||
+        (item.id === 3 &&
+          request.typeId === 8 &&
+          (request.agreementFoundationId === 2 ||
+            request.agreementFoundationId === 4) &&
+          isRefViolationGroupByGroup6or7) ||
+        (item.id === 3 &&
+          request.typeId === 11 &&
+          isRefViolationGroupByGroup6or7)
+      )
+    },
+    isVisibleInspAfterSuspPrimaryResult(item, violationGroup, request) {
+      const isRefViolationGroupByGroup6or7 = this.isRefViolationGroupByGroup6or7(
+        violationGroup
+      )
+      return (
+        (item.id !== 4 && item.id !== 3) ||
+        (item.id === 3 &&
+          request.typeId === 8 &&
+          (request.agreementFoundationId === 2 ||
+            request.agreementFoundationId === 4) &&
+          isRefViolationGroupByGroup6or7) ||
+        (item.id === 3 &&
+          request.typeId === 11 &&
+          isRefViolationGroupByGroup6or7)
+      )
+    },
+    isRefViolationGroupByGroup6or7(violationGroup) {
+      return (
+        violationGroup.refViolationGroupByGroupId.id === 6 ||
+        violationGroup.refViolationGroupByGroupId.id === 7
+      )
     }
   }
 }
