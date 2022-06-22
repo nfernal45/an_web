@@ -40,7 +40,8 @@ export default {
       delete request._links
       await dispatch(mutationTypes.SET_REQUEST, request)
       dispatch(actionTypes.FETCH_REQUEST_STATUSES)
-      dispatch(actionTypes.FETCH_DOC_CHECK)
+      /* Документы необходимы для корректной работы SET_PROPS_BY_STATUS */
+      await dispatch(actionTypes.FETCH_DOC_CHECK)
       dispatch(actionTypes.SET_PROPS_BY_STATUS, state.request.requestStatusId)
     } catch (error) {
       throw error
