@@ -1,6 +1,6 @@
 export default () => ({
   requestStatusesOptions: [],
-  globalSearchFilters: '',
+  globalSearchFilters: {},
   globalSearchFiltersSettings: {},
   globalSearchAddressFiltersSettings: {}
 })
