@@ -403,9 +403,6 @@ export default {
       if (this.searchForm.typeId.length)
         search.push(`typeId=in=(${this.searchForm.typeId.join(',')})`)
 
-      if (this.computedAddressesId.length)
-        search.push(`addressId=in=(${this.searchForm.addressesId.join(',')})`)
-
       if (this.searchForm.licenseeType.length)
         search.push(`licenseeType=in=(${this.searchForm.licenseeType})`)
 
@@ -419,17 +416,27 @@ export default {
 
       return search
     },
-    computedAddressesId() {
-      if (
-        !this.searchAddress.admDisctrict &&
-        !this.searchAddress.district &&
-        !this.searchAddress.constr &&
-        !this.searchAddress.corp &&
-        !this.searchAddress.house &&
-        !this.searchAddress.street
-      )
-        return []
-      else return this.searchForm.addressesId
+    searchAddressFilters() {
+      const searchAddressFilters = {}
+      if (this.searchAddress.admDisctrict) {
+        searchAddressFilters.filter_adm_district_id = this.searchAddress.admDisctrict
+      }
+      if (this.searchAddress.district) {
+        searchAddressFilters.filter_district_id = this.searchAddress.district
+      }
+      if (this.searchAddress.constr) {
+        searchAddressFilters.filter_construct = this.searchAddress.constr
+      }
+      if (this.searchAddress.corp) {
+        searchAddressFilters.filter_corp = this.searchAddress.corp
+      }
+      if (this.searchAddress.house) {
+        searchAddressFilters.filter_house_num = this.searchAddress.house
+      }
+      if (this.searchAddress.street) {
+        searchAddressFilters.filter_street_id = this.searchAddress.street
+      }
+      return searchAddressFilters
     },
     computedRefRequestTypes() {
       return (
@@ -521,7 +528,16 @@ export default {
       await this.fetchDocChecksList()
 
       if (this.errorAddressMessage.length) return false
-      else this.$emit('changeSearchFilters', this.searchParams)
+      else {
+        const globalSearch = Object.assign(
+          {},
+          {
+            searchParams: this.searchParams,
+            searchAddress: this.searchAddressFilters
+          }
+        )
+        this.$emit('changeSearchFilters', globalSearch)
+      }
     },
 
     clearSearchFilter() {

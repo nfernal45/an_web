@@ -52,8 +52,10 @@ export default {
   name: 'RegistryRequestsTable',
   props: {
     globalSearchFilters: {
-      type: String,
-      default: ''
+      type: Object,
+      default() {
+        return {}
+      }
     },
     isSearchLoading: {
       type: Boolean,
@@ -111,7 +113,7 @@ export default {
   },
   watch: {
     globalSearchFilters(value) {
-      this.searchString = value
+      this.searchString = value.searchParams
       this.tablePageChange(1)
     },
     requestsList(value) {
@@ -133,11 +135,23 @@ export default {
     async searchRequests() {
       this.$emit('update:isSearchLoading', true)
 
-      const searchParams = Object.assign({}, this.paginationParams)
+      let searchParams = Object.assign({}, this.paginationParams)
       delete searchParams.total
 
-      if (this.globalSearchFilters.length)
-        searchParams.search = this.globalSearchFilters
+      if (
+        this.globalSearchFilters &&
+        this.globalSearchFilters.searchParams &&
+        this.globalSearchFilters.searchParams.length
+      ) {
+        searchParams.search = this.globalSearchFilters.searchParams
+      }
+
+      if (this.globalSearchFilters && this.globalSearchFilters.searchAddress) {
+        searchParams = Object.assign(
+          searchParams,
+          this.globalSearchFilters.searchAddress
+        )
+      }
 
       try {
         const { data, total } = await fetchRequestsList({
