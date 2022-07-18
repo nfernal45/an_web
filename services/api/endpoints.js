@@ -23,7 +23,10 @@ const restApiGf = {
     byId: '/gf-attached-docs/{id}',
     list: '/gf-attached-docs/list',
     file: '/gf-attached-docs/{id}/file',
-    post: '/gf-attached-docs/'
+    /* Создание записи */
+    post: '/gf-attached-docs/',
+    /* Обновление записи */
+    put: '/gf-attached-docs/'
   },
   gfDocCheck: {
     byId: '/gf-doc-checks/{id}',
