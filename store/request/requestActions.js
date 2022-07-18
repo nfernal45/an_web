@@ -9,6 +9,7 @@ import changeRequestStatus from '@/services/api/request/changeRequestStatus'
 import postAttachedDoc from '@/services/api/request/postAttachedDoc'
 import uploadInternalMzhiDocument from '@/services/api/request/uploadInternalMzhiDocument'
 import deleteInternalMzhiDocument from '@/services/api/request/deleteInternalMzhiDocument'
+import updateAttachedDoc from '@/services/api/request/updateAttachedDoc'
 
 export default {
   [actionTypes.FETCH_REQUEST_LIST]: async ({ commit }) => {
@@ -93,6 +94,13 @@ export default {
       }
 
       if (file) {
+        if (doc.docId) {
+          doc.requestId = state.request.requestId
+          attachedDoc = await updateAttachedDoc({
+            axiosModule: this.$axios,
+            documentEntity: doc
+          })
+        }
         const { updatedObject } = await uploadInternalMzhiDocument({
           axiosModule: this.$axios,
           documentId: id,
@@ -101,6 +109,13 @@ export default {
 
         attachedDoc = Object.assign({}, updatedObject)
       } else if (doc.docFileName === 'DELETED') {
+        if (doc.docId) {
+          doc.requestId = state.request.requestId
+          attachedDoc = await updateAttachedDoc({
+            axiosModule: this.$axios,
+            documentEntity: doc
+          })
+        }
         const { updatedObject } = await deleteInternalMzhiDocument({
           axiosModule: this.$axios,
           docId: id
