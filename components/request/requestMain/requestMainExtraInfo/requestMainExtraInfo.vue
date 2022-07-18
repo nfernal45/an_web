@@ -107,14 +107,14 @@
 
         el-row(:gutter='20')
           el-col(
-            v-if='request.isTsgRepr === "N" || request.typeId === 11'
+            v-if='request.isTsgRepr !== "Y" || request.typeId === 11'
             :span='12'
           )
             el-form-item(label='Серия и номер действующей лицензии')
               el-input(v-model='currentLicenseSerNum')
 
           el-col(
-            v-if='request.isTsgRepr === "N" || request.typeId === 11'
+            v-if='request.isTsgRepr !== "Y" || request.typeId === 11'
             :span='12'
           )
             el-form-item(label='Дата выдачи действующей лицензии')
