@@ -13,9 +13,9 @@
       autocomplete
     )
       el-option(v-for='orgStructure in employeeOptions'
-        :key='orgStructure.orgStrctId'
-        :label='`${orgStructure.refPersonByPersonId.personName} - ${orgStructure.refDeptByDeptId.deptNameSht} - ${orgStructure.refAppointmentrtByAppointmentrtId.appntmtNameShrt}`'
-        :value='orgStructure.orgStrctId'
+        :key='orgStructure.id'
+        :label='`${orgStructure.name}`'
+        :value='orgStructure.id'
       )
 </template>
 
