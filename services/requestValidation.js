@@ -20,7 +20,7 @@ export const validation = function(request, rest) {
     errors.push('Укажите место подачи документов.')
   }
 
-  if (request.isTsgRepr === 'N' || request.typeId === 11) {
+  if (request.isTsgRepr !== 'Y' || request.typeId === 11) {
     if (!request.currentLicenseSerNum) {
       errors.push(
         'Поле "Серия и номер действующей лицензии" обязательно для ввода'
