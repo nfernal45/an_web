@@ -174,6 +174,7 @@ export default {
   computed: {
     ...mapState(moduleName, {
       request: (state) => state.request,
+      docCheck: (state) => state.docCheck,
       licenseeAttachedDocs: (state) => state.licenseeAttachedDocs
     }),
 
@@ -365,6 +366,7 @@ export default {
       this.agreementRequestNum = null
       this.agreementTransferDate = null
       this.transferMethod = null
+      this.clearInspectionResult()
     }
   },
   mounted() {
@@ -376,13 +378,53 @@ export default {
   methods: {
     ...mapMutations(moduleName, {
       set: mutationTypes.SET_PROP,
-      setArrayObjectProp: mutationTypes.SET_ARRAY_OBJECT_PROP
+      setArrayObjectProp: mutationTypes.SET_ARRAY_OBJECT_PROP,
+      setPrimaryInspectionResult:
+        mutationTypes.SET_DOC_CHECK_PRIMARY_INSPECTION_RESULT,
+      setAbeyanceInspectionResult:
+        mutationTypes.SET_DOC_CHECK_ABEYANCE_INSPECTION_RESULT
     }),
 
     async fetchTransferMethodOptions() {
       this.transferMethodOptions = await fetchTransferMethods({
         axiosModule: this.$axios
       })
+    },
+
+    clearInspectionResult() {
+      if (!this.docCheck || !this.docCheck.gfCheckViolationsByCheckId) {
+        return
+      }
+
+      for (const violation of this.docCheck.gfCheckViolationsByCheckId) {
+        if (this.isRefViolationGroupByGroup6or7(violation)) {
+          this.changePrimaryInspectionResult({
+            value: null,
+            violationGroupId: violation.id
+          })
+          this.changeAbeyanceInspectionResult({
+            value: null,
+            violationGroupId: violation.id
+          })
+        }
+      }
+    },
+
+    changePrimaryInspectionResult({ value, violationGroupId }) {
+      this.setPrimaryInspectionResult({ value, violationGroupId })
+    },
+
+    changeAbeyanceInspectionResult({ value, violationGroupId }) {
+      this.setAbeyanceInspectionResult({ value, violationGroupId })
+    },
+
+    isRefViolationGroupByGroup6or7(violationGroup) {
+      return (
+        violationGroup &&
+        violationGroup.refViolationGroupByGroupId &&
+        (violationGroup.refViolationGroupByGroupId.id === 6 ||
+          violationGroup.refViolationGroupByGroupId.id === 7)
+      )
     },
 
     async fetchYesNoOptions() {
