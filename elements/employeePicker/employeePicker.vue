@@ -64,7 +64,11 @@ export default {
   },
   methods: {
     async fetchEmployeeOptionsByName(personName) {
-      if (personName.length < 2) return
+      if (personName.length < 2) {
+        this.employeeOptions = []
+        this.isLoading = false
+        return
+      }
       this.isLoading = true
       this.employeeOptions = await fetchEmployeeOptions({
         axiosModule: this.$axios,
