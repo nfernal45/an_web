@@ -94,8 +94,8 @@
         el-form-item(label='Корпус дома')
           el-select.width-100(
             v-model='corp'
-            :disabled='!houseNum'
-            :placeholder='houseNum ? "Введите корпус дома" : "Укажите номер дома"'
+            :disabled='!streetId'
+            :placeholder='streetId ? "Введите корпус дома" : "Выберите улицу"'
             filterable
             remote
             :remote-method='fetchCorpsNumbersOptions'
