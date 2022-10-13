@@ -190,12 +190,6 @@ export default {
       }
 
       switch (nextStatusId) {
-        case statusConstants.RESUMED:
-          docName = getRequiredDocWarehouseName(
-            'ExtractOrReceiptOnRegistrationOfApplication'
-          )
-          break
-
         case statusConstants.DECISIONMADE:
           if (this.request.decisionType === 'D') {
             docName = getRequiredDocWarehouseName(
