@@ -26,6 +26,7 @@
             el-form-item(label='Приостановлено до:')
               el-date-picker(
                 :picker-options='{ firstDayOfWeek: 1 }'
+                disabled
                 v-model='endDate'
                 format="dd.MM.yyyy"
                 value-format="dd.MM.yyyy"
