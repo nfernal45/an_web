@@ -109,33 +109,6 @@
           size='small'
           :disabled='disabledEditing')
           el-row
-            el-form-item(label='Создание распоряжения в ходе рассмотрения заявления')
-              el-col(:span='4')
-                el-radio(v-model='isInstructionRequired' label='Y') Требуется
-              el-col(:span='4')
-                el-radio(v-model='isInstructionRequired' label='N') Не требуется
-          el-row(:gutter='20')
-            el-col(:span='7')
-              el-form-item(label='Дата направления документов')
-                el-date-picker(
-                  :picker-options='{ firstDayOfWeek: 1 }'
-                  v-model='sendDate'
-                  placeholder='Выберите дату'
-                  type='date'
-                  format="dd.MM.yyyy"
-                  value-format="dd.MM.yyyy"
-                )
-            el-col(:span='7')
-              el-form-item(label='Плановый срок исполнения')
-                el-date-picker(
-                  :picker-options='{ firstDayOfWeek: 1 }'
-                  v-model='planExecDate'
-                  disabled
-                  type='date'
-                  format="dd.MM.yyyy"
-                  value-format="dd.MM.yyyy"
-                )
-          el-row
             el-col(:span='14')
               employee-picker(label='Ответственный исполнитель' v-model='addCheckExecId')
     doc-check-violations-descriptions-dialog(
@@ -378,7 +351,10 @@ export default {
       )
       return (
         (item.id !== 4 && item.id !== 3) ||
-        (item.id === 4 && violationGroup.refViolationGroupByGroupId.id === 3) ||
+        (item.id === 4 &&
+          (violationGroup.refViolationGroupByGroupId.id === 3 ||
+            violationGroup.refViolationGroupByGroupId.id === 6 ||
+            violationGroup.refViolationGroupByGroupId.id === 7)) ||
         (item.id === 3 &&
           request.typeId === 8 &&
           (request.agreementFoundationId === 2 ||

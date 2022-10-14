@@ -451,6 +451,7 @@ export default {
         }
 
         switch (item.id) {
+          // Собрание собственников помещений в МКД (решение правления ТСЖ, ЖСК)
           case 1: {
             return this.request.typeId !== 11
           }
@@ -458,15 +459,20 @@ export default {
           case 2: {
             return this.request.typeId !== 11 && this.request.isTsgRepr !== 'Y'
           }
+          // Распорядительный документ ОИВ
           case 3: {
-            return this.request.typeId === 11
+            // Временное управление на основании РД или Исключение дома из реестра
+            return this.request.typeId === 11 || this.request.typeId === 10
           }
+          // Договор с застройщиком
           case 4: {
             return this.request.typeId === 8
           }
+          // Решение суда
           case 5: {
             return this.request.typeId === 10
           }
+          // Решение ОГЖН
           case 6: {
             return this.request.typeId === 10 && this.request.regPlaceId === 1
           }
