@@ -271,12 +271,6 @@ export const validation = function(request, rest) {
             'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
           )
         }
-
-        if (rest.docCheck.isInstructionRequired === null) {
-          errors.push(
-            'Необходимо выбрать флаг "Создание распоряжения в ходе рассмотрения заявления", вкладка "Ход рассмотрения";'
-          )
-        }
       }
     }
   }
@@ -376,12 +370,6 @@ export const validation = function(request, rest) {
           if (isPrimaryInspResultFilled) {
             errors.push(
               'Необходимо заполнить поле "Первичный осмотр, результат проверки", вкладка "Ход рассмотрения";'
-            )
-          }
-
-          if (rest.docCheck.isInstructionRequired === null) {
-            errors.push(
-              'Необходимо выбрать флаг "Создание распоряжения в ходе рассмотрения заявления", вкладка "Ход рассмотрения";'
             )
           }
         }
