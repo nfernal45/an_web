@@ -9,7 +9,6 @@
             placement="top"
           )
             font-awesome-icon(
-              v-if='can("RL_GF_ENTER_GU")'
               slot="reference"
               icon="link"
               transform="shrink-3"
@@ -17,7 +16,7 @@
               title="Переключение между модулями"
             )
             ul(:class='styles["links-list"]')
-              li(v-for='(link, index) in links' :key='index')
+              li(v-for='(link, index) in links' :key='index' v-if='link.visible')
                 a(:href='link.href') {{ link.title }}
           font-awesome-icon(icon="user" transform="shrink-3" size="2x" title="Мои настройки" @click="userSettings()")
           font-awesome-icon(
@@ -37,20 +36,28 @@ export default {
   data() {
     return {
       title:
-        'Подсистема "Реестр сведений о лицензиатах" ЕИС МЖИ. Внесение изменений в Реестр лицензий',
-      links: [
-        {
-          title:
-            'Модуль «Регистрации и обработки заявлений на выдачу лицензии / Лицензионных дел»',
-          href: process.env.APP_HOST
-        }
-      ]
+        'Подсистема "Реестр сведений о лицензиатах" ЕИС МЖИ. Внесение изменений в Реестр лицензий'
     }
   },
   computed: {
     ...mapGetters(['can', 'canAny']),
     styles() {
       return styles
+    },
+    links() {
+      return [
+        {
+          title:
+            'Модуль «Регистрации и обработки заявлений на выдачу лицензии / Лицензионных дел»',
+          href: process.env.APP_HOST,
+          visible: this.can('RL_GF_ENTER_GU')
+        },
+        {
+          title: 'Модуль «Квалификационные экзамены»',
+          href: process.env.APP_HOST + '/exam',
+          visible: true
+        }
+      ]
     }
   },
   methods: {
