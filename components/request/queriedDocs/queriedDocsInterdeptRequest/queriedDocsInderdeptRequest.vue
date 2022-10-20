@@ -77,7 +77,7 @@
                   el-button(type='primary'
                             :ref='`etp${doc.queryId}`'
                             v-show='!doc.queryDate'
-                            @click='sendToEtp(doc.queryId, index)') Запросить документ в БР
+                            @click='sendToEtp(doc, index)') Запросить документ в БР
 
         el-dialog(:visible.sync='isRequiredInterParamsDialogVisible'
                   :close-on-click-modal='false'
@@ -88,33 +88,45 @@
               h6.mb-10 Укажите параметры запроса:
           el-row
             el-col(:span='16')
-                el-form-item(v-for='item in requiredInterParamsData'
-                            :key='item && item.paramId'
-                            :label='item && item.paramCaption')
-                  div(v-if='isInfInExplNumPermInterParam(item)')
-                    el-input.mb-10(v-model='item.stringValue'
-                      v-mask="'##.##.####'"
-                      :placeholder="'XX.XX.XXXX'"
-                      style='border-color: yellow !important')
-                    transition(name='fade')
-                      div(v-show='item.isRequired === "Y" && !isValidDateInterParamValue(item.stringValue)'
-                          style='position: absolute; color: tomato; font-size: 11px; transform: translateY(-15px)') Поле должно иметь формат XX.XX.XXXX
-                  div(v-else)
-                    el-input.mb-10(v-model='item.stringValue'
-                      style='border-color: yellow !important')
-                    transition(name='fade')
-                      div(v-show='item.isRequired === "Y" && !item.stringValue'
-                        style='position: absolute; color: tomato; font-size: 11px; transform: translateY(-15px)') Обязательное поле должно быть заполнено
-                transition(name='fade')
-                  el-button(@click='updateRequiredInterParams'
-                            :loading='isRequiredInterParamsLoading'
-                            :disabled='isUpdateRequiredParamsButtonDisabled'
-                            type='primary') Отправить запрос
+              el-form-item(v-for='item in requiredInterParamsData'
+                          :key='item && item.paramId'
+                          :label='item && item.paramCaption')
+                div(v-if='isInfInExplNumPermInterParam(item)')
+                  el-input.mb-10(v-model='item.stringValue'
+                    v-mask="'##.##.####'"
+                    :placeholder="'XX.XX.XXXX'"
+                    style='border-color: yellow !important')
+                  transition(name='fade')
+                    div(v-show='item.isRequired === "Y" && !isValidDateInterParamValue(item.stringValue)'
+                        style='position: absolute; color: tomato; font-size: 11px; transform: translateY(-15px)') Поле должно иметь формат XX.XX.XXXX
+                div(v-else)
+                  el-input.mb-10(v-model='item.stringValue'
+                    style='border-color: yellow !important')
+                  transition(name='fade')
+                    div(v-show='item.isRequired === "Y" && !item.stringValue'
+                      style='position: absolute; color: tomato; font-size: 11px; transform: translateY(-15px)') Обязательное поле должно быть заполнено
+              div(v-if="isNeedSign(sendDocument)")
+                queried-docs-interdept-sign(
+                  :disabledEditing='disabledEditing'
+                  :signErrorMessage='signErrorMessage'
+                  @selectCertificate="selectSignCertificate"
+                )
+              transition(v-if="!isNeedSign(sendDocument)" name='fade')
+                el-button(@click='updateRequiredInterParams'
+                          :loading='isRequiredInterParamsLoading'
+                          :disabled='isUpdateRequiredParamsButtonDisabled'
+                          type='primary') Отправить запрос
+              transition(v-else name='fade')
+                el-button(@click='signAndSendDoc(sendDocument)'
+                  :loading='isRequiredInterParamsLoading || isProcessSignAndSend'
+                  :disabled='isUpdateRequiredParamsButtonDisabled || !signCertificate'
+                  type='primary') Подписать и отправить
 </template>
 <script>
 import { Loading } from 'element-ui'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { mutationTypes, actionTypes } from '@/store/types/request'
+import queriedDocsInterdeptSign from '@/components/request/queriedDocs/queriedDocsInterdeptSign'
 import fetchDocTypes from '@/services/api/references/fetchDocTypes'
 import fetchRequiredInterParams from '@/services/api/request/fetchRequiredInterParams'
 import updateRequiredInterParams from '@/services/api/request/updateRequiredInterParams'
@@ -126,6 +138,9 @@ import { INF_IN_EXPL_DATE_PERMISSION_INFER_PARAM_ID } from '@/services/api/const
 const moduleName = 'request'
 export default {
   name: 'QueriedDocsInderdeptRequest',
+  components: {
+    queriedDocsInterdeptSign
+  },
   props: {
     disabledEditing: {
       type: Boolean,
@@ -141,7 +156,12 @@ export default {
       isRequiredInterParamsLoading: false,
       requiredInterParamsData: [],
       chedSettings: {},
-      chedSettingsLoaded: false
+      chedSettingsLoaded: false,
+
+      sendDocument: null,
+      signCertificate: null,
+      signErrorMessage: null,
+      isProcessSignAndSend: false
     }
   },
   computed: {
@@ -283,7 +303,12 @@ export default {
         propValue
       })
     },
-    async sendToEtp(documentQueryId, index) {
+    async sendToEtp(doc, index) {
+      this.sendDocument = null
+      this.signCertificate = null
+      this.signErrorMessage = null
+
+      const documentQueryId = doc.queryId
       const el = this.$refs[`etp${documentQueryId}`][0].$el
 
       const loading = Loading.service({
@@ -296,7 +321,13 @@ export default {
         documentQueryId
       })
 
-      if (!requiredInterParamsResponse.length) {
+      if (requiredInterParamsResponse.length || this.isNeedSign(doc)) {
+        this.sendDocument = doc
+        this.requiredInterParamsData = requiredInterParamsResponse
+        this.isRequiredInterParamsDialogVisible = true
+
+        loading.close()
+      } else {
         await sendToEtp({
           axiosModule: this.$axios,
           documentQueryId,
@@ -308,12 +339,11 @@ export default {
         await this.fetchRequest(this.request.requestId)
 
         loading.close()
-      } else {
-        this.requiredInterParamsData = requiredInterParamsResponse
-        this.isRequiredInterParamsDialogVisible = true
-
-        loading.close()
       }
+    },
+    isNeedSign(doc) {
+      /* TODO какой должен быть тип документа ? */
+      return doc && doc.docTypeId === 71
     },
     async updateRequiredInterParams() {
       const array = this.requiredInterParamsData
@@ -338,6 +368,33 @@ export default {
 
       this.isRequiredInterParamsDialogVisible = false
       this.isRequiredInterParamsLoading = false
+    },
+    selectSignCertificate(cert) {
+      this.signCertificate = cert
+    },
+    signAndSendDoc(doc) {
+      const currentComponent = this
+      this.isProcessSignAndSend = true
+      // eslint-disable-next-line no-undef
+      signCadesBesAsync(
+        this.signCertificate,
+        'testDataInBase64',
+        'testDataInBase64'
+      )
+        .then((signature) => {
+          console.log(signature)
+        })
+        .catch((error) => {
+          if (error.message) {
+            currentComponent.signErrorMessage = error.message
+          } else {
+            currentComponent.signErrorMessage = error.toString()
+          }
+          console.log(error)
+        })
+        .finally(() => {
+          currentComponent.isProcessSignAndSend = false
+        })
     },
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
