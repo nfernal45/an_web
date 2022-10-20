@@ -206,7 +206,6 @@ export default {
   watch: {
     certIndex() {
       const cert = this.getCertificate(this.certIndex)
-      console.log(cert)
       this.$emit("selectCertificate", cert)
     }
   },
@@ -239,7 +238,7 @@ export default {
       Promise.all(promiseData).then(function() {
         currentComponent.initCadesPlugin()
       }).catch(function(gfgData) {
-        console.log(gfgData + ' failed to load!');
+        currentComponent.localErrorMessage = gfgData.toString()
       });
     },
     initCadesPlugin() {
@@ -283,20 +282,9 @@ export default {
       // eslint-disable-next-line no-undef
       return global_selectbox_container[certIndex]
     },
-    testSign() {
-      // eslint-disable-next-line no-undef
-      signCadesBesAsync(this.getCertificate(this.certIndex), "testDataInBase64")
-        .then((signature) => {
-          console.log(signature)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-      // разобраться, как из внешнего сюда передать на подпись
-    }
   }
 }
 </script>
 <style scoped>
-@import '@/components/request/queriedDocs/queriedDocsInterdeptSign/css/demopage.css';
+@import '~/components/request/queriedDocs/queriedDocCertLoader/css/certLoader.css';
 </style>

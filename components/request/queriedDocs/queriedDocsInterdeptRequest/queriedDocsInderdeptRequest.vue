@@ -106,7 +106,7 @@
                     div(v-show='item.isRequired === "Y" && !item.stringValue'
                       style='position: absolute; color: tomato; font-size: 11px; transform: translateY(-15px)') Обязательное поле должно быть заполнено
               div(v-if="isNeedSign(sendDocument)")
-                queried-docs-interdept-sign(
+                queried-doc-cert-loader(
                   :disabledEditing='disabledEditing'
                   :signErrorMessage='signErrorMessage'
                   @selectCertificate="selectSignCertificate"
@@ -126,7 +126,7 @@
 import { Loading } from 'element-ui'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { mutationTypes, actionTypes } from '@/store/types/request'
-import queriedDocsInterdeptSign from '@/components/request/queriedDocs/queriedDocsInterdeptSign'
+import queriedDocCertLoader from '@/components/request/queriedDocs/queriedDocCertLoader'
 import fetchDocTypes from '@/services/api/references/fetchDocTypes'
 import fetchRequiredInterParams from '@/services/api/request/fetchRequiredInterParams'
 import updateRequiredInterParams from '@/services/api/request/updateRequiredInterParams'
@@ -139,7 +139,7 @@ const moduleName = 'request'
 export default {
   name: 'QueriedDocsInderdeptRequest',
   components: {
-    queriedDocsInterdeptSign
+    queriedDocCertLoader
   },
   props: {
     disabledEditing: {
@@ -342,27 +342,41 @@ export default {
       }
     },
     isNeedSign(doc) {
-      /* TODO какой должен быть тип документа ? */
-      return doc && doc.docTypeId === 71
+      return doc && doc.docTypeId === 92
     },
     async updateRequiredInterParams() {
-      const array = this.requiredInterParamsData
-      const documentQueryId = array[0].queryId
+      console.log(this.sendDocument)
+      if (
+        this.requiredInterParamsData &&
+        this.requiredInterParamsData.length !== 0
+      ) {
+        const array = this.requiredInterParamsData
+        const documentQueryId = array[0].queryId
 
-      this.isRequiredInterParamsLoading = true
+        this.isRequiredInterParamsLoading = true
 
-      await updateRequiredInterParams({
-        axiosModule: this.$axios,
-        entityArray: array
-      })
+        await updateRequiredInterParams({
+          axiosModule: this.$axios,
+          entityArray: array
+        })
 
-      await sendToEtp({
-        axiosModule: this.$axios,
-        documentQueryId,
-        userLogin: this.$auth.$storage.getState(
-          AUTH_USER_LOGIN_STORE_VALUE_NAME
-        )
-      })
+        await sendToEtp({
+          axiosModule: this.$axios,
+          documentQueryId,
+          userLogin: this.$auth.$storage.getState(
+            AUTH_USER_LOGIN_STORE_VALUE_NAME
+          )
+        })
+      } else {
+        const documentQueryId = this.sendDocument.queryId
+        await sendToEtp({
+          axiosModule: this.$axios,
+          documentQueryId,
+          userLogin: this.$auth.$storage.getState(
+            AUTH_USER_LOGIN_STORE_VALUE_NAME
+          )
+        })
+      }
 
       await this.fetchRequest(this.request.requestId)
 
@@ -383,6 +397,7 @@ export default {
       )
         .then((signature) => {
           console.log(signature)
+          currentComponent.updateRequiredInterParams()
         })
         .catch((error) => {
           if (error.message) {
