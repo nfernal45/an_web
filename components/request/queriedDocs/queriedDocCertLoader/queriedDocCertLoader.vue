@@ -150,6 +150,4 @@ export default {
   }
 }
 </script>
-<style scoped>
-@import '~/components/request/queriedDocs/queriedDocCertLoader/css/certLoader.css';
-</style>
+<style lang="sass"></style>
