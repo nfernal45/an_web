@@ -498,14 +498,12 @@ function loadCades() {
     }
 
     function nmcades_api_onload() {
-        console.log("nmcades_api_onload")
         if (!isIE() && !isFireFox && !isSafari) {
             if (window.cadesplugin_extension_loaded_callback)
                 window.cadesplugin_extension_loaded_callback();
         }
         window.postMessage("cadesplugin_echo_request", "*");
         window.addEventListener("message", function (event){
-            console.log("nmcades_api_onload on message + " + event.data)
             if (typeof(event.data) !== "string" || !event.data.match("cadesplugin_loaded"))
                 return;
             if (cadesplugin_loaded_event_recieved)
@@ -549,7 +547,6 @@ function loadCades() {
                 fileref.onload = nmcades_api_onload;
                 document.getElementsByTagName("head")[0].appendChild(fileref);
             } else {
-                console.log("nmcades_plugin_api.js")
                 // для Chrome, Chromium, Chromium Edge расширение из Chrome store
                 var fileref = document.createElement('script');
                 fileref.setAttribute("type", "text/javascript");
@@ -591,7 +588,6 @@ function loadCades() {
         plugin_resolved = 1;
         if(canPromise)
         {
-            console.log("plugin_loaded")
             plugin_resolve();
         }else {
             window.postMessage("cadesplugin_loaded", "*");
@@ -606,7 +602,6 @@ function loadCades() {
         plugin_resolved = 1;
         if(canPromise)
         {
-            console.log("plugin_reject")
             plugin_reject(msg);
         } else {
             window.postMessage("cadesplugin_load_error", "*");
@@ -677,7 +672,6 @@ function loadCades() {
 
         if(isNativeMessageSupported())
         {
-            console.log("load_extension")
             load_extension();
         }else if(!canPromise) {
             window.addEventListener("message", function (event){
@@ -741,6 +735,23 @@ function loadCades() {
         setTimeout(check_load_timeout, 20000);
     }
 
+    function isExtensionNeeded() {
+        if (isIE()) return false;
+        if (browserSpecs.name == 'Edge') { return true; }
+        if (browserSpecs.name == 'Opera') { if (browserSpecs.version >= 33) { return true; } else { return false; } }
+        if (browserSpecs.name == 'Firefox') { if (browserSpecs.version >= 52) { return true; } else { return false; } }
+        if (browserSpecs.name == 'Chrome') { if (browserSpecs.version >= 42) { return true; } else { return false; } }
+        if (browserSpecs.name == 'Safari') { if (browserSpecs.version >= 11) { return true; } else { return false; } }
+        return true;
+    }
+
+    if(!isExtensionNeeded()) {
+        window.cadesplugin_extension_loaded = true;
+        if (window.cadesplugin_extension_loaded_callback) {
+            window.cadesplugin_extension_loaded_callback()
+        }
+    }
+
     set_constantValues();
 
     cadesplugin.current_log_level = cadesplugin.LOG_LEVEL_ERROR;
@@ -748,4 +759,24 @@ function loadCades() {
     check_plugin_working();
 }
 
+// Описание работы с плагином
+
+/* 1) Устанавливаем callback, вызывающийся после успешной загрузки расширения для браузера */
+/* Вывод текста - расширение для браузера загружено */
+window.cadesplugin_extension_loaded_callback = null
+
+/* 2) Инициализация cades плагина */
 document.loadCades = loadCades
+
+/* 3) Проверка загрузки плагина */
+/* Вывод текста - плагин загружен */
+// cadesplugin.then(function() {},function(error) {});
+
+/* 4) Проверка загрузки криптопровайдера в then блоке 3) */
+// fors_cades.js - checkPluginLoadedAsync()
+
+/* 5) Загрузка сертификатов в then блоке 4) */
+// fors_cades.js - loadCertificatesAsync()
+
+/* 6) После успешной загрузки сертификатов и выбора сертификата */
+// fors_cades.js - signCadesBesAsync()
