@@ -224,15 +224,15 @@ export default {
   methods: {
     addScripts() {
       const promiseData = [];
-      promiseData.push(this.loadScript('es6-promise', '/js/es6-promise.min.js'))
-      promiseData.push(this.loadScript('ie_eventlistner_polyfill', '/js/ie_eventlistner_polyfill.js'))
-      promiseData.push(this.loadScript('lights', '/js/lights.js'))
-      promiseData.push(this.loadScript('cadesplugin_api', '/js/cadesplugin_api.js'))
-      promiseData.push(this.loadScript('Code', '/js/Code.js'))
-      promiseData.push(this.loadScript('highlight', '/js/highlight.js'))
+      promiseData.push(this.loadSignScript('es6-promise', 'es6-promise.min.js'))
+      promiseData.push(this.loadSignScript('ie_eventlistner_polyfill', 'ie_eventlistner_polyfill.js'))
+      promiseData.push(this.loadSignScript('lights', 'lights.js'))
+      promiseData.push(this.loadSignScript('cadesplugin_api', 'cadesplugin_api.js'))
+      promiseData.push(this.loadSignScript('Code', 'Code.js'))
+      promiseData.push(this.loadSignScript('highlight', 'highlight.js'))
       // Грузится в '/js/Code.js'
-      // promiseData.push(this.loadScript('async_code', '/js/async_code.js'))
-      promiseData.push(this.loadScript('load_extension', '/js/load_extension.js'))
+      // promiseData.push(this.loadScript('async_code', 'async_code.js'))
+      promiseData.push(this.loadSignScript('load_extension', 'load_extension.js'))
 
       const currentComponent = this
       Promise.all(promiseData).then(function() {
@@ -261,10 +261,10 @@ export default {
       // eslint-disable-next-line no-unused-expressions
       if (script) script.parentNode?.removeChild(script)
     },
-    loadScript(id, src) {
+    loadSignScript(id, file) {
       return new Promise(function(resolve, reject) {
         const tag = document.createElement('script')
-        tag.src = src
+        tag.src = '/management/js/' + file
         tag.async = false
         tag.id = id
         tag.onload = () => {

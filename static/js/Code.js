@@ -48,7 +48,7 @@ function include_async_code()
     }
     var fileref = document.createElement('script');
     fileref.setAttribute("type", "text/javascript");
-    fileref.setAttribute("src", "/js/async_code.js");
+    fileref.setAttribute("src", "/management/js/async_code.js");
     fileref.setAttribute("id", "async_code");
     document.getElementsByTagName("head")[0].appendChild(fileref);
     async_Promise = new Promise(function(resolve, reject){
