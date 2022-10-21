@@ -83,7 +83,7 @@
                   :close-on-click-modal='false'
                   :append-to-body='true'
                   title="Дополнительные параметры")
-          el-row
+          el-row(v-if='requiredInterParamsData.length > 0')
             el-col
               h6.mb-10 Укажите параметры запроса:
           el-row
