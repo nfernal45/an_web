@@ -124,7 +124,7 @@ export default {
     removeScript(id) {
       const script = document.getElementById(id)
       // eslint-disable-next-line no-unused-expressions
-      if (script) script.parentNode?.removeChild(script)
+      if (script) script.parentNode.removeChild(script)
     },
     loadSignScript(id, file) {
       return new Promise(function(resolve, reject) {
@@ -140,7 +140,7 @@ export default {
         };
         const firstScriptTag = document.getElementsByTagName('script')[0]
         // eslint-disable-next-line no-unused-expressions
-        firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
       });
     },
     getCertificate(certIndex) {
