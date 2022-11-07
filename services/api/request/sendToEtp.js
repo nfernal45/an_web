@@ -2,11 +2,17 @@ import Vue from 'vue'
 import qs from 'qs'
 import { restApiGfRabbitmq } from '@/services/api/endpoints'
 
-export default async function({ axiosModule, documentQueryId, userLogin }) {
+export default async function({
+  axiosModule,
+  documentQueryId,
+  userLogin,
+  etpOutMessageEntityId
+}) {
   const url = restApiGfRabbitmq.sendingToEtp.send
   const data = {
     queriedDocId: documentQueryId,
-    userLogin
+    userLogin,
+    etpOutMessageEntityId
   }
 
   try {

@@ -16,8 +16,6 @@ function loadCertificatesAsync() {
   return new Promise(function (resolve, reject) {
     const lstId = 'CertListBox';
     cadesplugin.async_spawn(function *() {
-      console.log("Идет перечисление объектов плагина")
-      // setStateForObjects("yellow", "Идет перечисление объектов плагина");
       var MyStoreExists = true;
       try {
         var oStore = yield cadesplugin.CreateObjectAsync("CAdESCOM.Store");
@@ -132,7 +130,10 @@ function loadCertificatesAsync() {
   });
 }
 
-function signCadesBesAsync(certificate, appContentStr, requestContentStr) {
+function signCadesBesAsync(certificate, contentForSign) {
+  const appContentStr = contentForSign.appContentStr
+  const requestContentStr = contentForSign.requestContentStr
+
   return new Promise(function (resolve, reject) {
     if (!cadesplugin) {
       reject(new Error("Плагин не загружен"))
@@ -158,8 +159,8 @@ function signCadesBesAsync(certificate, appContentStr, requestContentStr) {
         var appContentSignature = yield oSignedData.SignCades(oSigner, cadesplugin.CADESCOM_CADES_BES)
         var reqContentSignature = yield reqSignedData.SignCades(oSigner, cadesplugin.CADESCOM_CADES_BES)
         resolve({
-          appContentSignature,
-          reqContentSignature
+          appSign: appContentSignature,
+          requestSign: reqContentSignature
         })
       }
       catch(err)

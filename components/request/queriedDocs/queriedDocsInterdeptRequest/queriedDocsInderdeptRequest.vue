@@ -112,12 +112,12 @@
                   @selectCertificate="selectSignCertificate"
                 )
               transition(v-if="!isNeedSign(sendDocument)" name='fade')
-                el-button(@click='updateRequiredInterParams'
+                el-button(@click='updateRequiredInterParamsAndSendToEtp'
                           :loading='isRequiredInterParamsLoading'
                           :disabled='isUpdateRequiredParamsButtonDisabled'
                           type='primary') Отправить запрос
               transition(v-else name='fade')
-                el-button(@click='signAndSendDoc(sendDocument)'
+                el-button(@click='tryToSignAndSendDoc(sendDocument)'
                   :loading='isRequiredInterParamsLoading || isProcessSignAndSend'
                   :disabled='isUpdateRequiredParamsButtonDisabled || !signCertificate'
                   type='primary') Подписать и отправить
@@ -130,6 +130,8 @@ import queriedDocCertLoader from '@/components/request/queriedDocs/queriedDocCer
 import fetchDocTypes from '@/services/api/references/fetchDocTypes'
 import fetchRequiredInterParams from '@/services/api/request/fetchRequiredInterParams'
 import updateRequiredInterParams from '@/services/api/request/updateRequiredInterParams'
+import prepareAsurMessageForSign from '@/services/api/request/sign/prepareAsurMessageForSign'
+import finishSign from '@/services/api/request/sign/finishSign'
 import sendToEtp from '@/services/api/request/sendToEtp'
 import fetchSettings from '@/services/api/settings/fetchSettings'
 import { AUTH_USER_LOGIN_STORE_VALUE_NAME } from '@/store/auth/const'
@@ -344,72 +346,96 @@ export default {
     isNeedSign(doc) {
       return doc && doc.docTypeId === 92
     },
-    async updateRequiredInterParams() {
-      console.log(this.sendDocument)
+    async updateRequiredInterParams(requiredInterParamsData) {
+      if (requiredInterParamsData && requiredInterParamsData.length !== 0) {
+        await updateRequiredInterParams({
+          axiosModule: this.$axios,
+          entityArray: requiredInterParamsData
+        })
+      }
+    },
+    async updateRequiredInterParamsAndSendToEtp() {
+      this.isRequiredInterParamsLoading = true
+      try {
+        await this.updateRequiredInterParams(this.requiredInterParamsData)
+        await sendToEtp({
+          axiosModule: this.$axios,
+          documentQueryId: this.getDocumentQueryId(
+            this.requiredInterParamsData,
+            this.sendDocument
+          ),
+          userLogin: this.$auth.$storage.getState(
+            AUTH_USER_LOGIN_STORE_VALUE_NAME
+          )
+        })
+        await this.fetchRequest(this.request.requestId)
+      } catch (e) {
+        throw e
+      } finally {
+        this.isRequiredInterParamsDialogVisible = false
+        this.isRequiredInterParamsLoading = false
+      }
+    },
+    getDocumentQueryId(requiredInterParamsData, sendDocument) {
       if (
         this.requiredInterParamsData &&
         this.requiredInterParamsData.length !== 0
       ) {
-        const array = this.requiredInterParamsData
-        const documentQueryId = array[0].queryId
-
-        this.isRequiredInterParamsLoading = true
-
-        await updateRequiredInterParams({
-          axiosModule: this.$axios,
-          entityArray: array
-        })
-
-        await sendToEtp({
-          axiosModule: this.$axios,
-          documentQueryId,
-          userLogin: this.$auth.$storage.getState(
-            AUTH_USER_LOGIN_STORE_VALUE_NAME
-          )
-        })
+        return this.requiredInterParamsData[0].queryId
       } else {
-        const documentQueryId = this.sendDocument.queryId
-        await sendToEtp({
-          axiosModule: this.$axios,
-          documentQueryId,
-          userLogin: this.$auth.$storage.getState(
-            AUTH_USER_LOGIN_STORE_VALUE_NAME
-          )
-        })
+        return this.sendDocument.queryId
       }
-
+    },
+    async tryToSignAndSendDoc(doc) {
+      this.isProcessSignAndSend = true
+      try {
+        await this.signAndSendDoc(doc)
+        this.isRequiredInterParamsDialogVisible = false
+      } catch (e) {
+        this.signErrorMessage = e.message ? e.message : e.toString()
+      } finally {
+        this.isProcessSignAndSend = false
+      }
+    },
+    async signAndSendDoc(doc, requiredInterParamsData) {
+      await this.updateRequiredInterParams(requiredInterParamsData)
+      const contentForSign = await this.getContentForSign(doc.queryId)
+      // eslint-disable-next-line no-undef
+      const signature = await signCadesBesAsync(
+        this.signCertificate,
+        contentForSign
+      )
+      await this.saveSignedContent(signature, contentForSign)
+      await this.sendToEtpSignedContent(doc.queryId, contentForSign)
       await this.fetchRequest(this.request.requestId)
-
-      this.isRequiredInterParamsDialogVisible = false
-      this.isRequiredInterParamsLoading = false
+    },
+    async getContentForSign(queryDocId) {
+      // eslint-disable-next-line no-return-await
+      return await prepareAsurMessageForSign({
+        axiosModule: this.$axios,
+        queriedDocId: queryDocId
+      })
+    },
+    async saveSignedContent(signature, contentForSign) {
+      await finishSign({
+        axiosModule: this.$axios,
+        etpOutMessageEntityId: contentForSign.etpOutMessageEntityId,
+        appSign: signature.appSign,
+        requestSign: signature.requestSign
+      })
+    },
+    async sendToEtpSignedContent(documentQueryId, contentForSign) {
+      await sendToEtp({
+        axiosModule: this.$axios,
+        documentQueryId,
+        userLogin: this.$auth.$storage.getState(
+          AUTH_USER_LOGIN_STORE_VALUE_NAME
+        ),
+        etpOutMessageEntityId: contentForSign.etpOutMessageEntityId
+      })
     },
     selectSignCertificate(cert) {
       this.signCertificate = cert
-    },
-    signAndSendDoc(doc) {
-      const currentComponent = this
-      this.isProcessSignAndSend = true
-      // eslint-disable-next-line no-undef
-      signCadesBesAsync(
-        this.signCertificate,
-        'testDataInBase64',
-        'testDataInBase64'
-      )
-        .then((signature) => {
-          console.log(signature)
-          currentComponent.updateRequiredInterParams()
-        })
-        .catch((error) => {
-          if (error.message) {
-            currentComponent.signErrorMessage = error.message
-          } else {
-            currentComponent.signErrorMessage = error.toString()
-          }
-          console.log(error)
-        })
-        .finally(() => {
-          currentComponent.isProcessSignAndSend = false
-        })
     },
     async fetchDocTypes() {
       this.refDocTypes = await fetchDocTypes({ axiosModule: this.$axios })
