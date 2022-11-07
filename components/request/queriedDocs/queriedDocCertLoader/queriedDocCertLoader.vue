@@ -60,7 +60,6 @@ export default {
   },
   watch: {
     certIndex(index) {
-      console.log(index)
       this.$emit("selectCertificate", this.certificates[index].cert)
     },
   },

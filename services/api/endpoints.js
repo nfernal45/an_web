@@ -17,7 +17,10 @@ const restApiGf = {
     byId: '/gf-queried-docs/{id}',
     list: '/gf-queried-docs/list',
     requiredInterParams: '/gf-queried-docs/{id}/required-inter-param',
-    updateRequiredInterParams: '/gf-queried-docs/inter-param-val'
+    updateRequiredInterParams: '/gf-queried-docs/inter-param-val',
+    prepareAsurMessageForSign:
+      '/gf-queried-docs/{queriedDocId}/prepare-for-sign',
+    finishSign: '/gf-queried-docs/finish-sign'
   },
   gfAttachedDocs: {
     byId: '/gf-attached-docs/{id}',
