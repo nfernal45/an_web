@@ -10,7 +10,11 @@ Vue 3
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
 ### Сборка проекта для production
-В корневой директории проекта выполнить команду
+Перед сборкой проекта необходимо в файле
+.env изменить значение APP_HOST на адрес, по которому будет развернуто приложение, например:
+
+    APP_HOST=http://mgi-int.fors.ru
+затем В корневой директории проекта выполнить команду
 
     # install dependencies
     yarn install
