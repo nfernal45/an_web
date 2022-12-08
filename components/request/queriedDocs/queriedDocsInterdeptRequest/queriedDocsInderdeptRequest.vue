@@ -2,7 +2,7 @@
   form-block(title='Запрос документов в базовом регистре для проверки предоставленных сведений')
     template(slot='content')
       el-form(
-        size='small' 
+        size='small'
         label-position='top'
         :disabled='disabledEditing'
       )
@@ -12,7 +12,7 @@
                        width='430'
                        v-model='isAddDocumentPopoverVisible')
               el-form-item(label='Тип документа')
-                el-select(v-model='additionalDocumentTypeId' 
+                el-select(v-model='additionalDocumentTypeId'
                           size='small'
                           filterable
                           style='width: 400px')
@@ -21,11 +21,11 @@
                             :value='item.typeId'
                             :label='item.typeName')
               div
-                el-button(size='mini' 
-                          type='primary' 
-                           @click='addDocument(additionalDocumentTypeId)' 
+                el-button(size='mini'
+                          type='primary'
+                           @click='addDocument(additionalDocumentTypeId)'
                            :disabled='!additionalDocumentTypeId') Добавить
-                el-button(size='mini' 
+                el-button(size='mini'
                           type='text'
                           @click='isAddDocumentPopoverVisible = false') Отмена
               el-button(slot='reference'
@@ -63,7 +63,7 @@
                 el-col(:span='6' v-show='doc.refAttachedDoc && doc.refAttachedDoc.docFileName')
                   el-form-item(label=' ')
                       a.file-link(:href='doc.refAttachedDoc && doc.refAttachedDoc.fileLink')
-                        i.el-icon-document 
+                        i.el-icon-document
                         span {{ doc.refAttachedDoc && doc.refAttachedDoc.docFileName }}
               el-row
                 el-col(:span='14')
@@ -389,7 +389,7 @@ export default {
     async tryToSignAndSendDoc(doc) {
       this.isProcessSignAndSend = true
       try {
-        await this.signAndSendDoc(doc)
+        await this.signAndSendDoc(doc, this.requiredInterParamsData)
         this.isRequiredInterParamsDialogVisible = false
       } catch (e) {
         this.signErrorMessage = e.message ? e.message : e.toString()
