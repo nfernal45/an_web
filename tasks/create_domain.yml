@@ -1,4 +1,7 @@
 ---
+- name: "update java urandom"
+  include_task: "update/urandom.yml"
+
 - name: "Read wlsserver directory"
   include_tasks: "profile/wls_server.yml"
 
@@ -24,6 +27,9 @@
   args:
     creates: "{{ domain_home }}/config"
   become: True
+
+- name: "Created Weblogic login-pass in prod-mod"
+  include_task: "update/domain_pass.yml"
 
 - name: "Service section"
   block:
@@ -61,18 +67,6 @@
         state: "started"
 
   become: True
-
-- name: "Check WebLogic console availability"
-  uri:
-    url: "http://{{ ansible_hostname }}:{{ domain.port }}/console"
-    method: "GET"
-    user: "{{ domain.user }}"
-    password: "{{ domain.password }}"
-    return_content: True
-  register: wls_host
-  until: wls_host.status == 200
-  retries: "120"
-  delay: "30"
 
 - name: "Put weblogic profile"
   template:
