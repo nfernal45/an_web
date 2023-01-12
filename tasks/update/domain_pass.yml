@@ -1,0 +1,22 @@
+---
+- name: create pass dir domain start
+  file:
+    path: /opt/weblogic/user_projects/domains/base_domain/servers/AdminServer/security
+    state: directory
+  become: true
+  become_user: weblogic
+
+- name: Creating an empty file
+  file:
+    path: "/opt/weblogic/user_projects/domains/base_domain/servers/AdminServer/security/boot.properties"
+    state: touch
+  become: true
+  become_user: weblogic
+
+- name: create a new file with lineinfile
+  lineinfile:
+    dest=/opt/weblogic/user_projects/domains/base_domain/servers/AdminServer/security/boot.properties
+    regexp='^'
+    line='username=weblogic\npassword=welcome0'
+    state=present
+    create=True

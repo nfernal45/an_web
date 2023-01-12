@@ -1,0 +1,8 @@
+---
+- name: "update java urandom"
+  lineinfile:
+    dest=$JAVA_HOME/jre/lib/security/java.security
+    regexp='securerandom.source=file:/dev/random'
+    line='securerandom.source=file:/dev/urandom'
+    state=present
+    create=True

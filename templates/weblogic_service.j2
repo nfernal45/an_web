@@ -98,7 +98,6 @@ Description=Weblogic Admin Server
 [Service]
 ExecStart={{ domain_home }}/startWebLogic.sh
 ExecStop={{ domain_home }}/bin/stopWebLogic.sh
-TimeoutSec=300
 PIDFile={{ pid_dir }}/{{ domain.service }}.pid
 User={{ wls_user }} 
 Group={{ wls_group }}
