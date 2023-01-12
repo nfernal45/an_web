@@ -1,6 +1,6 @@
 ---
 - name: "update java urandom"
-  include_task: "update/urandom.yml"
+  include_tasks: "update/urandom.yml"
 
 - name: "Read wlsserver directory"
   include_tasks: "profile/wls_server.yml"
@@ -29,7 +29,7 @@
   become: True
 
 - name: "Created Weblogic login-pass in prod-mod"
-  include_task: "update/domain_pass.yml"
+  include_tasks: "update/domain_pass.yml"
 
 - name: "Service section"
   block:
